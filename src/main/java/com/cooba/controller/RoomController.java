@@ -1,5 +1,6 @@
 package com.cooba.controller;
 
+import com.cooba.component.RoomComponent;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.tio.TioWebSocketServerBootstrap;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +17,15 @@ import java.nio.charset.StandardCharsets;
 @RequestMapping("/room")
 @RequiredArgsConstructor
 public class RoomController {
-    private final TioWebSocketServerBootstrap bootstrap;
+    private final RoomComponent roomComponent;
 
-    @PostMapping("/join")
-    public void joinRoom(@RequestBody RoomRequest request) {
-        Tio.bindGroup(bootstrap.getServerTioConfig(), request.getUid(), request.getGroupId());
-
-        WsResponse text = WsResponse.fromText(request.getUid() + " 加入房間", StandardCharsets.UTF_8.name());
-        Tio.sendToGroup(bootstrap.getServerTioConfig(), request.getGroupId(), text);
+    @PostMapping("/build")
+    public void buildRoom(@RequestBody RoomRequest request) {
+        roomComponent.build();
     }
 
     @PostMapping("/leave")
     public void leaveRoom(@RequestBody RoomRequest request) {
-        Tio.unbindGroup(bootstrap.getServerTioConfig(), request.getUid(), request.getGroupId());
 
-        WsResponse text = WsResponse.fromText(request.getUid() + " 離開房間", StandardCharsets.UTF_8.name());
-        Tio.sendToGroup(bootstrap.getServerTioConfig(), request.getGroupId(), text);
     }
 }

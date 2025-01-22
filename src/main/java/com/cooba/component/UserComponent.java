@@ -17,4 +17,10 @@ public interface UserComponent {
     void speakToRoom();
 
     void speakToAll();
+
+    void addFriend();
+
+    void permitFriendApply();
+
+    void removeFriend();
 }
