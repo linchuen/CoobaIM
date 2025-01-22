@@ -1,11 +1,15 @@
 package com.cooba.service;
 
+import com.cooba.entity.Room;
+import com.cooba.entity.RoomUser;
+import com.cooba.entity.User;
+
 public interface RoomService {
-    void build();
+    void build(Room room);
 
-    void destroy();
+    void destroy(Room room);
 
-    void addUser();
+    User addUser(RoomUser roomUser);
 
-    void deleteUser();
+    User deleteUser(RoomUser roomUser);
 }

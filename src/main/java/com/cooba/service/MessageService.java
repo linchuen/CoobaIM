@@ -1,7 +1,12 @@
 package com.cooba.service;
 
+import com.cooba.dto.NotifyMessage;
+import com.cooba.dto.SendMessage;
+
 public interface MessageService {
-    void sendToUser();
-    void sendToRoom();
-    void sendToAll();
+    void sendToUser(SendMessage message);
+
+    void sendToRoom(SendMessage message);
+
+    void sendToAll(NotifyMessage message);
 }

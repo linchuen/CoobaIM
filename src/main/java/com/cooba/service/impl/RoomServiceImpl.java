@@ -17,22 +17,22 @@ public class RoomServiceImpl implements RoomService {
     private final RoomUserRepository roomUserRepository;
 
     @Override
-    public void build() {
-        roomRepository.insert(new Room());
+    public void build(Room room) {
+        roomRepository.insert(room);
     }
 
     @Override
-    public void destroy() {
-        roomRepository.updateById(new Room());
+    public void destroy(Room room) {
+        roomRepository.updateById(room);
     }
 
     @Override
-    public void addUser() {
-        roomUserRepository.insert(new RoomUser());
+    public void addUser(RoomUser roomUser) {
+        roomUserRepository.insert(roomUser);
     }
 
     @Override
-    public void deleteUser() {
-        roomUserRepository.deleteById(new RoomUser());
+    public void deleteUser(RoomUser roomUser) {
+        roomUserRepository.deleteById(roomUser);
     }
 }

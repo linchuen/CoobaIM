@@ -1,12 +1,15 @@
 package com.cooba.component;
 
+import com.cooba.dto.request.RoomRequest;
+import com.cooba.dto.request.RoomUserRequest;
+
 public interface RoomComponent {
 
-    void build();
+    void build(RoomRequest request);
 
-    void destroy();
+    void destroy(RoomRequest request);
 
-    void invite();
+    void invite(RoomUserRequest request);
 
-    void evict();
+    void evict(RoomUserRequest request);
 }

@@ -2,16 +2,9 @@ package com.cooba.controller;
 
 import com.cooba.component.RoomComponent;
 import com.cooba.dto.request.RoomRequest;
-import com.cooba.tio.TioWebSocketServerBootstrap;
+import com.cooba.dto.request.RoomUserRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.tio.core.Tio;
-import org.tio.websocket.common.WsResponse;
-
-import java.nio.charset.StandardCharsets;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/room")
@@ -21,11 +14,21 @@ public class RoomController {
 
     @PostMapping("/build")
     public void buildRoom(@RequestBody RoomRequest request) {
-        roomComponent.build();
+        roomComponent.build(request);
     }
 
-    @PostMapping("/leave")
-    public void leaveRoom(@RequestBody RoomRequest request) {
+    @DeleteMapping("/destroy")
+    public void destroyRoom(@RequestBody RoomRequest request) {
+        roomComponent.destroy(request);
+    }
 
+    @PostMapping("/build")
+    public void inviteUser(@RequestBody RoomUserRequest request) {
+        roomComponent.invite(request);
+    }
+
+    @PostMapping("/build")
+    public void evictUser(@RequestBody RoomUserRequest request) {
+        roomComponent.evict(request);
     }
 }

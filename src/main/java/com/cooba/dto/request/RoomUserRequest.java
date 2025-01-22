@@ -3,7 +3,9 @@ package com.cooba.dto.request;
 import lombok.Data;
 
 @Data
-public class RoomRequest {
+public class RoomUserRequest {
+
     private Long id;
-    private String name;
+    private Long roomId;
+    private Long userId;
 }
