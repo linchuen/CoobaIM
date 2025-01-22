@@ -1,0 +1,28 @@
+spring:
+  port: 8080
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
+      timeout: 5s
+      connect-timeout: 5s
+
+tio:
+  websocket:
+    server:
+      port: 9876
+      heartbeat-timeout: 600000
+
+#    ssl:
+#      enabled: true
+#      keyStore: classpath:ssl/keystore.jks
+#      trustStore: classpath:ssl/keystore.jks
+#      password: 214323428310224
+    #是否支持集群，集群开启需要redis
+    cluster:
+      enabled: false
+      all: true
+      group: true
+      ip: true
+      user: true
