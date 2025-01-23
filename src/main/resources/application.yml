@@ -7,6 +7,25 @@ spring:
       port: 6379
       timeout: 5s
       connect-timeout: 5s
+  datasource:
+    dynamic:
+      primary: gamedb
+      strict: false
+      clickhouse:
+        url: jdbc:clickhouse://127.0.0.1:8123/im
+        username: default
+        password: example
+        driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+      mysql:
+        url: jdbc:mysql://127.0.0.1:3306/im
+        username: root
+        password: root
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 tio:
   websocket:

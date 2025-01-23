@@ -9,7 +9,7 @@ public class Chat {
     private Long id;
     private Long roomId;
     private Long userId;
-    private String msg;
+    private String message;
     private int version;
     private LocalDateTime createdTime;
 }
