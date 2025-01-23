@@ -22,12 +22,12 @@ public class RoomController {
         roomComponent.destroy(request);
     }
 
-    @PostMapping("/build")
+    @PostMapping("/invite")
     public void inviteUser(@RequestBody RoomUserRequest request) {
         roomComponent.invite(request);
     }
 
-    @PostMapping("/build")
+    @PostMapping("/evict")
     public void evictUser(@RequestBody RoomUserRequest request) {
         roomComponent.evict(request);
     }

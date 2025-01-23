@@ -17,18 +17,8 @@ public class UserServiceImpl implements UserService {
     private final RoomUserRepository roomUserRepository;
 
     @Override
-    public void register() {
+    public void register(User user) {
         userRepository.insert(new User());
-    }
-
-    @Override
-    public void login() {
-
-    }
-
-    @Override
-    public void logout() {
-
     }
 
     @Override

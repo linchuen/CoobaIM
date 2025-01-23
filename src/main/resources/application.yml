@@ -1,25 +1,26 @@
 spring:
   port: 8080
+  threads:
+    virtual:
+      enabled: true
   data:
     redis:
       database: 0
-      host: localhost
-      port: 6379
-      timeout: 5s
-      connect-timeout: 5s
+      host: 127.0.0.1
+      port: 16379
   datasource:
     dynamic:
-      primary: gamedb
+      primary: im
       strict: false
       clickhouse:
-        url: jdbc:clickhouse://127.0.0.1:8123/im
+        url: jdbc:clickhouse://127.0.0.1:18123/im
         username: default
         password: example
         driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
       mysql:
-        url: jdbc:mysql://127.0.0.1:3306/im
+        url: jdbc:mysql://127.0.0.1:13306/im
         username: root
-        password: root
+        password: example
         driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:

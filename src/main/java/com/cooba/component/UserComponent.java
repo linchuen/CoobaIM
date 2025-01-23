@@ -1,8 +1,10 @@
 package com.cooba.component;
 
+import com.cooba.dto.request.RegisterRequest;
+
 public interface UserComponent {
 
-    void register();
+    void register(RegisterRequest request);
 
     void login();
 
