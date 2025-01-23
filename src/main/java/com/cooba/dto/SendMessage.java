@@ -7,5 +7,5 @@ import lombok.Data;
 public class SendMessage {
     private long roomId;
     private User user;
-    private String msg;
+    private String message;
 }

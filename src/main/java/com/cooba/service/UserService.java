@@ -1,11 +1,12 @@
 package com.cooba.service;
 
+import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 
 public interface UserService {
     void register(User user);
 
-    void enterRoom();
+    User enterRoom(RoomUser roomUser);
 
-    void leaveRoom();
+    User leaveRoom(RoomUser roomUser);
 }

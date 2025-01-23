@@ -1,6 +1,9 @@
 package com.cooba.component;
 
+import com.cooba.dto.request.FriendRequest;
 import com.cooba.dto.request.RegisterRequest;
+import com.cooba.dto.request.RoomUserRequest;
+import com.cooba.dto.request.SpeakRequest;
 
 public interface UserComponent {
 
@@ -10,19 +13,19 @@ public interface UserComponent {
 
     void logout();
 
-    void enterRoom();
+    void enterRoom(RoomUserRequest request);
 
-    void leaveRoom();
+    void leaveRoom(RoomUserRequest request);
 
-    void speakToUser();
+    void speakToUser(SpeakRequest request);
 
-    void speakToRoom();
+    void speakToRoom(SpeakRequest request);
 
-    void speakToAll();
+    void speakToAll(SpeakRequest request);
 
-    void addFriend();
+    void addFriend(FriendRequest request);
 
-    void permitFriendApply();
+    void permitFriendApply(FriendRequest request);
 
-    void removeFriend();
+    void removeFriend(FriendRequest request);
 }

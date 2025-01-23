@@ -1,10 +1,12 @@
 package com.cooba.service;
 
+import com.cooba.entity.Friend;
+
 public interface FriendService {
 
-    void apply();
+    void apply(Friend friend);
 
-    void bind();
+    void bind(Friend friend);
 
-    void unbind();
+    void unbind(Friend friend);
 }

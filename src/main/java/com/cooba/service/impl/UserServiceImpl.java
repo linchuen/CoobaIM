@@ -18,16 +18,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(User user) {
-        userRepository.insert(new User());
+        userRepository.insert(user);
     }
 
     @Override
-    public void enterRoom() {
-        roomUserRepository.insert(new RoomUser());
+    public User enterRoom(RoomUser roomUser) {
+        roomUserRepository.insert(roomUser);
+        return null;
     }
 
     @Override
-    public void leaveRoom() {
-        roomUserRepository.deleteById(new RoomUser());
+    public User leaveRoom(RoomUser roomUser) {
+        roomUserRepository.deleteById(roomUser);
+        return null;
     }
 }

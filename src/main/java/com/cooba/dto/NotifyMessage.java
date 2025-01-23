@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class NotifyMessage {
-    private String msg;
+    private String message;
 }
