@@ -7,4 +7,6 @@ public interface SessionService {
     void add(Session session);
 
     void remove(Session session);
+
+    Session getInfo(long userId);
 }

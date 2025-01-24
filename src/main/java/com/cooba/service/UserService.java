@@ -9,4 +9,6 @@ public interface UserService {
     User enterRoom(RoomUser roomUser);
 
     User leaveRoom(RoomUser roomUser);
+
+    User getInfo(long userId);
 }

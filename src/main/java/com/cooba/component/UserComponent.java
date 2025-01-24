@@ -1,14 +1,19 @@
 package com.cooba.component;
 
 import com.cooba.dto.request.*;
+import com.cooba.entity.User;
 
 public interface UserComponent {
 
     void register(RegisterRequest request);
 
+    User getInfo(long userId);
+
     void login(SessionRequest request);
 
     void logout(SessionRequest request);
+
+    boolean isOnline(long userId);
 
     void enterRoom(RoomUserRequest request);
 

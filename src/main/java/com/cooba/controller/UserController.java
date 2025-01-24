@@ -22,25 +22,30 @@ public class UserController {
     @PostMapping("/register")
     public ResultResponse<?> registerUser(@RequestBody RegisterRequest request) {
         userComponent.register(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/login")
     public ResultResponse<?> login(@RequestBody SessionRequest request) {
         userComponent.login(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/logout")
     public ResultResponse<?> logout(@RequestBody SessionRequest request) {
         userComponent.logout(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/enter")
     public ResultResponse<?> enterRoom(@RequestBody RoomUserRequest request) {
         userComponent.enterRoom(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/leave")
     public ResultResponse<?> leaveRoom(@RequestBody RoomUserRequest request) {
         userComponent.leaveRoom(request);
+        return ResultResponse.builder().build();
     }
 }

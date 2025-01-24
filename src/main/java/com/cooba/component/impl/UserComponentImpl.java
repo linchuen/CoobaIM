@@ -35,6 +35,11 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    public User getInfo(long userId) {
+        return userService.getInfo(userId);
+    }
+
+    @Override
     public void login(SessionRequest request) {
         Session session = new Session();
         BeanUtils.copyProperties(request, session);
@@ -46,6 +51,11 @@ public class UserComponentImpl implements UserComponent {
         Session session = new Session();
         BeanUtils.copyProperties(request, session);
         sessionService.remove(session);
+    }
+
+    @Override
+    public boolean isOnline(long userId) {
+        return sessionService.getInfo(userId) != null;
     }
 
     @Override
