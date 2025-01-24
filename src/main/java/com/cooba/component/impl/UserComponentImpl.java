@@ -4,12 +4,10 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
-import com.cooba.dto.request.FriendRequest;
-import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.request.RoomUserRequest;
-import com.cooba.dto.request.SpeakRequest;
+import com.cooba.dto.request.*;
 import com.cooba.entity.Friend;
 import com.cooba.entity.RoomUser;
+import com.cooba.entity.Session;
 import com.cooba.entity.User;
 import com.cooba.service.FriendService;
 import com.cooba.service.MessageService;
@@ -37,13 +35,17 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void login() {
-        sessionService.add();
+    public void login(SessionRequest request) {
+        Session session = new Session();
+        BeanUtils.copyProperties(request, session);
+        sessionService.add(session);
     }
 
     @Override
-    public void logout() {
-        sessionService.remove();
+    public void logout(SessionRequest request) {
+        Session session = new Session();
+        BeanUtils.copyProperties(request, session);
+        sessionService.remove(session);
     }
 
     @Override

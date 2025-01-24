@@ -1,8 +1,10 @@
 package com.cooba.service;
 
+import com.cooba.entity.Session;
+
 public interface SessionService {
 
-    void add();
+    void add(Session session);
 
-    void remove();
+    void remove(Session session);
 }

@@ -12,13 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
+
     @Override
-    public void add() {
-        sessionRepository.insert(new Session());
+    public void add(Session session) {
+        sessionRepository.insert(session);
     }
 
     @Override
-    public void remove() {
-        sessionRepository.deleteById(new Session());
+    public void remove(Session session) {
+        sessionRepository.deleteById(session);
     }
 }

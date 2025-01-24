@@ -3,6 +3,7 @@ package com.cooba.controller;
 import com.cooba.component.RoomComponent;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomUserRequest;
+import com.cooba.dto.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,22 +14,26 @@ public class RoomController {
     private final RoomComponent roomComponent;
 
     @PostMapping("/build")
-    public void buildRoom(@RequestBody RoomRequest request) {
+    public ResultResponse<?> buildRoom(@RequestBody RoomRequest request) {
         roomComponent.build(request);
+        return ResultResponse.builder().build();
     }
 
     @DeleteMapping("/destroy")
-    public void destroyRoom(@RequestBody RoomRequest request) {
+    public ResultResponse<?> destroyRoom(@RequestBody RoomRequest request) {
         roomComponent.destroy(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/invite")
-    public void inviteUser(@RequestBody RoomUserRequest request) {
+    public ResultResponse<?> inviteUser(@RequestBody RoomUserRequest request) {
         roomComponent.invite(request);
+        return ResultResponse.builder().build();
     }
 
     @PostMapping("/evict")
-    public void evictUser(@RequestBody RoomUserRequest request) {
+    public ResultResponse<?> evictUser(@RequestBody RoomUserRequest request) {
         roomComponent.evict(request);
+        return ResultResponse.builder().build();
     }
 }

@@ -1,17 +1,14 @@
 package com.cooba.component;
 
-import com.cooba.dto.request.FriendRequest;
-import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.request.RoomUserRequest;
-import com.cooba.dto.request.SpeakRequest;
+import com.cooba.dto.request.*;
 
 public interface UserComponent {
 
     void register(RegisterRequest request);
 
-    void login();
+    void login(SessionRequest request);
 
-    void logout();
+    void logout(SessionRequest request);
 
     void enterRoom(RoomUserRequest request);
 
