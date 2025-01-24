@@ -10,18 +10,19 @@ spring:
       port: 16379
   datasource:
     dynamic:
-      primary: im
+      primary: mysql
       strict: false
-      clickhouse:
-        url: jdbc:clickhouse://127.0.0.1:18123/im
-        username: default
-        password: example
-        driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
-      mysql:
-        url: jdbc:mysql://127.0.0.1:13306/im
-        username: root
-        password: example
-        driver-class-name: com.mysql.cj.jdbc.Driver
+      datasource:
+        clickhouse:
+          url: jdbc:clickhouse://127.0.0.1:18123/im
+          username: default
+          password: example
+          driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+        mysql:
+          url: jdbc:mysql://127.0.0.1:13306/im
+          username: root
+          password: example
+          driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
   configuration:
