@@ -242,8 +242,8 @@ public class TioWebSocketServerAutoConfiguration {
                 groupListener);
     }
     @Bean
-    public TioSocketConnection socketConnection(ServerTioConfig serverTioConfig){
-        return new TioSocketConnection(serverTioConfig);
+    public TioSocketConnection socketConnection(TioWebSocketServerBootstrap tioWebSocketServerBootstrap){
+        return new TioSocketConnection(tioWebSocketServerBootstrap);
     }
 
     @Bean

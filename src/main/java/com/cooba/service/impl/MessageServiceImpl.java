@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
@@ -19,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 public class MessageServiceImpl implements MessageService {
     private final ChatRepository chatRepository;
     private final NotificationRepository notificationRepository;
+    private final SocketConnection socketConnection;
 
     @Override
     public void sendToUser(SendMessage message) {
@@ -27,6 +29,7 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
 
+        socketConnection.sendToUser(String.valueOf(chat.getUserId()), chat.getMessage());
     }
 
     @Override
@@ -36,11 +39,16 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
 
+        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat.getMessage());
     }
 
     @Override
     public void sendToAll(NotifyMessage message) {
-        notificationRepository.insert(new Notification());
+        Notification notification = new Notification();
+        BeanUtils.copyProperties(message, notification);
 
+        notificationRepository.insert(notification);
+
+        socketConnection.sendToAll(notification.getMessage());
     }
 }
