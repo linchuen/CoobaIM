@@ -191,67 +191,25 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio;
+package com.cooba.core.tio;
+
+import org.tio.core.intf.TioUuid;
+import org.tio.utils.hutool.Snowflake;
+
+public class TioWebSocketServerDefaultUuid implements TioUuid {
+    private final Snowflake snowflake;
 
 
-import com.cooba.tio.property.TioWebSocketServerClusterProperties;
-import com.cooba.tio.property.TioWebSocketServerProperties;
-import com.cooba.tio.property.TioWebSocketServerSslProperties;
-import org.redisson.api.RedissonClient;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.tio.cluster.redisson.RedissonTioClusterTopic;
-import org.tio.core.stat.DefaultIpStatListener;
-import org.tio.server.ServerTioConfig;
-import org.tio.websocket.server.WsServerAioListener;
-
-
-@Configuration
-public class TioWebSocketServerConfiguration {
+    public TioWebSocketServerDefaultUuid(long workerId, long dataCenterId) {
+        snowflake = new Snowflake(workerId, dataCenterId);
+    }
 
     /**
-     * cluster topic channel
+     * @return new uuid
+     * @author tanyaowu
      */
-    private static final String CLUSTER_TOPIC_CHANNEL = "tio_ws_spring_boot_starter";
-
-
-    @Bean
-    public DefaultIpStatListener defaultIpStatListener() {
-        return DefaultIpStatListener.me;
-    }
-
-    @Bean
-    public WsServerAioListener wsServerAioListener() {
-        return new WsServerAioListener();
-    }
-
-    @Bean
-    @ConfigurationProperties("tio.websocket.cluster")
-    public TioWebSocketServerClusterProperties clusterProperties() {
-        return new TioWebSocketServerClusterProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties("tio.websocket.server")
-    public TioWebSocketServerProperties serverProperties() {
-        return new TioWebSocketServerProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties("tio.websocket.ssl")
-    public TioWebSocketServerSslProperties sslProperties() {
-        return new TioWebSocketServerSslProperties();
-    }
-
-
-    @Bean
-    public ServerTioConfig wsServerTioConfig(TioWebSocketServerBootstrap bootstrap) {
-        return bootstrap.getServerTioConfig();
-    }
-
-    @Bean
-    public RedissonTioClusterTopic wsRedissonTioClusterTopic(RedissonClient redissonClient) {
-        return new RedissonTioClusterTopic(CLUSTER_TOPIC_CHANNEL, redissonClient);
+    @Override
+    public String uuid() {
+        return snowflake.nextId() + "";
     }
 }

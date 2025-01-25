@@ -191,34 +191,117 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio.property;
-
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.tio.utils.time.Time;
+package com.cooba.core.tio;
 
 
-@Data
-public class TioWebSocketServerProperties {
+import com.cooba.core.tio.property.TioWebSocketServerClusterProperties;
+import com.cooba.core.tio.property.TioWebSocketServerSslProperties;
+import com.cooba.core.tio.property.TioWebSocketServerProperties;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.tio.cluster.TioClusterConfig;
+import org.tio.cluster.redisson.RedissonTioClusterTopic;
+import org.tio.core.intf.GroupListener;
+import org.tio.core.stat.IpStatListener;
+import org.tio.server.ServerTioConfig;
+import org.tio.server.intf.ServerAioListener;
+import org.tio.utils.Threads;
+import org.tio.websocket.server.WsServerConfig;
+import org.tio.websocket.server.WsServerStarter;
+import org.tio.websocket.server.handler.IWsMsgHandler;
 
-    /**
-     * 服务绑定的 IP 地址，默认不绑定
-     */
-    private String ip = null;
-    /**
-     * 服务绑定的端口
-     */
-    private int port = 6789;
-    /**
-     * 心跳超时时间，超时会自动关闭连接
-     */
-    private int heartbeatTimeout = 5000;
-    /**
-     * 添加监控时段，不要添加过多的时间段，因为每个时间段都要消耗一份内存，一般加一个时间段就可以了
-     */
-    private Long[] ipStatDurations = {Time.MINUTE_1};
+import java.io.IOException;
 
+@Slf4j
+@RequiredArgsConstructor
+public final class TioWebSocketServerBootstrap {
+    private static final String GROUP_CONTEXT_NAME = "tio-websocket-spring-boot-starter";
 
-    private boolean useScanner = false;
+    private boolean initialized = false;
 
+    private final TioWebSocketServerProperties serverProperties;
+    private final TioWebSocketServerClusterProperties clusterProperties;
+    private final TioWebSocketServerSslProperties serverSslProperties;
+    private final RedissonTioClusterTopic redissonTioClusterTopic;
+    private final IWsMsgHandler tioWebSocketMsgHandler;
+    private final IpStatListener ipStatListener;
+    private final ServerAioListener serverAioListener;
+    private final GroupListener groupListener;
+
+    private WsServerConfig wsServerConfig;
+    private TioClusterConfig clusterConfig;
+    private WsServerStarter wsServerStarter;
+    @Getter
+    private ServerTioConfig serverTioConfig;
+
+    public void contextInitialized() {
+        if (initialized) {
+            log.info("Tio WebSocket Server has been initialized");
+            return;
+        }
+        log.info("Initializing Tio WebSocket Server");
+        try {
+            initTioWebSocketConfig();
+            initTioWebSocketServer();
+            initTioWebSocketServerTioConfig();
+
+            start();
+            initialized = true;
+        } catch (Throwable e) {
+            log.error("Cannot bootstrap tio websocket server :", e);
+            throw new RuntimeException("Cannot bootstrap tio websocket server :", e);
+        }
+    }
+
+    private void initTioWebSocketConfig() {
+        this.wsServerConfig = new WsServerConfig(serverProperties.getPort());
+        if (redissonTioClusterTopic != null && clusterProperties.isEnabled()) {
+            this.clusterConfig = new TioClusterConfig(redissonTioClusterTopic);
+            this.clusterConfig.setCluster4all(clusterProperties.isAll());
+            this.clusterConfig.setCluster4bsId(true);
+            this.clusterConfig.setCluster4channelId(clusterProperties.isChannel());
+            this.clusterConfig.setCluster4group(clusterProperties.isGroup());
+            this.clusterConfig.setCluster4ip(clusterProperties.isIp());
+            this.clusterConfig.setCluster4user(clusterProperties.isUser());
+        }
+    }
+
+    private void initTioWebSocketServer() throws Exception {
+        wsServerStarter = new WsServerStarter(wsServerConfig,
+                tioWebSocketMsgHandler,
+                new TioWebSocketServerDefaultUuid(1L, 1L),
+                Threads.getTioExecutor(),
+                Threads.getGroupExecutor());
+    }
+
+    private void initTioWebSocketServerTioConfig() {
+        serverTioConfig = wsServerStarter.getServerTioConfig();
+        serverTioConfig.setName(GROUP_CONTEXT_NAME);
+        serverTioConfig.setIpStatListener(ipStatListener);
+        serverTioConfig.ipStats.addDurations(serverProperties.getIpStatDurations());
+        serverTioConfig.setServerAioListener(this.serverAioListener);
+        serverTioConfig.setTioClusterConfig(clusterConfig);
+        serverTioConfig.setGroupListener(groupListener);
+
+        if (serverProperties.getHeartbeatTimeout() > 0) {
+            serverTioConfig.setHeartbeatTimeout(serverProperties.getHeartbeatTimeout());
+        }
+
+        //ssl config
+        if (serverSslProperties.isEnabled()) {
+            try {
+                serverTioConfig.useSsl(serverSslProperties.getKeyStore(), serverSslProperties.getTrustStore(), serverSslProperties.getPassword());
+            } catch (Exception e) {
+                //catch and log
+                log.error("init ssl config error", e);
+            }
+        }
+    }
+
+    private void start() throws IOException {
+        wsServerStarter.start();
+    }
 }

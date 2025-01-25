@@ -191,57 +191,37 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio;
+package com.cooba.core.tio.property;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.SmartLifecycle;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-
-@Configuration
-public class TioWebSocketServerInitializerConfiguration
-        implements SmartLifecycle, Ordered {
-
-    private boolean running = false;
-
-    @Autowired
-    private TioWebSocketServerBootstrap webSocketServerBootstrap;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
-    @Override
-    public void start() {
-        new Thread(() -> {
-            webSocketServerBootstrap.contextInitialized();
-            running = true;
-        }).start();
-    }
+@Data
+public class TioWebSocketServerClusterProperties {
+    /**
+     * 是否开启集群 默认为 false
+     * */
+    private boolean enabled = false;
+    /**
+     * 群组是否集群（同一个群组是否会分布在不同的机器上），false:不集群，默认不集群
+     */
+    private boolean	group = false;
+    /**
+     * 用户是否集群（同一个用户是否会分布在不同的机器上），false:不集群，默认集群
+     */
+    private boolean	user = true;
+    /**
+     * ip是否集群（同一个ip是否会分布在不同的机器上），false:不集群，默认集群
+     */
+    private boolean	ip = true;
+    /**
+     * id是否集群（在A机器上的客户端是否可以通过channelId发消息给B机器上的客户端），false:不集群，默认集群<br>
+     */
+    private boolean	channel	= true;
 
-    @Override
-    public void stop() {
-    	if(isRunning()) {
-    		running = false;
-    	}
-    }
-
-    @Override
-    public boolean isRunning() {
-        return running;
-    }
-
-    @Override
-    public int getPhase() {
-        return 0;
-    }
-
-    @Override
-    public int getOrder() {
-        return 1;
-    }
-
-    @Override
-    public void stop(Runnable runnable) {
-    	stop();
-    	runnable.run();
-    }
-
+    /**
+     * 所有连接是否集群（同一个ip是否会分布在不同的机器上），false:不集群，默认集群
+     */
+    private boolean	all = true;
 }

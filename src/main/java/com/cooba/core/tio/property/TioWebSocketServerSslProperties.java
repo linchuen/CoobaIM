@@ -191,37 +191,15 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio.property;
+package com.cooba.core.tio.property;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 
 @Data
-public class TioWebSocketServerClusterProperties {
-    /**
-     * 是否开启集群 默认为 false
-     * */
-    private boolean enabled = false;
-    /**
-     * 群组是否集群（同一个群组是否会分布在不同的机器上），false:不集群，默认不集群
-     */
-    private boolean	group = false;
-    /**
-     * 用户是否集群（同一个用户是否会分布在不同的机器上），false:不集群，默认集群
-     */
-    private boolean	user = true;
-    /**
-     * ip是否集群（同一个ip是否会分布在不同的机器上），false:不集群，默认集群
-     */
-    private boolean	ip = true;
-    /**
-     * id是否集群（在A机器上的客户端是否可以通过channelId发消息给B机器上的客户端），false:不集群，默认集群<br>
-     */
-    private boolean	channel	= true;
+public class TioWebSocketServerSslProperties {
+    private boolean enabled=false;
+    private String keyStore;
 
-    /**
-     * 所有连接是否集群（同一个ip是否会分布在不同的机器上），false:不集群，默认集群
-     */
-    private boolean	all = true;
+    private String trustStore;
+    private String password;
 }

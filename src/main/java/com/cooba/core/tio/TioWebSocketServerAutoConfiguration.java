@@ -191,120 +191,109 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio;
+package com.cooba.core.tio;
 
 
-import com.cooba.tio.property.TioWebSocketServerClusterProperties;
-import com.cooba.tio.property.TioWebSocketServerProperties;
-import com.cooba.tio.property.TioWebSocketServerSslProperties;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.tio.cluster.TioClusterConfig;
+import com.cooba.core.SocketConnection;
+import com.cooba.core.tio.property.TioWebSocketServerSslProperties;
+import com.cooba.core.tio.property.TioWebSocketServerClusterProperties;
+import com.cooba.core.tio.property.TioWebSocketServerProperties;
+import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.tio.cluster.redisson.RedissonTioClusterTopic;
 import org.tio.core.intf.GroupListener;
+import org.tio.core.stat.DefaultIpStatListener;
 import org.tio.core.stat.IpStatListener;
 import org.tio.server.ServerTioConfig;
 import org.tio.server.intf.ServerAioListener;
-import org.tio.utils.Threads;
-import org.tio.websocket.server.WsServerConfig;
-import org.tio.websocket.server.WsServerStarter;
+import org.tio.websocket.server.WsServerAioListener;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
-import java.io.IOException;
 
-@Slf4j
-@RequiredArgsConstructor
-@Service
-public final class TioWebSocketServerBootstrap {
-    private static final String GROUP_CONTEXT_NAME = "tio-websocket-spring-boot-starter";
+@Configuration
+@ConditionalOnMissingBean(SocketConnection.class)
+public class TioWebSocketServerAutoConfiguration {
 
-    private boolean initialized = false;
+    /**
+     * cluster topic channel
+     */
+    private static final String CLUSTER_TOPIC_CHANNEL = "tio_ws_spring_boot_starter";
 
-    private final TioWebSocketServerProperties serverProperties;
-    private final TioWebSocketServerClusterProperties clusterProperties;
-    private final TioWebSocketServerSslProperties serverSslProperties;
-    private final RedissonTioClusterTopic redissonTioClusterTopic;
-    private final IWsMsgHandler tioWebSocketMsgHandler;
-    private final IpStatListener ipStatListener;
-    private final ServerAioListener serverAioListener;
-
-    @Autowired(required = false)
-    private GroupListener groupListener;
-
-    private WsServerConfig wsServerConfig;
-    private TioClusterConfig clusterConfig;
-    private WsServerStarter wsServerStarter;
-    @Getter
-    private ServerTioConfig serverTioConfig;
-
-    public void contextInitialized() {
-        if (initialized) {
-            log.info("Tio WebSocket Server has been initialized");
-            return;
-        }
-        log.info("Initializing Tio WebSocket Server");
-        try {
-            initTioWebSocketConfig();
-            initTioWebSocketServer();
-            initTioWebSocketServerTioConfig();
-
-            start();
-            initialized = true;
-        } catch (Throwable e) {
-            log.error("Cannot bootstrap tio websocket server :", e);
-            throw new RuntimeException("Cannot bootstrap tio websocket server :", e);
-        }
-    }
-
-    private void initTioWebSocketConfig() {
-        this.wsServerConfig = new WsServerConfig(serverProperties.getPort());
-        if (redissonTioClusterTopic != null && clusterProperties.isEnabled()) {
-            this.clusterConfig = new TioClusterConfig(redissonTioClusterTopic);
-            this.clusterConfig.setCluster4all(clusterProperties.isAll());
-            this.clusterConfig.setCluster4bsId(true);
-            this.clusterConfig.setCluster4channelId(clusterProperties.isChannel());
-            this.clusterConfig.setCluster4group(clusterProperties.isGroup());
-            this.clusterConfig.setCluster4ip(clusterProperties.isIp());
-            this.clusterConfig.setCluster4user(clusterProperties.isUser());
-        }
-    }
-
-    private void initTioWebSocketServer() throws Exception {
-        wsServerStarter = new WsServerStarter(wsServerConfig,
+    @Bean
+    public TioWebSocketServerBootstrap initBootstrap(TioWebSocketServerProperties serverProperties,
+                                                     TioWebSocketServerClusterProperties clusterProperties,
+                                                     TioWebSocketServerSslProperties serverSslProperties,
+                                                     RedissonTioClusterTopic redissonTioClusterTopic,
+                                                     IWsMsgHandler tioWebSocketMsgHandler,
+                                                     IpStatListener ipStatListener,
+                                                     ServerAioListener serverAioListener,
+                                                     GroupListener groupListener) {
+        return new TioWebSocketServerBootstrap(
+                serverProperties,
+                clusterProperties,
+                serverSslProperties,
+                redissonTioClusterTopic,
                 tioWebSocketMsgHandler,
-                new TioWebSocketServerDefaultUuid(1L, 1L),
-                Threads.getTioExecutor(),
-                Threads.getGroupExecutor());
+                ipStatListener,
+                serverAioListener,
+                groupListener);
+    }
+    @Bean
+    public TioSocketConnection socketConnection(ServerTioConfig serverTioConfig){
+        return new TioSocketConnection(serverTioConfig);
     }
 
-    private void initTioWebSocketServerTioConfig() {
-        serverTioConfig = wsServerStarter.getServerTioConfig();
-        serverTioConfig.setName(GROUP_CONTEXT_NAME);
-        serverTioConfig.setIpStatListener(ipStatListener);
-        serverTioConfig.ipStats.addDurations(serverProperties.getIpStatDurations());
-        serverTioConfig.setServerAioListener(this.serverAioListener);
-        serverTioConfig.setTioClusterConfig(clusterConfig);
-        serverTioConfig.setGroupListener(groupListener);
-
-        if (serverProperties.getHeartbeatTimeout() > 0) {
-            serverTioConfig.setHeartbeatTimeout(serverProperties.getHeartbeatTimeout());
-        }
-
-        //ssl config
-        if (serverSslProperties.isEnabled()) {
-            try {
-                serverTioConfig.useSsl(serverSslProperties.getKeyStore(), serverSslProperties.getTrustStore(), serverSslProperties.getPassword());
-            } catch (Exception e) {
-                //catch and log
-                log.error("init ssl config error", e);
-            }
-        }
+    @Bean
+    @ConditionalOnMissingBean(IpStatListener.class)
+    public DefaultIpStatListener defaultIpStatListener() {
+        return DefaultIpStatListener.me;
     }
 
-    private void start() throws IOException {
-        wsServerStarter.start();
+    @Bean
+    @ConditionalOnMissingBean(ServerAioListener.class)
+    public WsServerAioListener wsServerAioListener() {
+        return new WsServerAioListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(GroupListener.class)
+    public TioGroupGroupListener tioGroupGroupListener() {
+        return new TioGroupGroupListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(IWsMsgHandler.class)
+    public TioWebSocketHandler tioWebSocketHandler(){return new TioWebSocketHandler();}
+
+    @Bean
+    @ConfigurationProperties("tio.websocket.cluster")
+    public TioWebSocketServerClusterProperties clusterProperties() {
+        return new TioWebSocketServerClusterProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties("tio.websocket.server")
+    public TioWebSocketServerProperties serverProperties() {
+        return new TioWebSocketServerProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties("tio.websocket.ssl")
+    public TioWebSocketServerSslProperties sslProperties() {
+        return new TioWebSocketServerSslProperties();
+    }
+
+
+    @Bean
+    public ServerTioConfig wsServerTioConfig(TioWebSocketServerBootstrap bootstrap) {
+        return bootstrap.getServerTioConfig();
+    }
+
+    @Bean
+    public RedissonTioClusterTopic wsRedissonTioClusterTopic(RedissonClient redissonClient) {
+        return new RedissonTioClusterTopic(CLUSTER_TOPIC_CHANNEL, redissonClient);
     }
 }

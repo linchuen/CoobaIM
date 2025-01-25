@@ -191,25 +191,57 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio;
+package com.cooba.core.tio;
 
-import org.tio.core.intf.TioUuid;
-import org.tio.utils.hutool.Snowflake;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.SmartLifecycle;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 
-public class TioWebSocketServerDefaultUuid implements TioUuid {
-    private final Snowflake snowflake;
+@Configuration
+public class TioWebSocketServerInitializerConfiguration
+        implements SmartLifecycle, Ordered {
+
+    private boolean running = false;
+
+    @Autowired
+    private TioWebSocketServerBootstrap webSocketServerBootstrap;
 
 
-    public TioWebSocketServerDefaultUuid(long workerId, long dataCenterId) {
-        snowflake = new Snowflake(workerId, dataCenterId);
-    }
-
-    /**
-     * @return new uuid
-     * @author tanyaowu
-     */
     @Override
-    public String uuid() {
-        return snowflake.nextId() + "";
+    public void start() {
+        new Thread(() -> {
+            webSocketServerBootstrap.contextInitialized();
+            running = true;
+        }).start();
     }
+
+    @Override
+    public void stop() {
+    	if(isRunning()) {
+    		running = false;
+    	}
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
+    @Override
+    public int getPhase() {
+        return 0;
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
+    }
+
+    @Override
+    public void stop(Runnable runnable) {
+    	stop();
+    	runnable.run();
+    }
+
 }

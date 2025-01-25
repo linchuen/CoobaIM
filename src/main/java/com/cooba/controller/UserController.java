@@ -1,12 +1,10 @@
 package com.cooba.controller;
 
 import com.cooba.component.UserComponent;
-import com.cooba.dto.request.MessageRequest;
 import com.cooba.dto.request.RegisterRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.request.SessionRequest;
 import com.cooba.dto.response.ResultResponse;
-import com.cooba.tio.TioWebSocketServerBootstrap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

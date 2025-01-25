@@ -191,15 +191,34 @@
 	   See the License for the specific language governing permissions and
 	   limitations under the License.
 */
-package com.cooba.tio.property;
+package com.cooba.core.tio.property;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.tio.utils.time.Time;
+
 
 @Data
-public class TioWebSocketServerSslProperties {
-    private boolean enabled=false;
-    private String keyStore;
+public class TioWebSocketServerProperties {
 
-    private String trustStore;
-    private String password;
+    /**
+     * 服务绑定的 IP 地址，默认不绑定
+     */
+    private String ip = null;
+    /**
+     * 服务绑定的端口
+     */
+    private int port = 6789;
+    /**
+     * 心跳超时时间，超时会自动关闭连接
+     */
+    private int heartbeatTimeout = 5000;
+    /**
+     * 添加监控时段，不要添加过多的时间段，因为每个时间段都要消耗一份内存，一般加一个时间段就可以了
+     */
+    private Long[] ipStatDurations = {Time.MINUTE_1};
+
+
+    private boolean useScanner = false;
+
 }

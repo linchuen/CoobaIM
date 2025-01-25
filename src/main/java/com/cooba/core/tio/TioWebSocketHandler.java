@@ -1,4 +1,4 @@
-package com.cooba.handler;
+package com.cooba.core.tio;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,6 @@ import org.tio.websocket.common.WsRequest;
 import org.tio.websocket.server.handler.IWsMsgHandler;
 
 @Slf4j
-@Component
 public class TioWebSocketHandler implements IWsMsgHandler {
 
     @Override
