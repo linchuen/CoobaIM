@@ -3,12 +3,16 @@ package com.cooba.service;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 
+import java.util.List;
+
 public interface UserService {
     void register(User user);
 
-    User enterRoom(RoomUser roomUser);
+    void connectRoom(RoomUser roomUser);
 
-    User leaveRoom(RoomUser roomUser);
+    void disconnectRoom(RoomUser roomUser);
 
     User getInfo(long userId);
+
+    List<RoomUser> getAllRooms(long userId);
 }

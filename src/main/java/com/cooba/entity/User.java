@@ -1,5 +1,6 @@
 package com.cooba.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,9 +8,11 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "t_user",
+        uniqueConstraints = {
         @UniqueConstraint(name = "uk_email", columnNames = {"email"})
 })
+@TableName("t_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +21,9 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
     @Column
-    private LocalDateTime createdTime;
+    private LocalDateTime createdTime = LocalDateTime.now();
 }

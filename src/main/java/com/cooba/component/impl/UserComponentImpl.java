@@ -5,23 +5,20 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
-import com.cooba.entity.FriendApply;
-import com.cooba.entity.RoomUser;
-import com.cooba.entity.Session;
-import com.cooba.entity.User;
-import com.cooba.service.FriendService;
-import com.cooba.service.MessageService;
-import com.cooba.service.SessionService;
-import com.cooba.service.UserService;
+import com.cooba.entity.*;
+import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+
+import java.util.List;
 
 @Slf4j
 @ObjectLayer
 @RequiredArgsConstructor
 public class UserComponentImpl implements UserComponent {
     private final UserService userService;
+    private final RoomService roomService;
     private final MessageService messageService;
     private final FriendService friendService;
     private final SessionService sessionService;
@@ -44,6 +41,8 @@ public class UserComponentImpl implements UserComponent {
         Session session = new Session();
         BeanUtils.copyProperties(request, session);
         sessionService.add(session);
+
+        userService.getAllRooms(session.getUserId()).forEach(userService::connectRoom);
     }
 
     @Override
@@ -51,6 +50,8 @@ public class UserComponentImpl implements UserComponent {
         Session session = new Session();
         BeanUtils.copyProperties(request, session);
         sessionService.remove(session);
+
+        userService.getAllRooms(session.getUserId()).forEach(userService::disconnectRoom);
     }
 
     @Override
@@ -62,26 +63,16 @@ public class UserComponentImpl implements UserComponent {
     public void enterRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
         BeanUtils.copyProperties(request, roomUser);
-        User user = userService.enterRoom(roomUser);
 
-        SendMessage message = new SendMessage();
-        message.setRoomId(request.getRoomId());
-        message.setUser(user);
-        message.setMessage("進入聊天室");
-        messageService.sendToRoom(message);
+        roomService.addUser(roomUser);
     }
 
     @Override
     public void leaveRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
         BeanUtils.copyProperties(request, roomUser);
-        User user = userService.leaveRoom(roomUser);
 
-        SendMessage message = new SendMessage();
-        message.setRoomId(request.getRoomId());
-        message.setUser(user);
-        message.setMessage("離開聊天室");
-        messageService.sendToRoom(message);
+        roomService.deleteUser(roomUser);
     }
 
     @Override
