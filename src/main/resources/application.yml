@@ -1,5 +1,7 @@
 spring:
   port: 8080
+  resources:
+    add-mappings: false
   threads:
     virtual:
       enabled: true
@@ -28,6 +30,13 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+logging:
+  file:
+    name: logs/app.log  # 指定日誌文件名
+    # path: logs         # 或者僅指定目錄
+  level:
+    root: info
 
 tio:
   websocket:
