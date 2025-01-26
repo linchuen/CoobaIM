@@ -1,5 +1,7 @@
 package com.cooba;
 
+import com.cooba.entity.Chat;
+import com.cooba.entity.Notification;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -30,24 +32,30 @@ public class Hibernate {
                 .build();
 
         try {
-            for (Class<?> c : classList) {
-                Metadata metadata = new MetadataSources(serviceRegistry)
-                        .addAnnotatedClasses(c)
-                        .buildMetadata();
-                // 創建 SchemaExport
-                SchemaExport schemaExport = new SchemaExport();
-                schemaExport.setDelimiter(";");
-                schemaExport.setFormat(true);
-                schemaExport.setOverrideOutputFileContent();
-                schemaExport.setManageNamespaces(true);
-                schemaExport.setOutputFile(c.getSimpleName() + "-schema.sql");
+            generateSql(Notification.class, serviceRegistry);
 
-                // 指定目標：控制台輸出和數據庫應用
-                schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
-            }
+//            for (Class<?> c : classList) {
+//                generateSql(c, serviceRegistry);
+//            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
+    }
+
+    private static void generateSql(Class<?> c, StandardServiceRegistry serviceRegistry) {
+        Metadata metadata = new MetadataSources(serviceRegistry)
+                .addAnnotatedClasses(c)
+                .buildMetadata();
+        // 創建 SchemaExport
+        SchemaExport schemaExport = new SchemaExport();
+        schemaExport.setDelimiter(";");
+        schemaExport.setFormat(true);
+        schemaExport.setOverrideOutputFileContent();
+        schemaExport.setManageNamespaces(true);
+        schemaExport.setOutputFile(c.getSimpleName() + "-schema.sql");
+
+        // 指定目標：控制台輸出和數據庫應用
+        schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
     }
 
     private static Map<String, Object> getConfig() {

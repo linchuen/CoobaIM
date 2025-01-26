@@ -1,5 +1,6 @@
 package com.cooba.entity;
 
+import com.cooba.dto.SendMessage;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(indexes = {
-        @Index(name = "idx-roomId", columnList = "roomId, userId")
+        @Index(name = "idx_roomId", columnList = "roomId, userId")
 })
 public class Chat {
     @Id
@@ -25,8 +26,15 @@ public class Chat {
     private String message;
 
     @Column
-    private int version;
+    private int version = 1;
 
     @Column(nullable = false)
-    private LocalDateTime createdTime;
+    private LocalDateTime createdTime = LocalDateTime.now();
+
+    public Chat() {}
+    public Chat(SendMessage sendMessage) {
+        this.roomId = sendMessage.getRoomId();
+        this.userId = sendMessage.getUser().getId();
+        this.message = sendMessage.getMessage();
+    }
 }

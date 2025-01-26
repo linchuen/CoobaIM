@@ -24,8 +24,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void sendToUser(SendMessage message) {
-        Chat chat = new Chat();
-        BeanUtils.copyProperties(message, chat);
+        Chat chat = new Chat(message);
 
         chatRepository.insert(chat);
 
@@ -34,8 +33,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void sendToRoom(SendMessage message) {
-        Chat chat = new Chat();
-        BeanUtils.copyProperties(message, chat);
+        Chat chat = new Chat(message);
 
         chatRepository.insert(chat);
 

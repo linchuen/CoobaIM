@@ -9,5 +9,5 @@
         primary key (id)
     ) engine=InnoDB;
 
-    create index idx-roomId 
+    create index idx_roomId 
        on chat (room_id, user_id);
