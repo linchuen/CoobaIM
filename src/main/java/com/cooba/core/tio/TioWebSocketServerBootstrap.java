@@ -303,5 +303,6 @@ public final class TioWebSocketServerBootstrap {
 
     private void start() throws IOException {
         wsServerStarter.start();
+
     }
 }

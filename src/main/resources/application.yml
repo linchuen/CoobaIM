@@ -32,7 +32,7 @@ mybatis-plus:
 tio:
   websocket:
     server:
-      port: 9876
+      port: 9999
       heartbeat-timeout: 600000
 
 #    ssl:
