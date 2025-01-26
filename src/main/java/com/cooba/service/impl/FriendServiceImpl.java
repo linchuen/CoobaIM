@@ -28,13 +28,13 @@ public class FriendServiceImpl implements FriendService {
             friendApplyRepository.updateById(friendApply);
 
             Friend apply = new Friend();
-            apply.setId(friendApply.getApplyUserId());
+            apply.setUserId(friendApply.getApplyUserId());
             apply.setFriendUserId(friendApply.getPermitUserId());
             friendRepository.insert(apply);
 
             Friend permit = new Friend();
-            permit.setId(friendApply.getPermitUserId());
-            permit.setId(friendApply.getApplyUserId());
+            permit.setUserId(friendApply.getPermitUserId());
+            permit.setFriendUserId(friendApply.getApplyUserId());
             friendRepository.insert(permit);
         } else {
             friendApplyRepository.deleteById(friendApply);
@@ -43,6 +43,8 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void unbind(FriendApply friendApply) {
+        friendApplyRepository.deleteById(friendApply);
+
         friendRepository.delete(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, friendApply.getApplyUserId())
                 .eq(Friend::getFriendUserId, friendApply.getPermitUserId()));
@@ -50,5 +52,12 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.delete(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, friendApply.getPermitUserId())
                 .eq(Friend::getFriendUserId, friendApply.getApplyUserId()));
+    }
+
+    @Override
+    public boolean isFriend(Friend friend) {
+        return friendRepository.selectOne(new LambdaQueryWrapper<Friend>()
+                .eq(Friend::getUserId, friend.getUserId())
+                .eq(Friend::getFriendUserId, friend.getFriendUserId())) != null;
     }
 }
