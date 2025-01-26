@@ -8,8 +8,6 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
-    schema: classpath:sql/*-schema.sql
-    data: classpath:sql/*-data.sql
 
 mybatis-plus:
   configuration:

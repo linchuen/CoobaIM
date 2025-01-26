@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class Hibernate {
     public static void main(String[] args) throws IOException {
 
-        List<? extends Class<?>> list = ClassPath.from(ClassLoader.getSystemClassLoader())
+        List<? extends Class<?>> classList = ClassPath.from(ClassLoader.getSystemClassLoader())
                 .getAllClasses()
                 .stream()
                 .filter(clazz -> clazz.getPackageName().equalsIgnoreCase("com.cooba.entity"))
@@ -30,24 +30,21 @@ public class Hibernate {
                 .build();
 
         try {
-            // 創建 Metadata
-            MetadataSources metadataSources = new MetadataSources(serviceRegistry);
-            for (Class<?> c : list) {
-                metadataSources.addAnnotatedClasses(c);//
+            for (Class<?> c : classList) {
+                Metadata metadata = new MetadataSources(serviceRegistry)
+                        .addAnnotatedClasses(c)
+                        .buildMetadata();
+                // 創建 SchemaExport
+                SchemaExport schemaExport = new SchemaExport();
+                schemaExport.setDelimiter(";");
+                schemaExport.setFormat(true);
+                schemaExport.setOverrideOutputFileContent();
+                schemaExport.setManageNamespaces(true);
+                schemaExport.setOutputFile(c.getSimpleName() + "-schema.sql");
+
+                // 指定目標：控制台輸出和數據庫應用
+                schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
             }
-            Metadata metadata = metadataSources.buildMetadata();
-
-            // 創建 SchemaExport
-            SchemaExport schemaExport = new SchemaExport();
-            schemaExport.setDelimiter(";");
-            schemaExport.setFormat(true);
-            schemaExport.setOverrideOutputFileContent();
-            schemaExport.setManageNamespaces(true);
-            schemaExport.setOutputFile("schema.sql");
-
-            // 指定目標：控制台輸出和數據庫應用
-            schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
-
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
@@ -63,7 +60,7 @@ public class Hibernate {
         config.put("hibernate.hbm2ddl.auto", "none");
         config.put("hibernate.show_sql", "true");
         config.put("hibernate.format_sql", "true");
-        config.put("hibernate.physical_naming_strategy","com.cooba.CustomPhysicalNamingStrategy");
+        config.put("hibernate.physical_naming_strategy", "com.cooba.CustomPhysicalNamingStrategy");
         return config;
     }
 }

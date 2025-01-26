@@ -5,7 +5,7 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
-import com.cooba.entity.Friend;
+import com.cooba.entity.FriendApply;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.Session;
 import com.cooba.entity.User;
@@ -110,25 +110,25 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void addFriend(FriendRequest request) {
-        Friend friend = new Friend();
-        BeanUtils.copyProperties(request, friend);
+        FriendApply friendApply = new FriendApply();
+        BeanUtils.copyProperties(request, friendApply);
 
-        friendService.apply(friend);
+        friendService.apply(friendApply);
     }
 
     @Override
     public void permitFriendApply(FriendRequest request) {
-        Friend friend = new Friend();
-        BeanUtils.copyProperties(request, friend);
+        FriendApply friendApply = new FriendApply();
+        BeanUtils.copyProperties(request, friendApply);
 
-        friendService.bind(friend);
+        friendService.bind(friendApply);
     }
 
     @Override
     public void removeFriend(FriendRequest request) {
-        Friend friend = new Friend();
-        BeanUtils.copyProperties(request, friend);
+        FriendApply friendApply = new FriendApply();
+        BeanUtils.copyProperties(request, friendApply);
 
-        friendService.unbind(friend);
+        friendService.unbind(friendApply);
     }
 }

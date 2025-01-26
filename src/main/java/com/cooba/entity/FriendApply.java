@@ -8,18 +8,24 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uk_userId", columnNames = {"userId", "friendUserId"})
+        @UniqueConstraint(name = "uk_apply_permit", columnNames = {"applyUserId", "permitUserId"})
+}, indexes = {
+        @Index(name = "idx_apply", columnList = "applyUserId"),
+        @Index(name = "idx_permit", columnList = "permitUserId")
 })
-public class Friend {
+public class FriendApply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Long userId;
+    private Long applyUserId;
 
     @Column(nullable = false)
-    private Long friendUserId;
+    private Long permitUserId;
+
+    @Column
+    private boolean isPermit = false;
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
