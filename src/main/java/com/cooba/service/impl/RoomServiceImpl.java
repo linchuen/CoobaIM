@@ -3,7 +3,7 @@ package com.cooba.service.impl;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
-import com.cooba.entity.User;
+import com.cooba.exception.BaseException;
 import com.cooba.repository.RoomRepository;
 import com.cooba.repository.RoomUserRepository;
 import com.cooba.service.RoomService;
@@ -24,18 +24,22 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void destroy(Room room) {
-        roomRepository.updateById(room);
+        roomRepository.deleteById(room);
     }
 
     @Override
-    public User addUser(RoomUser roomUser) {
+    public void addUser(RoomUser roomUser) {
+        Room room = roomRepository.selectById(roomUser.getRoomId());
+        if (room == null) throw new BaseException();
+
         roomUserRepository.insert(roomUser);
-        return null;
     }
 
     @Override
-    public User deleteUser(RoomUser roomUser) {
+    public void deleteUser(RoomUser roomUser) {
+        Room room = roomRepository.selectById(roomUser.getRoomId());
+        if (room == null) throw new BaseException();
+
         roomUserRepository.deleteById(roomUser);
-        return null;
     }
 }

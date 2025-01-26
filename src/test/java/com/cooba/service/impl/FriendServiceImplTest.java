@@ -22,10 +22,8 @@ import org.springframework.test.context.jdbc.Sql;
 class FriendServiceImplTest {
     @Autowired
     FriendService friendService;
-
     @Autowired
     FriendApplyRepository friendApplyRepository;
-
     @Autowired
     FriendRepository friendRepository;
 

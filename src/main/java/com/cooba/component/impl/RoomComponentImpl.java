@@ -10,6 +10,7 @@ import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 import com.cooba.service.MessageService;
 import com.cooba.service.RoomService;
+import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 @ObjectLayer
 @RequiredArgsConstructor
 public class RoomComponentImpl implements RoomComponent {
+    private final UserService userService;
     private final RoomService roomService;
     private final MessageService messageService;
 
@@ -39,9 +41,11 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public void invite(RoomUserRequest request) {
+        User user = userService.getInfo(request.getUserId());
+
         RoomUser roomUser = new RoomUser();
         BeanUtils.copyProperties(request, roomUser);
-        User user = roomService.addUser(roomUser);
+        roomService.addUser(roomUser);
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
@@ -52,9 +56,11 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public void evict(RoomUserRequest request) {
+        User user = userService.getInfo(request.getUserId());
+
         RoomUser roomUser = new RoomUser();
         BeanUtils.copyProperties(request, roomUser);
-        User user = roomService.deleteUser(roomUser);
+        roomService.deleteUser(roomUser);
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
