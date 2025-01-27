@@ -7,7 +7,7 @@
         login_time datetime(6) not null,
         logout_time datetime(6),
         platform varchar(255),
-        token varchar(255) not null,
+        token varchar(1000) not null,
         user_id bigint not null,
         primary key (id)
     ) engine=InnoDB;

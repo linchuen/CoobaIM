@@ -47,7 +47,8 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session getInfo(long userId) {
-        Session session = sessionRepository.selectById(userId);
+        Session session = sessionRepository.selectOne(new LambdaQueryWrapper<Session>()
+                .eq(Session::getUserId, userId));
         if (session == null) throw new BaseException();
 
         return session;
