@@ -2,6 +2,7 @@ package com.cooba;
 
 import com.cooba.entity.Chat;
 import com.cooba.entity.Notification;
+import com.cooba.entity.Session;
 import com.cooba.entity.User;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
@@ -33,7 +34,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(User.class, serviceRegistry);
+            generateSql(Session.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);

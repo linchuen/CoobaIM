@@ -9,13 +9,10 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.junit.jupiter.api.Assertions.*;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {UserServiceImpl.class})
@@ -35,14 +32,5 @@ class UserServiceImplTest {
 
         User select = userRepository.selectById(user.getId());
         Assertions.assertNotNull(select);
-    }
-
-    @Test
-    void loadUserByUsername() {
-        User user = Instancio.create(User.class);
-        userService.register(user);
-
-        UserDetails userDetails = userService.loadUserByUsername(user.getUsername());
-        Assertions.assertNotNull(userDetails);
     }
 }

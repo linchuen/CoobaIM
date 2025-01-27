@@ -3,6 +3,8 @@ package com.cooba.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(uniqueConstraints = {
@@ -18,4 +20,22 @@ public class Session {
 
     @Column(nullable = false)
     private String token;
+
+    @Column
+    private String platform;
+
+    @Column
+    private String ip;
+
+    @Column(nullable = false)
+    private LocalDateTime loginTime;
+
+    @Column(nullable = false)
+    private LocalDateTime expireTime;
+
+    @Column
+    private LocalDateTime logoutTime;
+
+    @Column(nullable = false)
+    private Boolean enable;
 }

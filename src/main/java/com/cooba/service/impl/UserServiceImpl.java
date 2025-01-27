@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void verifyPassword(User user, String password) {
+        if (!user.getPassword().equals(password)){
+            throw new BaseException();
+        }
+    }
+
+    @Override
     public User getInfo(long userId) {
         User user = userRepository.selectById(userId);
         if (user == null) throw new BaseException();

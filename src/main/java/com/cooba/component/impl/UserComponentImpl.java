@@ -6,12 +6,11 @@ import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
 import com.cooba.entity.*;
+import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-
-import java.util.List;
 
 @Slf4j
 @ObjectLayer
@@ -38,20 +37,22 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void login(SessionRequest request) {
-        Session session = new Session();
-        BeanUtils.copyProperties(request, session);
-        sessionService.add(session);
+        User user = userService.getInfo(request.getUserId());
 
-        userService.getAllRooms(session.getUserId()).forEach(userService::connectRoom);
+        userService.verifyPassword(user, user.getPassword());
+
+        sessionService.add(user);
+
+        userService.getAllRooms(user.getId()).forEach(userService::connectRoom);
     }
 
     @Override
     public void logout(SessionRequest request) {
-        Session session = new Session();
-        BeanUtils.copyProperties(request, session);
-        sessionService.remove(session);
+        User user = userService.getInfo(request.getUserId());
 
-        userService.getAllRooms(session.getUserId()).forEach(userService::disconnectRoom);
+        sessionService.remove(user);
+
+        userService.getAllRooms(user.getId()).forEach(userService::disconnectRoom);
     }
 
     @Override

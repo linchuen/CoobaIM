@@ -12,6 +12,8 @@ public interface UserService {
 
     void disconnectRoom(RoomUser roomUser);
 
+    void verifyPassword(User user, String password);
+
     User getInfo(long userId);
 
     List<RoomUser> getAllRooms(long userId);
