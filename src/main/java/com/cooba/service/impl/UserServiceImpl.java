@@ -9,6 +9,7 @@ import com.cooba.exception.BaseException;
 import com.cooba.repository.RoomUserRepository;
 import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
+import com.cooba.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(User user) {
+        String password = user.getPassword();
+        user.setPassword(PasswordUtil.hash(password));
         userRepository.insert(user);
     }
 
@@ -39,7 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyPassword(User user, String password) {
-        if (!user.getPassword().equals(password)){
+        String hashPassword = PasswordUtil.hash(password);
+        if (!user.getPassword().equals(hashPassword)){
             throw new BaseException();
         }
     }

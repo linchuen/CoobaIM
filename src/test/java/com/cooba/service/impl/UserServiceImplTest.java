@@ -5,6 +5,7 @@ import com.cooba.core.SocketConnection;
 import com.cooba.entity.User;
 import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
+import com.cooba.util.PasswordUtil;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
