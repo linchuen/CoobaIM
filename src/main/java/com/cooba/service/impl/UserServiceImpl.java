@@ -3,7 +3,6 @@ package com.cooba.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.core.SocketConnection;
-import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
@@ -12,8 +11,6 @@ import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
@@ -52,11 +49,5 @@ public class UserServiceImpl implements UserService {
     public List<RoomUser> getAllRooms(long userId) {
         return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getUserId, userId));
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getName, username));
     }
 }

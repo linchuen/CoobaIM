@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.cooba.constant.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,7 +17,7 @@ import java.util.Set;
                 @UniqueConstraint(name = "uk_name", columnNames = {"name"})
         })
 @TableName("t_user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,18 +41,7 @@ public class User implements UserDetails {
     @TableField(exist = false)
     private Set<UserAuthority> authorities;
 
-    @Override
     public Set<UserAuthority> getAuthorities() {
         return RoleEnum.getFromType(role);
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
     }
 }
