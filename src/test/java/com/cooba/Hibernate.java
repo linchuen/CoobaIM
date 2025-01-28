@@ -1,9 +1,5 @@
 package com.cooba;
 
-import com.cooba.entity.Chat;
-import com.cooba.entity.Notification;
-import com.cooba.entity.Session;
-import com.cooba.entity.User;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -13,7 +9,10 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,11 +33,11 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(Session.class, serviceRegistry);
+//            generateSql(Session.class, serviceRegistry);
 
-//            for (Class<?> c : classList) {
-//                generateSql(c, serviceRegistry);
-//            }
+            for (Class<?> c : classList) {
+                generateSql(c, serviceRegistry);
+            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
@@ -46,7 +45,7 @@ public class Hibernate {
 
     private static void generateSql(Class<?> c, StandardServiceRegistry serviceRegistry) {
         Metadata metadata = new MetadataSources(serviceRegistry)
-                .addAnnotatedClasses(c)
+                .addAnnotatedClass(c)
                 .buildMetadata();
         // 創建 SchemaExport
         SchemaExport schemaExport = new SchemaExport();
@@ -66,7 +65,7 @@ public class Hibernate {
         config.put("hibernate.connection.url", "jdbc:mysql://127.0.0.1:13306/im");
         config.put("hibernate.connection.username", "root");
         config.put("hibernate.connection.password", "example");
-        config.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        config.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         config.put("hibernate.hbm2ddl.auto", "none");
         config.put("hibernate.show_sql", "true");
         config.put("hibernate.format_sql", "true");

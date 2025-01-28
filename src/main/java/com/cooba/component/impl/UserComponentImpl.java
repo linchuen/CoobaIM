@@ -5,8 +5,8 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
+import com.cooba.dto.response.RegisterResponse;
 import com.cooba.entity.*;
-import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +23,16 @@ public class UserComponentImpl implements UserComponent {
     private final SessionService sessionService;
 
     @Override
-    public void register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         User user = new User();
         user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
 
-        userService.register(user);
+        long userId = userService.register(user);
+        return RegisterResponse.builder()
+                .userId(userId)
+                .build();
     }
 
     @Override

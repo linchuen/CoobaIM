@@ -4,6 +4,7 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.request.RegisterRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.request.SessionRequest;
+import com.cooba.dto.response.RegisterResponse;
 import com.cooba.dto.response.ResultResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResultResponse<?> registerUser(@Valid @RequestBody RegisterRequest request) {
-        userComponent.register(request);
-        return ResultResponse.builder().data(request.getName()).build();
+        RegisterResponse response = userComponent.register(request);
+        return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/login")

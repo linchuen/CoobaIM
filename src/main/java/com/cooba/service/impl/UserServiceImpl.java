@@ -3,7 +3,6 @@ package com.cooba.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.core.SocketConnection;
-import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
@@ -27,10 +26,12 @@ public class UserServiceImpl implements UserService {
     private final SocketConnection socketConnection;
 
     @Override
-    public void register(User user) {
+    public long register(User user) {
         String password = user.getPassword();
         user.setPassword(PasswordUtil.hash(password));
         userRepository.insert(user);
+
+        return user.getId();
     }
 
     @Override

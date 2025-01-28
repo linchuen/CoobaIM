@@ -1,6 +1,6 @@
 
-    create table room (
-        id bigint not null auto_increment,
+    create table t_room (
+       id bigint not null auto_increment,
         created_time datetime(6) not null,
         name varchar(255) not null,
         primary key (id)

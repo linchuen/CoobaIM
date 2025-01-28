@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {SessionServiceImpl.class, JwtUtil.class, JwtSecret.class})
-@Sql(scripts = {"/sql/Session-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Session-schema.sql"})
 class SessionServiceImplTest {
     @Autowired
     SessionService sessionService;

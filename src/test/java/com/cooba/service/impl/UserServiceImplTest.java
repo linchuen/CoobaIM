@@ -10,20 +10,20 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {UserServiceImpl.class})
-@Sql(scripts = {"/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/User-schema.sql"})
 class UserServiceImplTest {
     @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
-    @MockitoBean
+    @MockBean
     SocketConnection socketConnection;
 
     @Test

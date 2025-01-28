@@ -1,6 +1,6 @@
 
-    create table session (
-        id bigint not null auto_increment,
+    create table t_session (
+       id bigint not null auto_increment,
         enable bit not null,
         expire_time datetime(6) not null,
         ip varchar(255),
@@ -12,5 +12,5 @@
         primary key (id)
     ) engine=InnoDB;
 
-    alter table session 
-       add constraint `uk-userId` unique (user_id);
+    alter table t_session 
+       add constraint uk-userId unique (user_id);

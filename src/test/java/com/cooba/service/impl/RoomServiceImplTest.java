@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {RoomServiceImpl.class})
-@Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql"})
 class RoomServiceImplTest {
     @Autowired
     RoomService roomService;
