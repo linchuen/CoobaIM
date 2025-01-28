@@ -28,6 +28,7 @@ public class TraceAspect {
             String traceId = context.traceId();
             ((ResultResponse<?>) result).setTraceId(traceId);
         }
+        UserThreadLocal.remove();
         return result;
     }
 
