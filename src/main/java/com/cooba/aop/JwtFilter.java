@@ -2,29 +2,30 @@ package com.cooba.aop;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cooba.dto.UserBasicInfo;
+import com.cooba.handler.GlobalExceptionHandler;
 import com.cooba.util.JwtUtil;
-
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = "/**")
+@Component
 @RequiredArgsConstructor
-public class JwtFilter implements Filter {
+public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login"};
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+    protected void doFilterInternal(HttpServletRequest servletRequest, @NonNull HttpServletResponse servletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
+        String path = servletRequest.getRequestURI();
         for (String permitPath: ALL_PERMIT_PATHS) {
             if (path.startsWith(permitPath)){
                 filterChain.doFilter(servletRequest, servletResponse);
@@ -32,11 +33,11 @@ public class JwtFilter implements Filter {
         }
 
         // 获取 Authorization Header
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = servletRequest.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Missing or invalid Authorization header.");
+            servletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            servletResponse.getWriter().write(GlobalExceptionHandler.response401Json);
             return;
         }
 
@@ -59,8 +60,8 @@ public class JwtFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
 
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Failed to process JWT token.");
+            servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            servletResponse.getWriter().write(GlobalExceptionHandler.response401Json);
         }
     }
 }
