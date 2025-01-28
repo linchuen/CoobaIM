@@ -21,10 +21,6 @@ public class TraceAspect {
         if (result instanceof ResultResponse) {
             TraceContext context = tracer.currentTraceContext().context();
 
-            if (context == null) {
-                return result;
-            }
-
             String traceId = context.traceId();
             ((ResultResponse<?>) result).setTraceId(traceId);
         }
