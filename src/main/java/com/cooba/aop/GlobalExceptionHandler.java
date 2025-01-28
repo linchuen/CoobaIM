@@ -14,12 +14,14 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ValidationException;
 
+import static com.cooba.constant.ErrorEnum.INVALID_AUTHORIZATION;
+
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
     public static final ResultResponse<?> response401 = ResultResponse.builder()
-            .code(401)
-            .errorMessage("Invalid Authorization")
+            .code(INVALID_AUTHORIZATION.getCode())
+            .errorMessage(INVALID_AUTHORIZATION.getMessage())
             .build();
     public static final String response401Json = JsonUtil.toJson(response401);
     private final Tracer tracer;
@@ -32,6 +34,7 @@ public class GlobalExceptionHandler {
                 .code(ErrorEnum.INVALID_REQUEST.getCode())
                 .traceId(tracer.currentSpan().context().traceIdString())
                 .errorMessage(ex.getMessage())
+                .logMessage(ex.getMessage())
                 .build();
     }
 
@@ -42,6 +45,7 @@ public class GlobalExceptionHandler {
                 .code(ErrorEnum.BUSINESS_ERROR.getCode())
                 .traceId(tracer.currentSpan().context().traceIdString())
                 .errorMessage(ex.getMessage())
+                .logMessage(ex.getMessage())
                 .build();
     }
 
@@ -49,8 +53,10 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResultResponse<?> handleGlobalException(Exception ex, WebRequest request) {
         return ResultResponse.builder()
+                .code(ErrorEnum.BUSINESS_ERROR.getCode())
                 .traceId(tracer.currentSpan().context().traceIdString())
                 .errorMessage(ex.getMessage())
+                .logMessage(ex.getMessage())
                 .build();
     }
 }

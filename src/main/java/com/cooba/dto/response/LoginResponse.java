@@ -1,0 +1,17 @@
+package com.cooba.dto.response;
+
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+@Builder
+@Getter
+public class LoginResponse {
+    private long userId;
+    private String token;
+    private String platform;
+    private String ip;
+    private LocalDateTime loginTime;
+    private LocalDateTime expireTime;
+}

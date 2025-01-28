@@ -1,7 +1,9 @@
 package com.cooba.config;
 
+import com.cooba.aop.GlobalExceptionHandler;
 import com.cooba.aop.JwtFilter;
 import com.cooba.constant.RoleEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.servlet.http.HttpServletResponse;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -38,6 +43,19 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                        httpSecurityExceptionHandlingConfigurer
+                                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                                    log.error("{}",request.getRequestURI(), accessDeniedException);
+                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                    response.getWriter().write(GlobalExceptionHandler.response401Json);
+                                })
+                                .authenticationEntryPoint((request, response, authException) -> {
+                                    log.error("{}",request.getRequestURI(), authException);
+                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                    response.getWriter().write(GlobalExceptionHandler.response401Json);
+                                })
                 )
                 .build();
     }

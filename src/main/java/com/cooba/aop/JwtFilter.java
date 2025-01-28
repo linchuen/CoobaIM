@@ -1,10 +1,16 @@
 package com.cooba.aop;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.cooba.dto.UserBasicInfo;
+import com.cooba.dto.UserInfo;
+import com.cooba.entity.User;
+import com.cooba.service.UserService;
 import com.cooba.util.JwtUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,6 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login"};
 
@@ -50,15 +57,20 @@ public class JwtFilter extends OncePerRequestFilter {
             String name = decodedJWT.getClaim("name").asString();
             String jwtToken = decodedJWT.getToken();
 
-            UserBasicInfo userBasicInfo = new UserBasicInfo();
-            userBasicInfo.setId(id);
-            userBasicInfo.setName(name);
-            userBasicInfo.setToken(jwtToken);
-            UserThreadLocal.set(userBasicInfo);
+            User user = userService.getInfo(id);
+            if (user == null) throw new UsernameNotFoundException(name);
 
-            // 继续过滤链
+            UserInfo userInfo = new UserInfo();
+            userInfo.setId(id);
+            userInfo.setName(name);
+            userInfo.setToken(jwtToken);
+            userInfo.setOrigin(user);
+            UserThreadLocal.set(userInfo);
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(servletRequest, servletResponse);
-
         } catch (Exception e) {
             servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             servletResponse.getWriter().write(GlobalExceptionHandler.response401Json);

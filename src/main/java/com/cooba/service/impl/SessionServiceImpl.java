@@ -23,7 +23,10 @@ public class SessionServiceImpl implements SessionService {
     private final JwtSecret jwtSecret;
 
     @Override
-    public void add(User user) {
+    public Session add(User user) {
+        Session dbSession = sessionRepository.selectOne(new LambdaQueryWrapper<Session>()
+                .eq(Session::getUserId, user.getId()));
+
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
@@ -34,15 +37,28 @@ public class SessionServiceImpl implements SessionService {
         session.setIp("127.0.0.1");
         session.setToken(jwtUtil.createToken(user, now));
         session.setEnable(true);
-        sessionRepository.insert(session);
+
+        if (dbSession != null) {
+            sessionRepository.update(session, new LambdaQueryWrapper<Session>()
+                    .eq(Session::getUserId, user.getId()));
+        } else {
+            sessionRepository.insert(session);
+        }
+
+        return session;
     }
 
     @Override
-    public void remove(User user) {
+    public LocalDateTime remove(User user) {
+        LocalDateTime now = LocalDateTime.now();
+
         Session session = new Session();
+        session.setLogoutTime(now);
         session.setEnable(false);
         sessionRepository.update(session, new LambdaQueryWrapper<Session>()
                 .eq(Session::getUserId, user.getId()));
+
+        return now;
     }
 
     @Override

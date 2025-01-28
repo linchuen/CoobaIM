@@ -5,12 +5,17 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
+import com.cooba.dto.response.LoginResponse;
+import com.cooba.dto.response.LogoutResponse;
 import com.cooba.dto.response.RegisterResponse;
+import com.cooba.dto.response.RoomResponse;
 import com.cooba.entity.*;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @ObjectLayer
@@ -41,44 +46,73 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void login(SessionRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userService.getInfo(request.getUserId());
 
-        userService.verifyPassword(user, user.getPassword());
+        userService.verifyPassword(user, request.getPassword());
 
-        sessionService.add(user);
+        Session session = sessionService.add(user);
 
         userService.getAllRooms(user.getId()).forEach(userService::connectRoom);
+
+        return LoginResponse.builder()
+                .userId(session.getUserId())
+                .platform(session.getPlatform())
+                .token(session.getToken())
+                .ip(session.getIp())
+                .loginTime(session.getLoginTime())
+                .expireTime(session.getExpireTime())
+                .build();
     }
 
     @Override
-    public void logout(SessionRequest request) {
+    public LogoutResponse logout(LogoutRequest request) {
         User user = userService.getInfo(request.getUserId());
 
-        sessionService.remove(user);
+        LocalDateTime logoutTime = sessionService.remove(user);
 
         userService.getAllRooms(user.getId()).forEach(userService::disconnectRoom);
+
+        return LogoutResponse.builder()
+                .logoutTime(logoutTime)
+                .build();
     }
 
     @Override
     public boolean isOnline(long userId) {
-        return sessionService.getInfo(userId) != null;
+        return sessionService.getInfo(userId).getEnable();
     }
 
     @Override
-    public void enterRoom(RoomUserRequest request) {
+    public RoomResponse enterRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
-        BeanUtils.copyProperties(request, roomUser);
+        roomUser.setRoomId(request.getRoomId());
+        roomUser.setUserId(request.getUserId());
 
         roomService.addUser(roomUser);
+
+        userService.connectRoom(roomUser);
+
+        return RoomResponse.builder()
+                .roomId(request.getRoomId())
+                .userId(request.getUserId())
+                .build();
     }
 
     @Override
-    public void leaveRoom(RoomUserRequest request) {
+    public RoomResponse leaveRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
-        BeanUtils.copyProperties(request, roomUser);
+        roomUser.setRoomId(request.getRoomId());
+        roomUser.setUserId(request.getUserId());
 
         roomService.deleteUser(roomUser);
+
+        userService.disconnectRoom(roomUser);
+
+        return RoomResponse.builder()
+                .roomId(request.getRoomId())
+                .userId(request.getUserId())
+                .build();
     }
 
     @Override

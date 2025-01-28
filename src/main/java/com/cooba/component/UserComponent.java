@@ -1,7 +1,10 @@
 package com.cooba.component;
 
 import com.cooba.dto.request.*;
+import com.cooba.dto.response.LoginResponse;
+import com.cooba.dto.response.LogoutResponse;
 import com.cooba.dto.response.RegisterResponse;
+import com.cooba.dto.response.RoomResponse;
 import com.cooba.entity.User;
 
 public interface UserComponent {
@@ -10,15 +13,15 @@ public interface UserComponent {
 
     User getInfo(long userId);
 
-    void login(SessionRequest request);
+    LoginResponse login(LoginRequest request);
 
-    void logout(SessionRequest request);
+    LogoutResponse logout(LogoutRequest request);
 
     boolean isOnline(long userId);
 
-    void enterRoom(RoomUserRequest request);
+    RoomResponse enterRoom(RoomUserRequest request);
 
-    void leaveRoom(RoomUserRequest request);
+    RoomResponse leaveRoom(RoomUserRequest request);
 
     void speakToUser(SpeakRequest request);
 

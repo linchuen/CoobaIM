@@ -3,11 +3,13 @@ package com.cooba.service;
 import com.cooba.entity.Session;
 import com.cooba.entity.User;
 
+import java.time.LocalDateTime;
+
 public interface SessionService {
 
-    void add(User user);
+    Session add(User user);
 
-    void remove(User user);
+    LocalDateTime remove(User user);
 
     Session getInfo(long userId);
 }
