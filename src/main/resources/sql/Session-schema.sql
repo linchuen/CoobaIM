@@ -13,4 +13,4 @@
     ) engine=InnoDB;
 
     alter table t_session 
-       add constraint uk-userId unique (user_id);
+       add constraint uk_userId unique (user_id);

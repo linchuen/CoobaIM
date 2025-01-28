@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 @Data
 @RequiredArgsConstructor
+@Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "uk", columnNames = {"userId", "authority"})
 })

@@ -1,5 +1,6 @@
 package com.cooba;
 
+import com.cooba.entity.UserAuthority;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -33,11 +34,11 @@ public class Hibernate {
                 .build();
 
         try {
-//            generateSql(Session.class, serviceRegistry);
+            generateSql(UserAuthority.class, serviceRegistry);
 
-            for (Class<?> c : classList) {
-                generateSql(c, serviceRegistry);
-            }
+//            for (Class<?> c : classList) {
+//                generateSql(c, serviceRegistry);
+//            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
