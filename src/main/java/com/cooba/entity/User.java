@@ -1,6 +1,8 @@
 package com.cooba.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cooba.constant.RoleEnum;
 import jakarta.persistence.*;
@@ -16,10 +18,10 @@ import java.util.Set;
                 @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
                 @UniqueConstraint(name = "uk_name", columnNames = {"name"})
         })
-@TableName("t_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     @Column(nullable = false)

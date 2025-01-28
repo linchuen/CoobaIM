@@ -5,6 +5,7 @@ import com.cooba.component.RoomComponent;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomUserRequest;
+import com.cooba.dto.response.BuildRoomResponse;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
@@ -24,11 +25,15 @@ public class RoomComponentImpl implements RoomComponent {
     private final MessageService messageService;
 
     @Override
-    public void build(RoomRequest request) {
+    public BuildRoomResponse build(RoomRequest request) {
         Room room = new Room();
-        BeanUtils.copyProperties(request, room);
+        room.setName(request.getName());
 
-        roomService.build(room);
+        long roomId = roomService.build(room);
+
+        return BuildRoomResponse.builder()
+                .roomId(roomId)
+                .build();
     }
 
     @Override

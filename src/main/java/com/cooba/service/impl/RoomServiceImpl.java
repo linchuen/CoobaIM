@@ -18,8 +18,9 @@ public class RoomServiceImpl implements RoomService {
     private final RoomUserRepository roomUserRepository;
 
     @Override
-    public void build(Room room) {
+    public long build(Room room) {
         roomRepository.insert(room);
+        return room.getId();
     }
 
     @Override

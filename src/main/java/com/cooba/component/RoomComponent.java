@@ -2,10 +2,11 @@ package com.cooba.component;
 
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomUserRequest;
+import com.cooba.dto.response.BuildRoomResponse;
 
 public interface RoomComponent {
 
-    void build(RoomRequest request);
+    BuildRoomResponse build(RoomRequest request);
 
     void destroy(RoomRequest request);
 

@@ -7,6 +7,7 @@ import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 
 public class CustomPhysicalNamingStrategy implements PhysicalNamingStrategy {
     private static final CamelCaseToUnderscoresNamingStrategy strategy = new CamelCaseToUnderscoresNamingStrategy();
+
     @Override
     public Identifier toPhysicalCatalogName(Identifier identifier, JdbcEnvironment jdbcEnvironment) {
         return strategy.toPhysicalCatalogName(identifier, jdbcEnvironment);
@@ -20,12 +21,12 @@ public class CustomPhysicalNamingStrategy implements PhysicalNamingStrategy {
     @Override
     public Identifier toPhysicalTableName(Identifier identifier, JdbcEnvironment jdbcEnvironment) {
         Identifier physicalTableName = strategy.toPhysicalTableName(identifier, jdbcEnvironment);
-        return new Identifier(physicalTableName.toString(),false);
+        return new Identifier("t_" + physicalTableName.toString(), false);
     }
 
     @Override
     public Identifier toPhysicalSequenceName(Identifier identifier, JdbcEnvironment jdbcEnvironment) {
-        return strategy.toPhysicalSequenceName(identifier,jdbcEnvironment);
+        return strategy.toPhysicalSequenceName(identifier, jdbcEnvironment);
     }
 
     @Override

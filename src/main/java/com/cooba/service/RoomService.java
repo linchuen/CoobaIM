@@ -4,7 +4,7 @@ import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 
 public interface RoomService {
-    void build(Room room);
+    long build(Room room);
 
     void destroy(Room room);
 

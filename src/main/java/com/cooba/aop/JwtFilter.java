@@ -10,17 +10,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.security.SignatureException;
 
 @WebFilter
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
     private final JwtUtil jwtUtil;
 
+    public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login"};
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        String path = request.getRequestURI();
+        for (String permitPath: ALL_PERMIT_PATHS) {
+            if (path.startsWith(permitPath)){
+                filterChain.doFilter(servletRequest, servletResponse);
+            }
+        }
 
         // 获取 Authorization Header
         String authHeader = request.getHeader("Authorization");
