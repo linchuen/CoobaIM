@@ -9,7 +9,8 @@ public enum ErrorEnum {
     INVALID_AUTHORIZATION(401,"invalid authorization"),
     INVALID_REQUEST(1001,"invalid request"),
     BUSINESS_ERROR(1002,"business error"),
-    UNKNOWN_ERROR(1002,"unknown error"),
+    ROOM_NOT_EXIST(1003,"room not exist"),
+    UNKNOWN_ERROR(9999,"unknown error"),
     ;
 
     private final int code;

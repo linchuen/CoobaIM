@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.exception.BaseException;
@@ -31,7 +32,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void addUser(RoomUser roomUser) {
         Room room = roomRepository.selectById(roomUser.getRoomId());
-        if (room == null) throw new BaseException();
+        if (room == null) throw new BaseException(ErrorEnum.ROOM_NOT_EXIST);
 
         roomUserRepository.insert(roomUser);
     }
@@ -39,7 +40,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void deleteUser(RoomUser roomUser) {
         Room room = roomRepository.selectById(roomUser.getRoomId());
-        if (room == null) throw new BaseException();
+        if (room == null) throw new BaseException(ErrorEnum.ROOM_NOT_EXIST);
 
         roomUserRepository.deleteById(roomUser);
     }

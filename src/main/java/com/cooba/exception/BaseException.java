@@ -1,4 +1,15 @@
 package com.cooba.exception;
 
-public class BaseException extends RuntimeException{
+import com.cooba.constant.ErrorEnum;
+import lombok.Getter;
+
+@Getter
+public class BaseException extends RuntimeException {
+    private ErrorEnum errorEnum;
+    public BaseException() {
+        super();
+    }
+    public BaseException(ErrorEnum errorEnum) {
+        this.errorEnum = errorEnum;
+    }
 }

@@ -1,7 +1,9 @@
 package com.cooba.component.impl;
 
 import com.cooba.annotation.ObjectLayer;
+import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.RoomComponent;
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomUserRequest;
@@ -30,6 +32,12 @@ public class RoomComponentImpl implements RoomComponent {
         room.setName(request.getName());
 
         long roomId = roomService.build(room);
+
+        RoomUser roomUser = new RoomUser();
+        roomUser.setUserId(UserThreadLocal.get().getId());
+        roomUser.setRoomId(roomId);
+        roomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
+        roomService.addUser(roomUser);
 
         return BuildRoomResponse.builder()
                 .roomId(roomId)

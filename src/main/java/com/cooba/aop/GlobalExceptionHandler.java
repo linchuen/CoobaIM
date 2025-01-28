@@ -41,10 +41,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     @ResponseBody
     public ResultResponse<?> handleBaseException(BaseException ex, WebRequest request) {
+        ErrorEnum errorEnum = ex.getErrorEnum() == null ? ErrorEnum.BUSINESS_ERROR : ex.getErrorEnum();
         return ResultResponse.builder()
-                .code(ErrorEnum.BUSINESS_ERROR.getCode())
                 .traceId(tracer.currentSpan().context().traceIdString())
-                .errorMessage(ex.getMessage())
+                .errorMessage(errorEnum.getMessage())
+                .code(errorEnum.getCode())
                 .logMessage(ex.getMessage())
                 .build();
     }

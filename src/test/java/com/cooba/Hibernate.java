@@ -1,5 +1,6 @@
 package com.cooba;
 
+import com.cooba.entity.RoomUser;
 import com.cooba.entity.UserAuthority;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
@@ -34,7 +35,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(UserAuthority.class, serviceRegistry);
+            generateSql(RoomUser.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);

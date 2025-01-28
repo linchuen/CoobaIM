@@ -2,7 +2,10 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
 import javax.persistence.*;
+
+import com.cooba.constant.RoomRoleEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -27,5 +30,8 @@ public class RoomUser {
     private Long userId;
 
     @Column(nullable = false)
-    private LocalDateTime createdTime;
+    private RoomRoleEnum roomRoleEnum = RoomRoleEnum.MEMBER;
+
+    @Column(nullable = false)
+    private LocalDateTime createdTime = LocalDateTime.now();
 }
