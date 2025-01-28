@@ -1,14 +1,18 @@
-package com.cooba.handler;
+package com.cooba.aop;
 
 import brave.Tracer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.response.ResultResponse;
 import com.cooba.exception.BaseException;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.validation.ValidationException;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -21,19 +25,29 @@ public class GlobalExceptionHandler {
     private final Tracer tracer;
 
     // 處理通用異常
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class})
     @ResponseBody
-    public ResultResponse<?> handleGlobalException(Exception ex, WebRequest request) {
+    public ResultResponse<?> handleValidationException(Exception ex, WebRequest request) {
         return ResultResponse.builder()
+                .code(ErrorEnum.INVALID_REQUEST.getCode())
                 .traceId(tracer.currentSpan().context().traceIdString())
                 .errorMessage(ex.getMessage())
                 .build();
     }
 
-    // 處理特定異常，例如自定義異常
     @ExceptionHandler(BaseException.class)
     @ResponseBody
-    public ResultResponse<?> handleResourceNotFoundException(BaseException ex, WebRequest request) {
+    public ResultResponse<?> handleBaseException(BaseException ex, WebRequest request) {
+        return ResultResponse.builder()
+                .code(ErrorEnum.BUSINESS_ERROR.getCode())
+                .traceId(tracer.currentSpan().context().traceIdString())
+                .errorMessage(ex.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public ResultResponse<?> handleGlobalException(Exception ex, WebRequest request) {
         return ResultResponse.builder()
                 .traceId(tracer.currentSpan().context().traceIdString())
                 .errorMessage(ex.getMessage())

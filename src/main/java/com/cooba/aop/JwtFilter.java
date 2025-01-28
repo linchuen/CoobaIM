@@ -2,7 +2,6 @@ package com.cooba.aop;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cooba.dto.UserBasicInfo;
-import com.cooba.handler.GlobalExceptionHandler;
 import com.cooba.util.JwtUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
         for (String permitPath: ALL_PERMIT_PATHS) {
             if (path.startsWith(permitPath)){
                 filterChain.doFilter(servletRequest, servletResponse);
+                return;
             }
         }
 
