@@ -1,8 +1,9 @@
 package com.cooba.aop;
 
+import brave.Tracer;
+import brave.propagation.TraceContext;
 import com.cooba.dto.response.ResultResponse;
-import io.micrometer.tracing.TraceContext;
-import io.micrometer.tracing.Tracer;
+
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,9 +20,9 @@ public class TraceAspect {
     public Object addTraceId(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = joinPoint.proceed();
         if (result instanceof ResultResponse) {
-            TraceContext context = tracer.currentTraceContext().context();
+            TraceContext context = tracer.currentSpan().context();
 
-            String traceId = context.traceId();
+            String traceId = context.traceIdString();
             ((ResultResponse<?>) result).setTraceId(traceId);
         }
         UserThreadLocal.remove();

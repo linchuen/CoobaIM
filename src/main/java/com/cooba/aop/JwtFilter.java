@@ -3,15 +3,16 @@ package com.cooba.aop;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cooba.dto.UserBasicInfo;
 import com.cooba.util.JwtUtil;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter
+@WebFilter(urlPatterns = "/**")
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
     private final JwtUtil jwtUtil;

@@ -5,7 +5,7 @@ import com.cooba.dto.request.RegisterRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.request.SessionRequest;
 import com.cooba.dto.response.ResultResponse;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
