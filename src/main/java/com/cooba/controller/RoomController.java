@@ -4,6 +4,7 @@ import com.cooba.component.RoomComponent;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.response.BuildRoomResponse;
+import com.cooba.dto.response.DestroyRoomResponse;
 import com.cooba.dto.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,8 @@ public class RoomController {
 
     @DeleteMapping("/destroy")
     public ResultResponse<?> destroyRoom(@RequestBody RoomRequest request) {
-        roomComponent.destroy(request);
-        return ResultResponse.builder().build();
+        DestroyRoomResponse response = roomComponent.destroy(request);
+        return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/invite")

@@ -2,8 +2,11 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.cooba.constant.MessageTypeEnum;
 import com.cooba.dto.SendMessage;
+
 import javax.persistence.*;
+
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -28,16 +31,22 @@ public class Chat {
     @Column(nullable = false)
     private String message;
 
+    @Column(nullable = false)
+    private MessageTypeEnum type = MessageTypeEnum.TEXT;
+
     @Column
     private int version = 1;
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 
-    public Chat() {}
+    public Chat() {
+    }
+
     public Chat(SendMessage sendMessage) {
         this.roomId = sendMessage.getRoomId();
         this.userId = sendMessage.getUser().getId();
         this.message = sendMessage.getMessage();
+        this.type = sendMessage.getType();
     }
 }

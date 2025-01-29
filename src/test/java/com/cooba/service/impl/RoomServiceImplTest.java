@@ -14,8 +14,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {RoomServiceImpl.class})
@@ -41,7 +39,7 @@ class RoomServiceImplTest {
     void destroy() {
         Room room = Instancio.create(Room.class);
         roomService.build(room);
-        roomService.destroy(room);
+        roomService.destroy(room.getId());
 
         Room select = roomRepository.selectById(room.getId());
         Assertions.assertNull(select);

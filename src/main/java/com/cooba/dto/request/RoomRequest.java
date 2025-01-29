@@ -2,11 +2,8 @@ package com.cooba.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-
 @Data
 public class RoomRequest {
-    private Long id;
-    @NotEmpty
+    private Long roomId;
     private String name;
 }
