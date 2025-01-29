@@ -30,12 +30,12 @@ public class RoomController {
     @PostMapping("/invite")
     public ResultResponse<?> inviteUser(@RequestBody RoomUserRequest request) {
         roomComponent.invite(request);
-        return ResultResponse.builder().build();
+        return ResultResponse.builder().data(true).build();
     }
 
     @DeleteMapping("/evict")
     public ResultResponse<?> evictUser(@RequestBody RoomUserRequest request) {
         roomComponent.evict(request);
-        return ResultResponse.builder().build();
+        return ResultResponse.builder().data(true).build();
     }
 }

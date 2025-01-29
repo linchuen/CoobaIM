@@ -75,6 +75,8 @@ public class RoomComponentImpl implements RoomComponent {
         newRoomUser.setUserId(request.getUserId());
         roomService.addUser(newRoomUser);
 
+        userService.connectRoom(newRoomUser);
+
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
         message.setUser(newUser);
@@ -99,6 +101,8 @@ public class RoomComponentImpl implements RoomComponent {
         removeRoomUser.setRoomId(request.getRoomId());
         removeRoomUser.setUserId(request.getUserId());
         roomService.deleteUser(removeRoomUser);
+
+        userService.disconnectRoom(removeRoomUser);
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());

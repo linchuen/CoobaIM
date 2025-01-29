@@ -5,10 +5,7 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
-import com.cooba.dto.response.LoginResponse;
-import com.cooba.dto.response.LogoutResponse;
-import com.cooba.dto.response.RegisterResponse;
-import com.cooba.dto.response.RoomResponse;
+import com.cooba.dto.response.*;
 import com.cooba.entity.*;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
@@ -140,17 +137,23 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void addFriend(FriendRequest request) {
+    public ApplyFriendResponse applyFriend(FriendRequest request) {
         FriendApply friendApply = new FriendApply();
-        BeanUtils.copyProperties(request, friendApply);
+        friendApply.setApplyUserId(request.getApplyUserId());
+        friendApply.setPermitUserId(request.getPermitUserId());
 
-        friendService.apply(friendApply);
+        long applyId = friendService.apply(friendApply);
+
+        return ApplyFriendResponse.builder()
+                .applyId(applyId)
+                .build();
     }
 
     @Override
     public void permitFriendApply(FriendRequest request) {
         FriendApply friendApply = new FriendApply();
-        BeanUtils.copyProperties(request, friendApply);
+        friendApply.setApplyUserId(request.getApplyUserId());
+        friendApply.setPermitUserId(request.getPermitUserId());
 
         friendService.bind(friendApply);
     }
@@ -158,7 +161,8 @@ public class UserComponentImpl implements UserComponent {
     @Override
     public void removeFriend(FriendRequest request) {
         FriendApply friendApply = new FriendApply();
-        BeanUtils.copyProperties(request, friendApply);
+        friendApply.setApplyUserId(request.getApplyUserId());
+        friendApply.setPermitUserId(request.getPermitUserId());
 
         friendService.unbind(friendApply);
     }

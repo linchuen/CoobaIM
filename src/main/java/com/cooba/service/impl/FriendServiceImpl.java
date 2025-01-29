@@ -2,13 +2,16 @@ package com.cooba.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
+import com.cooba.exception.BaseException;
 import com.cooba.repository.FriendApplyRepository;
 import com.cooba.repository.FriendRepository;
 import com.cooba.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @BehaviorLayer
@@ -18,11 +21,23 @@ public class FriendServiceImpl implements FriendService {
     private final FriendRepository friendRepository;
 
     @Override
-    public void apply(FriendApply friendApply) {
+    @Transactional(rollbackFor = Exception.class)
+    public long apply(FriendApply friendApply) {
+        FriendApply apply = friendApplyRepository.selectOne(new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+                .or()
+                .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId())
+        );
+        if (apply != null) throw new BaseException(ErrorEnum.FRIEND_APPLY_EXIST);
+
         friendApplyRepository.insert(friendApply);
+        return friendApply.getId();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void bind(FriendApply friendApply) {
         if (friendApply.isPermit()) {
             friendApplyRepository.updateById(friendApply);
@@ -42,6 +57,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void unbind(FriendApply friendApply) {
         friendApplyRepository.deleteById(friendApply);
 

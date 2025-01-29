@@ -1,10 +1,7 @@
 package com.cooba.component;
 
 import com.cooba.dto.request.*;
-import com.cooba.dto.response.LoginResponse;
-import com.cooba.dto.response.LogoutResponse;
-import com.cooba.dto.response.RegisterResponse;
-import com.cooba.dto.response.RoomResponse;
+import com.cooba.dto.response.*;
 import com.cooba.entity.User;
 
 public interface UserComponent {
@@ -29,7 +26,7 @@ public interface UserComponent {
 
     void speakToAll(SpeakRequest request);
 
-    void addFriend(FriendRequest request);
+    ApplyFriendResponse applyFriend(FriendRequest request);
 
     void permitFriendApply(FriendRequest request);
 

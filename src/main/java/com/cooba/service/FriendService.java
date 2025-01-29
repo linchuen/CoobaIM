@@ -5,7 +5,7 @@ import com.cooba.entity.FriendApply;
 
 public interface FriendService {
 
-    void apply(FriendApply friendApply);
+    long apply(FriendApply friendApply);
 
     void bind(FriendApply friendApply);
 

@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void disconnectRoom(RoomUser roomUser) {
-        roomUserRepository.deleteById(roomUser);
+        socketConnection.unbindGroup(String.valueOf(roomUser.getUserId()), String.valueOf(roomUser.getRoomId()));
     }
 
     @Override
