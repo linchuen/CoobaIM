@@ -33,7 +33,7 @@ public class RoomController {
         return ResultResponse.builder().build();
     }
 
-    @PostMapping("/evict")
+    @DeleteMapping("/evict")
     public ResultResponse<?> evictUser(@RequestBody RoomUserRequest request) {
         roomComponent.evict(request);
         return ResultResponse.builder().build();

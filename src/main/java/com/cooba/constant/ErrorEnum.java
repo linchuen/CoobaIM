@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorEnum {
     INVALID_AUTHORIZATION(401,"invalid authorization"),
+    FORBIDDEN(403,"forbidden"),
     INVALID_REQUEST(1001,"invalid request"),
     BUSINESS_ERROR(1002,"business error"),
     ROOM_NOT_EXIST(1003,"room not exist"),

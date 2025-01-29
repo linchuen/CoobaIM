@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Objects;
+
 @Slf4j
 @ObjectLayer
 @RequiredArgsConstructor
@@ -82,16 +84,26 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public void evict(RoomUserRequest request) {
-        User user = userService.getInfo(request.getUserId());
+        User user = UserThreadLocal.get().getOrigin();
 
-        RoomUser roomUser = new RoomUser();
-        BeanUtils.copyProperties(request, roomUser);
-        roomService.deleteUser(roomUser);
+        RoomUser roomUser = roomService.getRoomUserInfo(request.getRoomId(), user.getId());
+        RoomRoleEnum roomRole = roomUser.getRoomRoleEnum();
+        if (roomRole != RoomRoleEnum.MASTER && roomRole != RoomRoleEnum.MANAGER) {
+            throw new BaseException(ErrorEnum.INVALID_AUTHORIZATION);
+        }
+
+        User removeUser = userService.getInfo(request.getUserId());
+        if (Objects.equals(removeUser.getId(), user.getId())) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        RoomUser removeRoomUser = new RoomUser();
+        removeRoomUser.setRoomId(request.getRoomId());
+        removeRoomUser.setUserId(request.getUserId());
+        roomService.deleteUser(removeRoomUser);
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
-        message.setUser(user);
-        message.setMessage("離開聊天室");
+        message.setUser(removeUser);
+        message.setMessage(removeUser.getName() + "離開聊天室");
         messageService.sendToRoom(message);
     }
 }

@@ -56,14 +56,16 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository.selectById(roomUser.getRoomId());
         if (room == null) throw new BaseException(ErrorEnum.ROOM_NOT_EXIST);
 
-        roomUserRepository.deleteById(roomUser);
+        roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
+                .eq(RoomUser::getRoomId, roomUser.getRoomId())
+                .eq(RoomUser::getUserId, roomUser.getUserId()));
     }
 
     @Override
     public void deleteUsers(long roomId, List<Long> userIds) {
         roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getRoomId, roomId)
-                .in(RoomUser::getUserId,userIds));
+                .in(RoomUser::getUserId, userIds));
     }
 
     @Override
