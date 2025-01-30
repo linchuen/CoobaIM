@@ -10,5 +10,5 @@ public class FriendRequest {
     private Long applyUserId;
     @NotNull
     private Long permitUserId;
-    private boolean isPermit = false;
+    private Boolean isPermit;
 }

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @BehaviorLayer
 @RequiredArgsConstructor
@@ -40,7 +42,12 @@ public class FriendServiceImpl implements FriendService {
     @Transactional(rollbackFor = Exception.class)
     public void bind(FriendApply friendApply) {
         if (friendApply.isPermit()) {
-            friendApplyRepository.updateById(friendApply);
+            friendApply.setPermitTime(LocalDateTime.now());
+            int update = friendApplyRepository.update(friendApply, new LambdaQueryWrapper<FriendApply>()
+                    .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                    .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+            );
+            if (update == 0) throw new BaseException(ErrorEnum.FRIEND_APPLY_NOT_EXIST);
 
             Friend apply = new Friend();
             apply.setUserId(friendApply.getApplyUserId());
@@ -52,14 +59,23 @@ public class FriendServiceImpl implements FriendService {
             permit.setFriendUserId(friendApply.getApplyUserId());
             friendRepository.insert(permit);
         } else {
-            friendApplyRepository.deleteById(friendApply);
+            friendApplyRepository.delete(new LambdaQueryWrapper<FriendApply>()
+                    .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                    .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+            );
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void unbind(FriendApply friendApply) {
-        friendApplyRepository.deleteById(friendApply);
+        friendApplyRepository.delete(new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+                .or()
+                .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId())
+        );
 
         friendRepository.delete(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, friendApply.getApplyUserId())

@@ -5,10 +5,7 @@ import com.cooba.dto.request.FriendRequest;
 import com.cooba.dto.response.ApplyFriendResponse;
 import com.cooba.dto.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/friend")
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FriendController {
     private final UserComponent userComponent;
 
-    @PostMapping("/add")
+    @PostMapping("/apply")
     public ResultResponse<?> apply(@RequestBody FriendRequest request) {
         ApplyFriendResponse response = userComponent.applyFriend(request);
         return ResultResponse.builder().data(response).build();
@@ -28,7 +25,7 @@ public class FriendController {
         return ResultResponse.builder().data(true).build();
     }
 
-    @PostMapping("/remove")
+    @DeleteMapping("/remove")
     public ResultResponse<?> remove(@RequestBody FriendRequest request) {
         userComponent.removeFriend(request);
         return ResultResponse.builder().data(true).build();

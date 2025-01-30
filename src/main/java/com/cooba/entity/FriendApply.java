@@ -32,4 +32,7 @@ public class FriendApply {
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
+
+    @Column
+    private LocalDateTime permitTime;
 }

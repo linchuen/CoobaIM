@@ -1,18 +1,22 @@
 package com.cooba.component.impl;
 
 import com.cooba.annotation.ObjectLayer;
+import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
+import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Slf4j
 @ObjectLayer
@@ -151,9 +155,13 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void permitFriendApply(FriendRequest request) {
+        Long userId = UserThreadLocal.get().getId();
+        if (!Objects.equals(userId, request.getPermitUserId())) throw new BaseException(ErrorEnum.FORBIDDEN);
+
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(request.getApplyUserId());
         friendApply.setPermitUserId(request.getPermitUserId());
+        friendApply.setPermit(request.getIsPermit());
 
         friendService.bind(friendApply);
     }
