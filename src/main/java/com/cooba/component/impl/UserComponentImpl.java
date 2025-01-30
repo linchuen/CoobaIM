@@ -118,24 +118,41 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void speakToUser(SpeakRequest request) {
+        User user = UserThreadLocal.get().getOrigin();
+
+        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
+        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
         SendMessage message = new SendMessage();
-        BeanUtils.copyProperties(request, message);
+        message.setMessage(request.getMessage());
+        message.setUser(user);
+        message.setRoomId(request.getRoomId());
 
         messageService.sendToUser(message);
     }
 
     @Override
     public void speakToRoom(SpeakRequest request) {
+        User user = UserThreadLocal.get().getOrigin();
+
+        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
+        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
         SendMessage message = new SendMessage();
-        BeanUtils.copyProperties(request, message);
+        message.setMessage(request.getMessage());
+        message.setUser(user);
+        message.setRoomId(request.getRoomId());
 
         messageService.sendToRoom(message);
     }
 
     @Override
     public void speakToAll(SpeakRequest request) {
+        Long userId = UserThreadLocal.get().getId();
+
         NotifyMessage message = new NotifyMessage();
-        BeanUtils.copyProperties(request, message);
+        message.setUserId(userId);
+        message.setMessage(request.getMessage());
 
         messageService.sendToAll(message);
     }

@@ -1,5 +1,6 @@
 package com.cooba;
 
+import com.cooba.entity.FriendApply;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.UserAuthority;
 import com.google.common.reflect.ClassPath;
@@ -35,7 +36,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(RoomUser.class, serviceRegistry);
+            generateSql(FriendApply.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);

@@ -4,6 +4,7 @@
         apply_user_id bigint not null,
         created_time datetime(6) not null,
         is_permit bit,
+        permit_time datetime(6),
         permit_user_id bigint not null,
         primary key (id)
     ) engine=InnoDB;

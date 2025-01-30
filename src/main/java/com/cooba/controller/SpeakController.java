@@ -18,18 +18,18 @@ public class SpeakController {
     @PostMapping("/user")
     public ResultResponse<?> speakToUser(@RequestBody SpeakRequest request) {
         userComponent.speakToUser(request);
-        return ResultResponse.builder().build();
+        return ResultResponse.builder().data(true).build();
     }
 
     @PostMapping("/room")
     public ResultResponse<?> speakToRoom(@RequestBody SpeakRequest request) {
         userComponent.speakToRoom(request);
-        return ResultResponse.builder().build();
+        return ResultResponse.builder().data(true).build();
     }
 
     @PostMapping("/all")
     public ResultResponse<?> speakToAll(@RequestBody SpeakRequest request) {
         userComponent.speakToAll(request);
-        return ResultResponse.builder().build();
+        return ResultResponse.builder().data(true).build();
     }
 }

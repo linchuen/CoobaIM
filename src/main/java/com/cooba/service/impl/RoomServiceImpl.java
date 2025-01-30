@@ -77,4 +77,13 @@ public class RoomServiceImpl implements RoomService {
         if (roomUser == null) throw new BaseException(ErrorEnum.ROOM_USER_NOT_EXIST);
         return roomUser;
     }
+
+    @Override
+    public boolean isRoomMember(long roomId, long userId) {
+        RoomUser roomUser = roomUserRepository.selectOne(new LambdaQueryWrapper<RoomUser>()
+                .eq(RoomUser::getRoomId, roomId)
+                .eq(RoomUser::getUserId, userId));
+
+        return roomUser != null;
+    }
 }
