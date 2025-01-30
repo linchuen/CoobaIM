@@ -1,6 +1,7 @@
 package com.cooba.controller;
 
 import com.cooba.component.UserComponent;
+import com.cooba.dto.request.FriendRemoveRequest;
 import com.cooba.dto.request.FriendRequest;
 import com.cooba.dto.response.ApplyFriendResponse;
 import com.cooba.dto.response.ResultResponse;
@@ -26,7 +27,7 @@ public class FriendController {
     }
 
     @DeleteMapping("/remove")
-    public ResultResponse<?> remove(@RequestBody FriendRequest request) {
+    public ResultResponse<?> remove(@RequestBody FriendRemoveRequest request) {
         userComponent.removeFriend(request);
         return ResultResponse.builder().data(true).build();
     }

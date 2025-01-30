@@ -30,5 +30,5 @@ public interface UserComponent {
 
     void permitFriendApply(FriendRequest request);
 
-    void removeFriend(FriendRequest request);
+    void removeFriend(FriendRemoveRequest request);
 }

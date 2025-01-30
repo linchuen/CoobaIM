@@ -167,10 +167,12 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void removeFriend(FriendRequest request) {
+    public void removeFriend(FriendRemoveRequest request) {
+        Long userId = UserThreadLocal.get().getId();
+
         FriendApply friendApply = new FriendApply();
-        friendApply.setApplyUserId(request.getApplyUserId());
-        friendApply.setPermitUserId(request.getPermitUserId());
+        friendApply.setApplyUserId(userId);
+        friendApply.setPermitUserId(request.getFriendUserId());
 
         friendService.unbind(friendApply);
     }
