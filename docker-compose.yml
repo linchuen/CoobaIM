@@ -6,17 +6,23 @@ services:
       dockerfile: .dockerfile
     restart: always
     container_name: im
+    env_file:
+      - .env
     environment:
-      REDIS_DB_HOST: redis
-      REDIS_DB_PORT: 6379
-      CLICKHOUSE_DB_HOST: clickhouse:8123
-      CLICKHOUSE_DB_USERNAME: default
-      CLICKHOUSE_DB_PASSWORD: example
-      MYSQL_DB_HOST: mysql:3306
-      MYSQL_DB_USERNAME: root
-      MYSQL_DB_PASSWORD: example
+      REDIS_DB_HOST: ${REDIS_DB_HOST}
+      REDIS_DB_PORT: ${REDIS_DB_PORT}
+      CLICKHOUSE_DB_HOST: ${CLICKHOUSE_DB_HOST}
+      CLICKHOUSE_DB_USERNAME: ${CLICKHOUSE_DB_USERNAME}
+      CLICKHOUSE_DB_PASSWORD: ${CLICKHOUSE_DB_PASSWORD}
+      MYSQL_DB_HOST: ${MYSQL_DB_HOST}
+      MYSQL_DB_USERNAME: ${MYSQL_DB_USERNAME}
+      MYSQL_DB_PASSWORD: ${MYSQL_DB_PASSWORD}
     ports:
       - 8080:8080
+    depends_on:
+      - redis
+      - mysql
+      - clickhouse
 
   redis:
     image: redis:alpine
@@ -28,9 +34,11 @@ services:
   mysql:
     image: bitnami/mysql:8.3.0
     container_name: mysql
+    env_file:
+      - .env
     environment:
-      MYSQL_PASSWORD: example
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
       MYSQL_DATABASE: im
     ports:
       - 13306:3306
@@ -39,9 +47,11 @@ services:
   clickhouse:
     image: clickhouse:24.12
     container_name: clickhouse
+    env_file:
+      - .env
     environment:
       CLICKHOUSE_DB: im
-      CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: example
+      CLICKHOUSE_USER: ${CLICKHOUSE_DB_USERNAME}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_DB_PASSWORD}
     ports:
       - 18123:8123
