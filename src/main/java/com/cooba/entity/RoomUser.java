@@ -3,7 +3,7 @@ package com.cooba.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.cooba.constant.RoomRoleEnum;
 import lombok.Data;

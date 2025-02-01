@@ -2,7 +2,7 @@ package com.cooba.dto.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 @Data
 public class RegisterRequest {

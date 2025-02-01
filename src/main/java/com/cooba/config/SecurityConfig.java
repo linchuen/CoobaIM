@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Configuration
@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .antMatchers(JwtFilter.ALL_PERMIT_PATHS).permitAll()
+                                .requestMatchers(JwtFilter.ALL_PERMIT_PATHS).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((sessionManagement) ->

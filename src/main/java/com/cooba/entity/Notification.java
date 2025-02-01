@@ -2,7 +2,7 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;

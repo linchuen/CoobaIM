@@ -5,6 +5,7 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.response.ResultResponse;
 import com.cooba.exception.BaseException;
 import com.cooba.util.JsonUtil;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.validation.ValidationException;
+
 
 import static com.cooba.constant.ErrorEnum.INVALID_AUTHORIZATION;
 

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.cooba.constant.MessageTypeEnum;
 import com.cooba.dto.SendMessage;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.Data;
 

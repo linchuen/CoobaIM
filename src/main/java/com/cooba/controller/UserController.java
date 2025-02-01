@@ -7,7 +7,7 @@ import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.request.LogoutRequest;
 import com.cooba.dto.response.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

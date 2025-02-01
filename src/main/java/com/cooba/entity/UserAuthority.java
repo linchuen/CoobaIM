@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @RequiredArgsConstructor
