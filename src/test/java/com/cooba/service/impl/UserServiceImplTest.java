@@ -5,25 +5,24 @@ import com.cooba.core.SocketConnection;
 import com.cooba.entity.User;
 import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
-import com.cooba.util.PasswordUtil;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {UserServiceImpl.class})
-@Sql(scripts = {"/sql/User-schema.sql"})
+@Sql(scripts = {"/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class UserServiceImplTest {
     @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
-    @MockBean
+    @MockitoBean
     SocketConnection socketConnection;
 
     @Test

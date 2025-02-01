@@ -107,19 +107,12 @@
             <version>4.3.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-tracing-bridge-brave -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
             <version>1.4.2</version>
         </dependency>
-
-        <!--    spring 2    -->
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-sleuth -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-sleuth</artifactId>-->
-<!--            <version>3.1.11</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -133,14 +126,6 @@
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
-
-        <!--    spring 2    -->
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.httpcomponents.client5</groupId>-->
-<!--            <artifactId>httpclient5</artifactId>-->
-<!--            <version>5.2.1</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -189,11 +174,19 @@
             <scope>test</scope>
         </dependency>
 
-        <!--    spring 2    -->
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>6.6.5.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--    For SchemaExport    -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-ant -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-ant</artifactId>
             <version>6.6.5.Final</version>
             <scope>provided</scope>
         </dependency>

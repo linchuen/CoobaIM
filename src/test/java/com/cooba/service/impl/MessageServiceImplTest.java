@@ -14,20 +14,17 @@ import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {MessageServiceImpl.class})
-@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql"})
+@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class MessageServiceImplTest {
     @Autowired
     MessageService messageService;
@@ -35,7 +32,7 @@ class MessageServiceImplTest {
     ChatRepository chatRepository;
     @Autowired
     NotificationRepository notificationRepository;
-    @MockBean
+    @MockitoBean
     SocketConnection socketConnection;
 
 
