@@ -25,6 +25,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final UserThreadLocal userThreadLocal;
 
     public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login"};
 
@@ -65,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
             userInfo.setName(name);
             userInfo.setToken(jwtToken);
             userInfo.setOrigin(user);
-            UserThreadLocal.set(userInfo);
+            userThreadLocal.set(userInfo);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -30,6 +30,7 @@ public class RoomComponentImpl implements RoomComponent {
     private final UserService userService;
     private final RoomService roomService;
     private final MessageService messageService;
+    private final UserThreadLocal userThreadLocal;
 
     @Override
     public BuildRoomResponse build(RoomRequest request) {
@@ -45,7 +46,7 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public DestroyRoomResponse destroy(RoomRequest request) {
-        Long userId = UserThreadLocal.get().getId();
+        long userId = userThreadLocal.getCurrentUserId();
         Long roomId = request.getRoomId();
         RoomUser roomUser = roomService.getRoomUserInfo(roomId, userId);
         if (roomUser.getRoomRoleEnum() != RoomRoleEnum.MASTER) {
@@ -60,7 +61,7 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public void invite(RoomUserRequest request) {
-        User user = UserThreadLocal.get().getOrigin();
+        User user = userThreadLocal.getCurrentUser();
 
         RoomUser roomUser = roomService.getRoomUserInfo(request.getRoomId(), user.getId());
         RoomRoleEnum roomRole = roomUser.getRoomRoleEnum();
@@ -86,7 +87,7 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public void evict(RoomUserRequest request) {
-        User user = UserThreadLocal.get().getOrigin();
+        User user = userThreadLocal.getCurrentUser();
 
         RoomUser roomUser = roomService.getRoomUserInfo(request.getRoomId(), user.getId());
         RoomRoleEnum roomRole = roomUser.getRoomRoleEnum();

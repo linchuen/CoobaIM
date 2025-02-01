@@ -16,6 +16,9 @@ public interface RoomService {
 
     void deleteUsers(long roomId, List<Long> userIds);
 
+
+    List<RoomUser> getRoomUsers(long roomId);
+
     RoomUser getRoomUserInfo(long roomId, long userId);
 
     boolean isRoomMember(long roomId, long userId);

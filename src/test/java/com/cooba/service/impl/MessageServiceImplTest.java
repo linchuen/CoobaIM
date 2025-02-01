@@ -1,6 +1,5 @@
 package com.cooba.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
@@ -41,9 +40,7 @@ class MessageServiceImplTest {
         SendMessage sendMessage = Instancio.create(SendMessage.class);
         messageService.sendToUser(sendMessage);
 
-        List<String> chats = chatRepository.selectList(new LambdaQueryWrapper<Chat>()
-                        .eq(Chat::getUserId, sendMessage.getUser().getId())
-                        .eq(Chat::getRoomId, sendMessage.getRoomId()))
+        List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
                 .stream()
                 .map(Chat::getMessage)
                 .toList();
@@ -57,9 +54,7 @@ class MessageServiceImplTest {
         SendMessage sendMessage = Instancio.create(SendMessage.class);
         messageService.sendToRoom(sendMessage);
 
-        List<String> chats = chatRepository.selectList(new LambdaQueryWrapper<Chat>()
-                        .eq(Chat::getUserId, sendMessage.getUser().getId())
-                        .eq(Chat::getRoomId, sendMessage.getRoomId()))
+        List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
                 .stream()
                 .map(Chat::getMessage)
                 .toList();
@@ -73,8 +68,7 @@ class MessageServiceImplTest {
         NotifyMessage notifyMessage = Instancio.create(NotifyMessage.class);
         messageService.sendToAll(notifyMessage);
 
-        List<String> chats = notificationRepository.selectList(new LambdaQueryWrapper<Notification>()
-                        .eq(Notification::getUserId, notifyMessage.getUserId()))
+        List<String> chats = messageService.getNotifications()
                 .stream()
                 .map(Notification::getMessage)
                 .toList();

@@ -22,13 +22,14 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomUserRepository roomUserRepository;
+    private final UserThreadLocal userThreadLocal;
 
     @Override
     public long build(Room room) {
         roomRepository.insert(room);
 
         RoomUser roomUser = new RoomUser();
-        roomUser.setUserId(UserThreadLocal.get().getId());
+        roomUser.setUserId(userThreadLocal.getCurrentUserId());
         roomUser.setRoomId(room.getId());
         roomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
         roomUserRepository.insert(roomUser);
@@ -66,6 +67,12 @@ public class RoomServiceImpl implements RoomService {
         roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getRoomId, roomId)
                 .in(RoomUser::getUserId, userIds));
+    }
+
+    @Override
+    public List<RoomUser> getRoomUsers(long roomId) {
+        return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
+                .eq(RoomUser::getRoomId, roomId));
     }
 
     @Override

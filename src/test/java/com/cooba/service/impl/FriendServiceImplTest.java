@@ -1,8 +1,11 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
+import com.cooba.aop.UserThreadLocal;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
+import com.cooba.exception.BaseException;
 import com.cooba.repository.FriendApplyRepository;
 import com.cooba.repository.FriendRepository;
 import com.cooba.service.FriendService;
@@ -13,9 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.UnexpectedRollbackException;
 
-@Rollback(value = false)
+
 @MybatisLocalTest
 @ContextConfiguration(classes = {FriendServiceImpl.class})
 @Sql(scripts = {"/sql/Friend-schema.sql", "/sql/FriendApply-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
@@ -35,6 +40,17 @@ class FriendServiceImplTest {
 
         FriendApply apply = friendApplyRepository.selectById(friendApply.getId());
         Assertions.assertNotNull(apply);
+    }
+
+    @Test
+    @DisplayName("朋友重複申請")
+    void applyTwice() {
+        FriendApply friendApply = Instancio.create(FriendApply.class);
+        friendService.apply(friendApply);
+
+        BaseException baseException = Assertions.assertThrows(BaseException.class, () -> friendService.apply(friendApply));
+
+        Assertions.assertEquals(ErrorEnum.FRIEND_APPLY_EXIST, baseException.getErrorEnum());
     }
 
     @Test

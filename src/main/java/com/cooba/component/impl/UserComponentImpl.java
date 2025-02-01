@@ -8,12 +8,14 @@ import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-import com.cooba.entity.*;
+import com.cooba.entity.FriendApply;
+import com.cooba.entity.RoomUser;
+import com.cooba.entity.Session;
+import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -27,6 +29,7 @@ public class UserComponentImpl implements UserComponent {
     private final MessageService messageService;
     private final FriendService friendService;
     private final SessionService sessionService;
+    private final  UserThreadLocal userThreadLocal;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -118,7 +121,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void speakToUser(SpeakRequest request) {
-        User user = UserThreadLocal.get().getOrigin();
+        User user = userThreadLocal.getCurrentUser();
 
         boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
         if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
@@ -133,7 +136,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void speakToRoom(SpeakRequest request) {
-        User user = UserThreadLocal.get().getOrigin();
+        User user = userThreadLocal.getCurrentUser();
 
         boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
         if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
@@ -148,7 +151,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void speakToAll(SpeakRequest request) {
-        Long userId = UserThreadLocal.get().getId();
+        Long userId = userThreadLocal.getCurrentUserId();
 
         NotifyMessage message = new NotifyMessage();
         message.setUserId(userId);
@@ -172,7 +175,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void permitFriendApply(FriendRequest request) {
-        Long userId = UserThreadLocal.get().getId();
+        Long userId = userThreadLocal.getCurrentUserId();
         if (!Objects.equals(userId, request.getPermitUserId())) throw new BaseException(ErrorEnum.FORBIDDEN);
 
         FriendApply friendApply = new FriendApply();
@@ -185,7 +188,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public void removeFriend(FriendRemoveRequest request) {
-        Long userId = UserThreadLocal.get().getId();
+        Long userId = userThreadLocal.getCurrentUserId();
 
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(userId);

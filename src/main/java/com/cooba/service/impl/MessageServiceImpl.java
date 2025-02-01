@@ -1,5 +1,6 @@
 package com.cooba.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
@@ -13,6 +14,8 @@ import com.cooba.core.tio.TioWebSocketServerBootstrap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+
+import java.util.List;
 
 @Slf4j
 @BehaviorLayer
@@ -43,10 +46,22 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void sendToAll(NotifyMessage message) {
         Notification notification = new Notification();
-        BeanUtils.copyProperties(message, notification);
+        notification.setUserId(message.getUserId());
+        notification.setMessage(message.getMessage());
 
         notificationRepository.insert(notification);
 
         socketConnection.sendToAll(notification.getMessage());
+    }
+
+    @Override
+    public List<Chat> getRoomChats(long roomId) {
+        return chatRepository.selectList(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getRoomId, roomId));
+    }
+
+    @Override
+    public List<Notification> getNotifications() {
+        return notificationRepository.selectList(new LambdaQueryWrapper<>());
     }
 }

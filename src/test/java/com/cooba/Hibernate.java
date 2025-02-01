@@ -1,5 +1,6 @@
 package com.cooba;
 
+import com.cooba.entity.Chat;
 import com.cooba.entity.FriendApply;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.UserAuthority;
@@ -37,7 +38,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(FriendApply.class, serviceRegistry);
+            generateSql(Chat.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);

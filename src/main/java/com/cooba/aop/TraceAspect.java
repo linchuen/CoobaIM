@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TraceAspect {
     private final Tracer tracer;
+    private final UserThreadLocal userThreadLocal;
 
     @Around("execution(public * com.cooba.controller.**.*(..))")
     public Object addTraceId(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -25,7 +26,7 @@ public class TraceAspect {
             String traceId = context.traceIdString();
             ((ResultResponse<?>) result).setTraceId(traceId);
         }
-        UserThreadLocal.remove();
+        userThreadLocal.remove();
         return result;
     }
 
