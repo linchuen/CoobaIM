@@ -6,22 +6,22 @@ spring:
   data:
     redis:
       database: 0
-      host: ${REDIS_DB_HOST:127.0.0.1}
-      port: ${REDIS_DB_PORT:16379}
+      host: ${REDIS_DB_HOST}
+      port: ${REDIS_DB_PORT}
   datasource:
     dynamic:
       primary: mysql
       strict: false
       datasource:
         clickhouse:
-          url: jdbc:clickhouse://${CLICKHOUSE_DB_HOST:127.0.0.1:18123}/im
-          username: ${CLICKHOUSE_DB_USERNAME:default}
-          password: ${CLICKHOUSE_DB_PASSWORD:example}
+          url: jdbc:clickhouse://${CLICKHOUSE_DB_HOST}/im
+          username: ${CLICKHOUSE_DB_USERNAME}
+          password: ${CLICKHOUSE_DB_PASSWORD}
           driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
         mysql:
-          url: jdbc:mysql://${MYSQL_DB_HOST:127.0.0.1:13306}/im
-          username: ${MYSQL_DB_USERNAME:root}
-          password: ${MYSQL_DB_PASSWORD:example}
+          url: jdbc:mysql://${MYSQL_DB_HOST}/im
+          username: ${MYSQL_DB_USERNAME}
+          password: ${MYSQL_DB_PASSWORD}
           driver-class-name: com.mysql.cj.jdbc.Driver
 
 mybatis-plus:
