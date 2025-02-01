@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  im:
+    build:
+      context: .
+      dockerfile: .dockerfile
+    restart: always
+    container_name: im
+    environment:
+      REDIS_DB_HOST: redis
+      REDIS_DB_PORT: 6379
+      CLICKHOUSE_DB_HOST: clickhouse:8123
+      CLICKHOUSE_DB_USERNAME: default
+      CLICKHOUSE_DB_PASSWORD: example
+      MYSQL_DB_HOST: mysql:3306
+      MYSQL_DB_USERNAME: root
+      MYSQL_DB_PASSWORD: example
+    ports:
+      - 8080:8080
+
+  redis:
+    image: redis:alpine
+    restart: always
+    container_name: redis
+    ports:
+      - 16379:6379
+
+  mysql:
+    image: bitnami/mysql:8.3.0
+    container_name: mysql
+    environment:
+      MYSQL_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: im
+    ports:
+      - 13306:3306
+    
+      
+  clickhouse:
+    image: clickhouse:24.12
+    container_name: clickhouse
+    environment:
+      CLICKHOUSE_DB: im
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: example
+    ports:
+      - 18123:8123
