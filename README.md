@@ -2,7 +2,13 @@
 本專案僅實現最基本聊天室功能，  
 期望額外的功能能以外掛的方式實現，  
 進而使專案本體維持在一定的複雜度，  
-因為是side project基本希望每個人都有參與的機會。  
+因為是side project基本希望每個人都有參與的機會。 
+
+### 服務啟動
+可直接執行`docker compose up -d`，初次執行會將所有依賴jar下載下來會比較久(需要調整)  
+  
+本地運行可先執行`docker compose up -d redis mysql clickhouse`，再來在**intellij**
+直接執行專案即可
 
 ### 專案架構
 專案採分層式架構，分別為  
