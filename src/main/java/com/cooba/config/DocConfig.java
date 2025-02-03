@@ -14,14 +14,15 @@ public class DocConfig {
     @Bean
     public OpenAPI springOpenApi() {
         return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement().addList("bearer"))
+                .addSecurityItem(new SecurityRequirement().addList("Authorization"))
                 .components(
                         new Components()
-                                .addSecuritySchemes("User Token",
+                                .addSecuritySchemes("Authorization",
                                         new SecurityScheme()
-                                                .name("securitySchemeName")
+                                                .name("User Token")
                                                 .type(SecurityScheme.Type.HTTP)
                                                 .scheme("bearer")
+                                                .in(SecurityScheme.In.HEADER)
                                                 .bearerFormat("JWT")
                                 )
                 )
