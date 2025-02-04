@@ -33,6 +33,7 @@ services:
 
   mysql:
     image: bitnami/mysql:8.3.0
+    restart: always
     container_name: im_mysql
     env_file:
       - .env
@@ -46,6 +47,7 @@ services:
       
   clickhouse:
     image: clickhouse:24.12
+    restart: always
     container_name: im_clickhouse
     env_file:
       - .env
