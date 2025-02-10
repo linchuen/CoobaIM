@@ -6,7 +6,7 @@ COPY pom.xml .
 COPY src ./src
 
 # 使用 Maven 打包專案
-RUN --mount=type=cache,target=/root/.m2 mvn clean install -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 # 第二階段：使用 JDK 來執行應用程式
 FROM amazoncorretto:21-alpine-jdk
