@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "用戶登入")
-    public ResultResponse<?> login(@RequestBody LoginRequest request) {
+    public ResultResponse<?> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = userComponent.login(request);
         return ResultResponse.builder().data(response).build();
     }
