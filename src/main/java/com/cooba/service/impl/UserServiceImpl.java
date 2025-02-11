@@ -61,6 +61,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getInfo(String email) {
+        User user = userRepository.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getEmail, email));
+        if (user == null) throw new BaseException();
+
+        return user;
+    }
+
+    @Override
     public List<RoomUser> getAllRooms(long userId) {
         return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getUserId, userId));

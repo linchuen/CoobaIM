@@ -51,7 +51,7 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        User user = userService.getInfo(request.getUserId());
+        User user = userService.getInfo(request.getEmail());
 
         userService.verifyPassword(user, request.getPassword());
 
