@@ -25,5 +25,8 @@ public class Friend {
     private Long friendUserId;
 
     @Column(nullable = false)
+    private String showName;
+
+    @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 }

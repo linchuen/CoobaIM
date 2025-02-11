@@ -5,9 +5,11 @@ import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
+import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.repository.FriendApplyRepository;
 import com.cooba.repository.FriendRepository;
+import com.cooba.repository.UserRepository;
 import com.cooba.service.FriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class FriendServiceImpl implements FriendService {
     private final FriendApplyRepository friendApplyRepository;
     private final FriendRepository friendRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -50,14 +53,18 @@ public class FriendServiceImpl implements FriendService {
             );
             if (update == 0) throw new BaseException(ErrorEnum.FRIEND_APPLY_NOT_EXIST);
 
+            User permitUser = userRepository.selectById(friendApply.getApplyUserId());
             Friend apply = new Friend();
             apply.setUserId(friendApply.getApplyUserId());
             apply.setFriendUserId(friendApply.getPermitUserId());
+            apply.setShowName(permitUser.getName());
             friendRepository.insert(apply);
 
+            User applyUser = userRepository.selectById(friendApply.getApplyUserId());
             Friend permit = new Friend();
             permit.setUserId(friendApply.getPermitUserId());
             permit.setFriendUserId(friendApply.getApplyUserId());
+            permit.setShowName(applyUser.getName());
             friendRepository.insert(permit);
         } else {
             friendApplyRepository.delete(new LambdaQueryWrapper<FriendApply>()
@@ -89,7 +96,7 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<Friend> search(long userId, List<Long> friendUserIds) {
-        List<Friend> friends = friendRepository.selectList(new LambdaQueryWrapper<Friend>()
+        return friendRepository.selectList(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, userId)
                 .in(Friend::getFriendUserId, friendUserIds));
     }
