@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @BehaviorLayer
@@ -84,6 +85,13 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.delete(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, friendApply.getPermitUserId())
                 .eq(Friend::getFriendUserId, friendApply.getApplyUserId()));
+    }
+
+    @Override
+    public List<Friend> search(long userId, List<Long> friendUserIds) {
+        List<Friend> friends = friendRepository.selectList(new LambdaQueryWrapper<Friend>()
+                .eq(Friend::getUserId, userId)
+                .in(Friend::getFriendUserId, friendUserIds));
     }
 
     @Override

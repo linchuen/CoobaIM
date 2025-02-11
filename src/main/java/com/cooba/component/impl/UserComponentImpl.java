@@ -8,16 +8,14 @@ import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-import com.cooba.entity.FriendApply;
-import com.cooba.entity.RoomUser;
-import com.cooba.entity.Session;
-import com.cooba.entity.User;
+import com.cooba.entity.*;
 import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -29,7 +27,7 @@ public class UserComponentImpl implements UserComponent {
     private final MessageService messageService;
     private final FriendService friendService;
     private final SessionService sessionService;
-    private final  UserThreadLocal userThreadLocal;
+    private final UserThreadLocal userThreadLocal;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -195,5 +193,12 @@ public class UserComponentImpl implements UserComponent {
         friendApply.setPermitUserId(request.getFriendUserId());
 
         friendService.unbind(friendApply);
+    }
+
+    @Override
+    public List<Friend> searchFriend(FriendSearchRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
+
+        return friendService.search(userId, request.getFriendUserIds());
     }
 }

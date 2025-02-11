@@ -3,12 +3,16 @@ package com.cooba.controller;
 import com.cooba.component.UserComponent;
 import com.cooba.dto.request.FriendRemoveRequest;
 import com.cooba.dto.request.FriendRequest;
+import com.cooba.dto.request.FriendSearchRequest;
 import com.cooba.dto.response.ApplyFriendResponse;
 import com.cooba.dto.response.ResultResponse;
+import com.cooba.entity.Friend;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friend")
@@ -36,5 +40,12 @@ public class FriendController {
     public ResultResponse<?> remove(@RequestBody FriendRemoveRequest request) {
         userComponent.removeFriend(request);
         return ResultResponse.builder().data(true).build();
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "好友搜尋")
+    public ResultResponse<?> search(@RequestBody FriendSearchRequest request) {
+        List<Friend> friends = userComponent.searchFriend(request);
+        return ResultResponse.builder().data(friends).build();
     }
 }

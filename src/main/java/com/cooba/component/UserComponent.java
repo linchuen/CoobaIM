@@ -2,7 +2,10 @@ package com.cooba.component;
 
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
+import com.cooba.entity.Friend;
 import com.cooba.entity.User;
+
+import java.util.List;
 
 public interface UserComponent {
 
@@ -31,4 +34,6 @@ public interface UserComponent {
     void permitFriendApply(FriendRequest request);
 
     void removeFriend(FriendRemoveRequest request);
+
+    List<Friend> searchFriend(FriendSearchRequest request);
 }
