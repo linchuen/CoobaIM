@@ -41,7 +41,6 @@ public class ChatController {
         return ResultResponse.builder().data(true).build();
     }
 
-
     @PostMapping("/load")
     @Operation(summary = "取得聊天室內容")
     public ResultResponse<?> load(@RequestBody ChatLoadRequest request) {

@@ -9,11 +9,14 @@ import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.ChatLoadRequest;
 import com.cooba.dto.request.SpeakRequest;
 import com.cooba.dto.response.ChatLoadResponse;
+import com.cooba.entity.Chat;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Slf4j
 @ObjectLayer
@@ -66,6 +69,14 @@ public class ChatComponentImpl implements ChatComponent {
 
     @Override
     public ChatLoadResponse load(ChatLoadRequest request) {
-        return null;
+        long userId = userThreadLocal.getCurrentUserId();
+
+        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), userId);
+        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        List<Chat> chats = messageService.getRoomChats(request.getRoomId());
+        return ChatLoadResponse.builder()
+                .chats(chats)
+                .build();
     }
 }
