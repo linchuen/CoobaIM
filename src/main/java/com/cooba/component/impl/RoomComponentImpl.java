@@ -7,9 +7,11 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.RoomRequest;
+import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.response.BuildRoomResponse;
-import com.cooba.dto.response.DestroyRoomResponse;
+import com.cooba.dto.response.RoomDestroyResponse;
+import com.cooba.dto.response.RoomSearchResponse;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
@@ -19,8 +21,8 @@ import com.cooba.service.RoomService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -45,7 +47,7 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
-    public DestroyRoomResponse destroy(RoomRequest request) {
+    public RoomDestroyResponse destroy(RoomRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
         Long roomId = request.getRoomId();
         RoomUser roomUser = roomService.getRoomUserInfo(roomId, userId);
@@ -54,7 +56,7 @@ public class RoomComponentImpl implements RoomComponent {
         }
 
         roomService.destroy(roomId);
-        return DestroyRoomResponse.builder()
+        return RoomDestroyResponse.builder()
                 .roomId(roomId)
                 .build();
     }
@@ -110,5 +112,15 @@ public class RoomComponentImpl implements RoomComponent {
         message.setUser(removeUser);
         message.setMessage(removeUser.getName() + "離開聊天室");
         messageService.sendToRoom(message);
+    }
+
+    @Override
+    public RoomSearchResponse search(RoomSearchRequest request) {
+        User user = userThreadLocal.getCurrentUser();
+
+        List<Room> rooms = roomService.searchRooms(user.getId(), request.getRoomIds());
+        return RoomSearchResponse.builder()
+                .rooms(rooms)
+                .build();
     }
 }

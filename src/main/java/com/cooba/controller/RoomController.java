@@ -2,10 +2,12 @@ package com.cooba.controller;
 
 import com.cooba.component.RoomComponent;
 import com.cooba.dto.request.RoomRequest;
+import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.response.BuildRoomResponse;
-import com.cooba.dto.response.DestroyRoomResponse;
+import com.cooba.dto.response.RoomDestroyResponse;
 import com.cooba.dto.response.ResultResponse;
+import com.cooba.dto.response.RoomSearchResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class RoomController {
     @DeleteMapping("/destroy")
     @Operation(summary = "刪除聊天室")
     public ResultResponse<?> destroyRoom(@RequestBody RoomRequest request) {
-        DestroyRoomResponse response = roomComponent.destroy(request);
+        RoomDestroyResponse response = roomComponent.destroy(request);
         return ResultResponse.builder().data(response).build();
     }
 
@@ -44,5 +46,12 @@ public class RoomController {
     public ResultResponse<?> evictUser(@RequestBody RoomUserRequest request) {
         roomComponent.evict(request);
         return ResultResponse.builder().data(true).build();
+    }
+
+    @PostMapping("/search")
+    @Operation(summary = "聊天室列表")
+    public ResultResponse<?> evictUser(@RequestBody RoomSearchRequest request) {
+        RoomSearchResponse response = roomComponent.search(request);
+        return ResultResponse.builder().data(response).build();
     }
 }

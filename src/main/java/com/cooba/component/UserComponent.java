@@ -2,10 +2,7 @@ package com.cooba.component;
 
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-import com.cooba.entity.Friend;
 import com.cooba.entity.User;
-
-import java.util.List;
 
 public interface UserComponent {
 
@@ -23,17 +20,11 @@ public interface UserComponent {
 
     RoomResponse leaveRoom(RoomUserRequest request);
 
-    void speakToUser(SpeakRequest request);
-
-    void speakToRoom(SpeakRequest request);
-
-    void speakToAll(SpeakRequest request);
-
-    ApplyFriendResponse applyFriend(FriendRequest request);
+    FriendApplyResponse applyFriend(FriendRequest request);
 
     void permitFriendApply(FriendRequest request);
 
     void removeFriend(FriendRemoveRequest request);
 
-    List<Friend> searchFriend(FriendSearchRequest request);
+    FriendSearchResponse searchFriend(FriendSearchRequest request);
 }

@@ -70,6 +70,16 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public List<Room> searchRooms(long userId, List<Long> roomIds) {
+        if(roomIds.isEmpty()){
+            return roomRepository.selectList(new LambdaQueryWrapper<>());
+        }
+
+        return roomRepository.selectList(new LambdaQueryWrapper<Room>()
+                .in(Room::getId, roomIds));
+    }
+
+    @Override
     public List<RoomUser> getRoomUsers(long roomId) {
         return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getRoomId, roomId));

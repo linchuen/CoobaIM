@@ -4,8 +4,6 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
-import com.cooba.dto.NotifyMessage;
-import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
@@ -118,55 +116,14 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void speakToUser(SpeakRequest request) {
-        User user = userThreadLocal.getCurrentUser();
-
-        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
-        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
-
-        SendMessage message = new SendMessage();
-        message.setMessage(request.getMessage());
-        message.setUser(user);
-        message.setRoomId(request.getRoomId());
-
-        messageService.sendToUser(message);
-    }
-
-    @Override
-    public void speakToRoom(SpeakRequest request) {
-        User user = userThreadLocal.getCurrentUser();
-
-        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
-        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
-
-        SendMessage message = new SendMessage();
-        message.setMessage(request.getMessage());
-        message.setUser(user);
-        message.setRoomId(request.getRoomId());
-
-        messageService.sendToRoom(message);
-    }
-
-    @Override
-    public void speakToAll(SpeakRequest request) {
-        Long userId = userThreadLocal.getCurrentUserId();
-
-        NotifyMessage message = new NotifyMessage();
-        message.setUserId(userId);
-        message.setMessage(request.getMessage());
-
-        messageService.sendToAll(message);
-    }
-
-    @Override
-    public ApplyFriendResponse applyFriend(FriendRequest request) {
+    public FriendApplyResponse applyFriend(FriendRequest request) {
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(request.getApplyUserId());
         friendApply.setPermitUserId(request.getPermitUserId());
 
         long applyId = friendService.apply(friendApply);
 
-        return ApplyFriendResponse.builder()
+        return FriendApplyResponse.builder()
                 .applyId(applyId)
                 .build();
     }
@@ -196,9 +153,12 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public List<Friend> searchFriend(FriendSearchRequest request) {
+    public FriendSearchResponse searchFriend(FriendSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
 
-        return friendService.search(userId, request.getFriendUserIds());
+        List<Friend> friends = friendService.search(userId, request.getFriendUserIds());
+        return FriendSearchResponse.builder()
+                .friends(friends)
+                .build();
     }
 }

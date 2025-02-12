@@ -5,6 +5,5 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class DestroyRoomResponse {
-    private long roomId;
+public class ChatLoadResponse {
 }

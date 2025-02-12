@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ApplyFriendResponse {
-    private Long applyId;
+public class RoomDestroyResponse {
+    private long roomId;
 }
