@@ -40,7 +40,7 @@ public class FriendController {
         return ResultResponse.builder().data(true).build();
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     @Operation(summary = "好友搜尋")
     public ResultResponse<?> search(@RequestBody FriendSearchRequest request) {
         FriendSearchResponse response = userComponent.searchFriend(request);
