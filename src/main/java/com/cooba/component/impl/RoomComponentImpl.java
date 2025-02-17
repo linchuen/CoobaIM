@@ -117,9 +117,9 @@ public class RoomComponentImpl implements RoomComponent {
 
     @Override
     public RoomSearchResponse search(RoomSearchRequest request) {
-        User user = userThreadLocal.getCurrentUser();
+        long userId = userThreadLocal.getCurrentUserId();
 
-        List<Room> rooms = roomService.searchRooms(user.getId(), request.getRoomIds());
+        List<Room> rooms = roomService.searchRooms(userId, request.getRoomIds());
         return RoomSearchResponse.builder()
                 .rooms(rooms)
                 .build();

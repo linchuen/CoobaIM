@@ -6,6 +6,8 @@ import com.cooba.entity.RoomUser;
 import java.util.List;
 
 public interface RoomService {
+    long build(Room room);
+
     long build(Room room, List<Long> userIds);
 
     void destroy(long roomId);

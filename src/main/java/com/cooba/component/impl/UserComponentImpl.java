@@ -4,6 +4,7 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
+import com.cooba.constant.RoomTypeEnum;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
@@ -131,20 +132,25 @@ public class UserComponentImpl implements UserComponent {
 
     @Override
     public FriendPermitResponse permitFriendApply(FriendRequest request) {
+        Long permitUserId = request.getPermitUserId();
+        Long applyUserId = request.getApplyUserId();
+
         Long userId = userThreadLocal.getCurrentUserId();
-        if (!Objects.equals(userId, request.getPermitUserId())) throw new BaseException(ErrorEnum.FORBIDDEN);
+        if (!Objects.equals(userId, permitUserId)) throw new BaseException(ErrorEnum.FORBIDDEN);
 
         FriendApply friendApply = new FriendApply();
-        friendApply.setApplyUserId(request.getApplyUserId());
-        friendApply.setPermitUserId(request.getPermitUserId());
+        friendApply.setApplyUserId(applyUserId);
+        friendApply.setPermitUserId(permitUserId);
         friendApply.setPermit(request.getIsPermit());
 
         friendService.bind(friendApply);
 
         Room room = new Room();
         room.setName(UUID.randomUUID().toString());
-        long roomId = roomService.build(room, List.of(request.getApplyUserId()));
+        room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
+        long roomId = roomService.build(room, List.of(applyUserId));
 
+        friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
         return FriendPermitResponse.builder()
                 .roomId(roomId)
                 .build();

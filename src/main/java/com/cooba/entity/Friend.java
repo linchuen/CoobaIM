@@ -27,6 +27,9 @@ public class Friend {
     @Column(nullable = false)
     private String showName;
 
+    @Column
+    private Long roomId;
+
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 }

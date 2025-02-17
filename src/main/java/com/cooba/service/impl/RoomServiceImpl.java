@@ -14,6 +14,7 @@ import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,11 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomUserRepository roomUserRepository;
     private final UserThreadLocal userThreadLocal;
+
+    @Override
+    public long build(Room room) {
+        return build(room, Collections.emptyList());
+    }
 
     @Override
     public long build(Room room, List<Long> userIds) {
@@ -82,12 +88,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<Room> searchRooms(long userId, List<Long> roomIds) {
-        if(roomIds.isEmpty()){
-            return roomRepository.selectList(new LambdaQueryWrapper<>());
-        }
-
+        List<RoomUser> roomUsers = roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
+                .eq(RoomUser::getUserId, userId));
         return roomRepository.selectList(new LambdaQueryWrapper<Room>()
-                .in(Room::getId, roomIds));
+                .in(Room::getId, roomUsers.stream().map(RoomUser::getRoomId).toList()));
     }
 
     @Override

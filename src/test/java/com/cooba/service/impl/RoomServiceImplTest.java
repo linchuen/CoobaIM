@@ -41,7 +41,7 @@ class RoomServiceImplTest {
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(userId);
 
         Room room = Instancio.create(Room.class);
-        roomService.build(room, );
+        roomService.build(room);
 
         Room select = roomRepository.selectById(room.getId());
         Assertions.assertNotNull(select);
@@ -56,7 +56,7 @@ class RoomServiceImplTest {
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(1L);
 
         Room room = Instancio.create(Room.class);
-        roomService.build(room, );
+        roomService.build(room);
         roomService.destroy(room.getId());
 
         Room select = roomRepository.selectById(room.getId());
@@ -69,7 +69,7 @@ class RoomServiceImplTest {
     @Test
     void addUser() {
         Room room = Instancio.create(Room.class);
-        roomService.build(room, );
+        roomService.build(room);
 
         RoomUser roomUser = Instancio.create(RoomUser.class);
         roomUser.setRoomId(room.getId());
@@ -83,7 +83,7 @@ class RoomServiceImplTest {
     @Test
     void deleteUser() {
         Room room = Instancio.create(Room.class);
-        roomService.build(room, );
+        roomService.build(room);
 
         RoomUser roomUser = Instancio.create(RoomUser.class);
         roomUser.setRoomId(room.getId());

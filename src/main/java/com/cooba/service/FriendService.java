@@ -13,6 +13,8 @@ public interface FriendService {
 
     void unbind(FriendApply friendApply);
 
+    void tagRoom(List<Long> userIds, long roomId);
+
     List<Friend> search(long userId, List<Long> friendUserIds);
 
     boolean isFriend(Friend friend);

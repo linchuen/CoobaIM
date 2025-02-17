@@ -95,7 +95,20 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    public void tagRoom(List<Long> userIds, long roomId) {
+        Friend friend = new Friend();
+        friend.setRoomId(roomId);
+        friendRepository.update(friend, new LambdaQueryWrapper<Friend>()
+                .in(Friend::getUserId, userIds));
+    }
+
+    @Override
     public List<Friend> search(long userId, List<Long> friendUserIds) {
+        if (friendUserIds.isEmpty()) {
+            return friendRepository.selectList(new LambdaQueryWrapper<Friend>()
+                    .eq(Friend::getUserId, userId));
+        }
+
         return friendRepository.selectList(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, userId)
                 .in(Friend::getFriendUserId, friendUserIds));
