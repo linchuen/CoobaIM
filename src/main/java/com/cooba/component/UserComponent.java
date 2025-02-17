@@ -22,7 +22,7 @@ public interface UserComponent {
 
     FriendApplyResponse applyFriend(FriendRequest request);
 
-    void permitFriendApply(FriendRequest request);
+    FriendPermitResponse permitFriendApply(FriendRequest request);
 
     void removeFriend(FriendRemoveRequest request);
 

@@ -1,5 +1,6 @@
 package com.cooba.component;
 
+import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
@@ -9,7 +10,7 @@ import com.cooba.dto.response.RoomSearchResponse;
 
 public interface RoomComponent {
 
-    BuildRoomResponse build(RoomRequest request);
+    BuildRoomResponse build(RoomBuildRequest request);
 
     RoomDestroyResponse destroy(RoomRequest request);
 

@@ -6,6 +6,7 @@ import com.cooba.component.RoomComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.dto.SendMessage;
+import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
@@ -35,11 +36,11 @@ public class RoomComponentImpl implements RoomComponent {
     private final UserThreadLocal userThreadLocal;
 
     @Override
-    public BuildRoomResponse build(RoomRequest request) {
+    public BuildRoomResponse build(RoomBuildRequest request) {
         Room room = new Room();
         room.setName(request.getName());
 
-        long roomId = roomService.build(room);
+        long roomId = roomService.build(room, request.getUserIds());
 
         return BuildRoomResponse.builder()
                 .roomId(roomId)

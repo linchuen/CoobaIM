@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @BehaviorLayer
@@ -25,14 +26,24 @@ public class RoomServiceImpl implements RoomService {
     private final UserThreadLocal userThreadLocal;
 
     @Override
-    public long build(Room room) {
+    public long build(Room room, List<Long> userIds) {
         roomRepository.insert(room);
 
-        RoomUser roomUser = new RoomUser();
-        roomUser.setUserId(userThreadLocal.getCurrentUserId());
-        roomUser.setRoomId(room.getId());
-        roomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
-        roomUserRepository.insert(roomUser);
+        RoomUser roomMaster = new RoomUser();
+        roomMaster.setUserId(userThreadLocal.getCurrentUserId());
+        roomMaster.setRoomId(room.getId());
+        roomMaster.setRoomRoleEnum(RoomRoleEnum.MASTER);
+
+        List<RoomUser> roomUsers = userIds.stream().map(userId -> {
+            RoomUser roomUser = new RoomUser();
+            roomUser.setUserId(userId);
+            roomUser.setRoomId(room.getId());
+            roomUser.setRoomRoleEnum(RoomRoleEnum.MEMBER);
+            return roomUser;
+        }).collect(Collectors.toList());
+
+        roomUsers.add(roomMaster);
+        roomUserRepository.insert(roomUsers);
         return room.getId();
     }
 

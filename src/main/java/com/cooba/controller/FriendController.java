@@ -5,6 +5,7 @@ import com.cooba.dto.request.FriendRemoveRequest;
 import com.cooba.dto.request.FriendRequest;
 import com.cooba.dto.request.FriendSearchRequest;
 import com.cooba.dto.response.FriendApplyResponse;
+import com.cooba.dto.response.FriendPermitResponse;
 import com.cooba.dto.response.FriendSearchResponse;
 import com.cooba.dto.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +30,8 @@ public class FriendController {
     @PostMapping("/permit")
     @Operation(summary = "好友審核")
     public ResultResponse<?> permit(@RequestBody FriendRequest request) {
-        userComponent.permitFriendApply(request);
-        return ResultResponse.builder().data(true).build();
+        FriendPermitResponse response = userComponent.permitFriendApply(request);
+        return ResultResponse.builder().data(response).build();
     }
 
     @DeleteMapping("/remove")

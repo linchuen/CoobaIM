@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @ObjectLayer
@@ -129,7 +130,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public void permitFriendApply(FriendRequest request) {
+    public FriendPermitResponse permitFriendApply(FriendRequest request) {
         Long userId = userThreadLocal.getCurrentUserId();
         if (!Objects.equals(userId, request.getPermitUserId())) throw new BaseException(ErrorEnum.FORBIDDEN);
 
@@ -139,6 +140,14 @@ public class UserComponentImpl implements UserComponent {
         friendApply.setPermit(request.getIsPermit());
 
         friendService.bind(friendApply);
+
+        Room room = new Room();
+        room.setName(UUID.randomUUID().toString());
+        long roomId = roomService.build(room, List.of(request.getApplyUserId()));
+
+        return FriendPermitResponse.builder()
+                .roomId(roomId)
+                .build();
     }
 
     @Override

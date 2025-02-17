@@ -1,6 +1,7 @@
 package com.cooba.controller;
 
 import com.cooba.component.RoomComponent;
+import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
@@ -22,7 +23,7 @@ public class RoomController {
 
     @PostMapping("/build")
     @Operation(summary = "建立聊天室")
-    public ResultResponse<?> buildRoom(@RequestBody RoomRequest request) {
+    public ResultResponse<?> buildRoom(@RequestBody RoomBuildRequest request) {
         BuildRoomResponse response = roomComponent.build(request);
         return ResultResponse.builder().data(response).build();
     }
