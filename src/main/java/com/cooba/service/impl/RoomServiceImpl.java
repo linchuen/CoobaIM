@@ -87,7 +87,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> searchRooms(long userId, List<Long> roomIds) {
+    public List<Room> searchRooms(long userId) {
         List<RoomUser> roomUsers = roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getUserId, userId));
         return roomRepository.selectList(new LambdaQueryWrapper<Room>()

@@ -5,6 +5,7 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.RoomComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomRoleEnum;
+import com.cooba.constant.RoomTypeEnum;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
@@ -119,7 +120,10 @@ public class RoomComponentImpl implements RoomComponent {
     public RoomSearchResponse search(RoomSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
 
-        List<Room> rooms = roomService.searchRooms(userId, request.getRoomIds());
+        List<Room> rooms = roomService.searchRooms(userId)
+                .stream()
+                .filter(room -> room.getRoomTypeEnum()!= RoomTypeEnum.PERSONAL)
+                .toList();
         return RoomSearchResponse.builder()
                 .rooms(rooms)
                 .build();
