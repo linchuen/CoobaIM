@@ -10,10 +10,8 @@ import com.cooba.entity.Notification;
 import com.cooba.repository.ChatRepository;
 import com.cooba.repository.NotificationRepository;
 import com.cooba.service.MessageService;
-import com.cooba.core.tio.TioWebSocketServerBootstrap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
