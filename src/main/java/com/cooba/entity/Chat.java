@@ -29,6 +29,9 @@ public class Chat {
     private Long userId;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String message;
 
     @Column(nullable = false)
@@ -46,6 +49,7 @@ public class Chat {
     public Chat(SendMessage sendMessage) {
         this.roomId = sendMessage.getRoomId();
         this.userId = sendMessage.getUser().getId();
+        this.name = sendMessage.getUser().getName();
         this.message = sendMessage.getMessage();
         this.type = sendMessage.getType();
     }

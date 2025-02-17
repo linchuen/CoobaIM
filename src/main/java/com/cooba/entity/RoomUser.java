@@ -29,6 +29,9 @@ public class RoomUser {
     @Column(nullable = false)
     private Long userId;
 
+    @Column
+    private String showName;
+
     @Column(nullable = false)
     private RoomRoleEnum roomRoleEnum = RoomRoleEnum.MEMBER;
 
