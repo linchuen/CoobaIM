@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final UserThreadLocal userThreadLocal;
 
-    public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**"};
+    public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**","/ws/**"};
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
