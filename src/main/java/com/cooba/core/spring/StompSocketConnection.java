@@ -3,8 +3,9 @@ package com.cooba.core.spring;
 import com.cooba.core.SocketConnection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 
-
+@Component
 @RequiredArgsConstructor
 public class StompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
