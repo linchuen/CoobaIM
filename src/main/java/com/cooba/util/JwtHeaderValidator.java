@@ -1,14 +1,12 @@
 package com.cooba.util;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.cooba.aop.GlobalExceptionHandler;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.dto.UserInfo;
 import com.cooba.entity.User;
-import com.cooba.exception.BaseException;
+import com.cooba.exception.JwtValidException;
 import com.cooba.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,11 +21,11 @@ public class JwtHeaderValidator {
     private final UserService userService;
     private final UserThreadLocal userThreadLocal;
 
-    public void validHeader(HttpServletRequest servletRequest) throws BaseException{
+    public void validHeader(HttpServletRequest servletRequest) throws JwtValidException {
         // 获取 Authorization Header
         String authToken = servletRequest.getHeader("Authorization");
         if (authToken == null || !authToken.startsWith("Bearer ")) {
-            throw new BaseException();
+            throw new JwtValidException();
         }
 
         String token = authToken.substring(7); // 去掉 "Bearer " 前缀
@@ -52,7 +50,7 @@ public class JwtHeaderValidator {
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
-            throw new BaseException();
+            throw new JwtValidException();
         }
     }
 }

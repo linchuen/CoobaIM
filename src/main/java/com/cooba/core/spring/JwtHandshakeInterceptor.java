@@ -1,6 +1,7 @@
 package com.cooba.core.spring;
 
 import com.cooba.exception.BaseException;
+import com.cooba.exception.JwtValidException;
 import com.cooba.util.JwtHeaderValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
             try {
                 jwtHeaderValidator.validHeader(httpServletRequest);
-            } catch (BaseException e) {
+            } catch (JwtValidException e) {
                 return false;
             }
         }

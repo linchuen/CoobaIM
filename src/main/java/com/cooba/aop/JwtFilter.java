@@ -1,6 +1,7 @@
 package com.cooba.aop;
 
 import com.cooba.exception.BaseException;
+import com.cooba.exception.JwtValidException;
 import com.cooba.util.JwtHeaderValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             jwtHeaderValidator.validHeader(servletRequest);
             filterChain.doFilter(servletRequest, servletResponse);
-        } catch (BaseException e) {
+        } catch (JwtValidException e) {
             servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             servletResponse.getWriter().write(GlobalExceptionHandler.response401Json);
         }
