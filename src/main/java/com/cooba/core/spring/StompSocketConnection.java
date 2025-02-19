@@ -1,6 +1,7 @@
 package com.cooba.core.spring;
 
 import com.cooba.core.SocketConnection;
+import com.cooba.entity.Chat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -21,17 +22,17 @@ public class StompSocketConnection implements SocketConnection {
     }
 
     @Override
-    public void sendToUser(String userid, String message) {
-        messagingTemplate.convertAndSendToUser(userid, "/queue/messages",  message);
+    public void sendToUser(String userid, Chat chat) {
+        messagingTemplate.convertAndSendToUser(userid, "/private",  chat);
     }
 
     @Override
-    public void sendToGroup(String group, String message) {
-        messagingTemplate.convertAndSend("/group/" + group, message);
+    public void sendToGroup(String group, Chat chat) {
+        messagingTemplate.convertAndSend("/group/" + group, chat);
     }
 
     @Override
     public void sendToAll(String message) {
-        messagingTemplate.convertAndSend("/topic/messages",  message);
+        messagingTemplate.convertAndSend("/topic/broadcast",  message);
     }
 }

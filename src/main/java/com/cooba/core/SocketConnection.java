@@ -1,5 +1,7 @@
 package com.cooba.core;
 
+import com.cooba.entity.Chat;
+
 public interface SocketConnection {
 
 
@@ -7,9 +9,9 @@ public interface SocketConnection {
 
     void unbindGroup(String userid, String group);
 
-    void sendToUser(String userid, String message);
+    void sendToUser(String userid, Chat chat);
 
-    void sendToGroup(String group, String message);
+    void sendToGroup(String group, Chat chat);
 
     void sendToAll(String message);
 }

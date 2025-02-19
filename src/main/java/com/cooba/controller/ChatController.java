@@ -20,27 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
     private final ChatComponent chatComponent;
 
-    @PostMapping("/user")
-    @Operation(summary = "傳訊息至用戶")
-    public ResultResponse<?> speakToUser(@RequestBody SpeakRequest request) {
-        chatComponent.speakToUser(request);
-        return ResultResponse.builder().data(true).build();
-    }
-
-    @PostMapping("/room")
-    @Operation(summary = "傳訊息至聊天室")
-    public ResultResponse<?> speakToRoom(@RequestBody SpeakRequest request) {
-        chatComponent.speakToRoom(request);
-        return ResultResponse.builder().data(true).build();
-    }
-
-    @PostMapping("/all")
-    @Operation(summary = "傳訊息至所有人")
-    public ResultResponse<?> speakToAll(@RequestBody SpeakRequest request) {
-        chatComponent.speakToAll(request);
-        return ResultResponse.builder().data(true).build();
-    }
-
     @PostMapping("/load")
     @Operation(summary = "取得聊天室內容")
     public ResultResponse<?> load(@RequestBody ChatLoadRequest request) {

@@ -29,7 +29,7 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
 
-        socketConnection.sendToUser(String.valueOf(chat.getUserId()), chat.getMessage());
+        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
 
-        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat.getMessage());
+        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }
 
     @Override
