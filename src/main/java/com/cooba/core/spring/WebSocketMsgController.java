@@ -23,7 +23,6 @@ public class WebSocketMsgController {
         chatComponent.speakToRoom(message);
     }
 
-
     @MessageMapping("/sendToAll")
     @SendTo("/topic/broadcast")
     public void sendToAll(@Payload SpeakRequest message) {

@@ -4,6 +4,7 @@ import com.cooba.aop.GlobalExceptionHandler;
 import com.cooba.aop.JwtFilter;
 import com.cooba.constant.RoleEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -40,6 +41,8 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Value("${frontEnd.url:http://localhost:5173")
+    private String frontEndUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
@@ -52,7 +55,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers(JwtFilter.ALL_PERMIT_PATHS).permitAll()
-                                .anyRequest().permitAll()
+                                .anyRequest().denyAll()
                 )
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
@@ -88,14 +91,18 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    /**
+     * AllowedOrigins 為 * 表示允許任何來源的跨來源請求
+     * 如果是允許使用 cookie 的情況，Access-Control-Allow-Origin 不能用 *，必須明確標示哪些來源允許存取
+     * <a href="https://www.shubo.io/what-is-cors/">cors 解釋</a>
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); // 允許所有來源
+        configuration.setAllowedOrigins(Collections.singletonList(frontEndUrl));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*")); // 允許所有標頭
-        configuration.setAllowCredentials(true); // 如果要允許 credentials，則不能使用 "*"
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

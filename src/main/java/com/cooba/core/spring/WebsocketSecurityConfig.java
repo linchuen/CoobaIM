@@ -1,5 +1,6 @@
 package com.cooba.core.spring;
 
+import com.cooba.constant.RoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -14,10 +15,10 @@ public class WebsocketSecurityConfig {
         MessageMatcherDelegatingAuthorizationManager.Builder messages=MessageMatcherDelegatingAuthorizationManager.builder();
         messages
                 .nullDestMatcher().authenticated()
-                .simpSubscribeDestMatchers("/user/queue/errors").permitAll()
-                .simpDestMatchers("/app/**").permitAll()
-                .simpSubscribeDestMatchers("/user/**", "/topic/friends/*").permitAll()
-                .anyMessage().permitAll();
+                .simpSubscribeDestMatchers("/user/**").hasRole(RoleEnum.USER.getRole())
+                .simpDestMatchers("/app/**").hasRole(RoleEnum.USER.getRole())
+                .simpSubscribeDestMatchers( "/topic/broadcast").permitAll()
+                .anyMessage().denyAll();
 
         return messages.build();
     }
