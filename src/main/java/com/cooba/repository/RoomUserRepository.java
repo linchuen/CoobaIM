@@ -1,8 +1,6 @@
 package com.cooba.repository;
 
-import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.mapper.RoomUserMapper;
+import com.cooba.entity.RoomUser;
 
-@DataManipulateLayer
-public interface RoomUserRepository extends RoomUserMapper {
+public interface RoomUserRepository extends BaseRepository<RoomUser> {
 }

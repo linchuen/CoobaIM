@@ -1,7 +1,6 @@
 package com.cooba.repository;
 
-import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.mapper.SessionMapper;
-@DataManipulateLayer
-public interface SessionRepository extends SessionMapper {
+import com.cooba.entity.Session;
+
+public interface SessionRepository extends BaseRepository<Session> {
 }

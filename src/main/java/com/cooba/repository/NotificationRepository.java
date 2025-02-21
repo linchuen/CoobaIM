@@ -1,9 +1,6 @@
 package com.cooba.repository;
 
-import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.mapper.ChatMapper;
-import com.cooba.mapper.NotificationMapper;
+import com.cooba.entity.Notification;
 
-@DataManipulateLayer
-public interface NotificationRepository extends NotificationMapper {
+public interface NotificationRepository extends BaseRepository<Notification> {
 }

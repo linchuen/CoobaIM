@@ -1,7 +1,6 @@
 package com.cooba.repository;
 
-import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.mapper.ChatMapper;
-@DataManipulateLayer
-public interface ChatRepository extends ChatMapper {
+import com.cooba.entity.Chat;
+
+public interface ChatRepository extends BaseRepository<Chat>{
 }

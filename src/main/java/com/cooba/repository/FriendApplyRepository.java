@@ -1,9 +1,9 @@
 package com.cooba.repository;
 
-import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.mapper.FriendApplyMapper;
-import com.cooba.mapper.FriendMapper;
+import com.cooba.entity.FriendApply;
 
-@DataManipulateLayer
-public interface FriendApplyRepository extends FriendApplyMapper {
+import java.util.Optional;
+
+public interface FriendApplyRepository extends BaseRepository<FriendApply> {
+    Optional<FriendApply> findFriendApply(FriendApply friendApply);
 }
