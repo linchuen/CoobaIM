@@ -7,6 +7,8 @@ import com.cooba.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @DataManipulateLayer
 @RequiredArgsConstructor
@@ -18,5 +20,14 @@ public class ChatRepositoryImpl implements ChatRepository {
         chatMapper.insert(chat);
     }
 
+    @Override
+    public void insert(List<Chat> chats) {
+        chatMapper.insert(chats);
+    }
 
+
+    @Override
+    public List<Chat> findChatByRoomId(long roomId) {
+        return List.of();
+    }
 }

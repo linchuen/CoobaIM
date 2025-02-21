@@ -29,14 +29,8 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public long apply(FriendApply friendApply) {
-        FriendApply apply = friendApplyRepository.selectOne(new LambdaQueryWrapper<FriendApply>()
-                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
-                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
-                .or()
-                .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
-                .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId())
-        );
-        if (apply != null) throw new BaseException(ErrorEnum.FRIEND_APPLY_EXIST);
+        friendApplyRepository.findFriendApply(friendApply)
+                .orElseThrow(() -> new BaseException(ErrorEnum.FRIEND_APPLY_EXIST));
 
         friendApplyRepository.insert(friendApply);
         return friendApply.getId();

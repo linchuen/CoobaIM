@@ -10,6 +10,8 @@ import com.cooba.repository.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @DataManipulateLayer
@@ -20,5 +22,10 @@ public class FriendRepositoryImpl implements FriendRepository {
     @Override
     public void insert(Friend friend) {
         friendMapper.insert(friend);
+    }
+
+    @Override
+    public void insert(List<Friend> friends) {
+        friendMapper.insert(friends);
     }
 }

@@ -7,6 +7,8 @@ import com.cooba.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @DataManipulateLayer
@@ -17,6 +19,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void insert(User user) {
         userMapper.insert(user);
+    }
+
+    @Override
+    public void insert(List<User> users) {
+        userMapper.insert(users);
+
     }
 }
 

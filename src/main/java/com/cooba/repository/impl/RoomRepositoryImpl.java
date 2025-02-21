@@ -7,6 +7,8 @@ import com.cooba.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @DataManipulateLayer
@@ -17,6 +19,12 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public void insert(Room room) {
         roomMapper.insert(room);
+    }
+
+    @Override
+    public void insert(List<Room> rooms) {
+        roomMapper.insert(rooms);
+
     }
 }
 

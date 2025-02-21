@@ -7,6 +7,8 @@ import com.cooba.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @DataManipulateLayer
@@ -17,5 +19,11 @@ public class SessionRepositoryImpl implements SessionRepository {
     @Override
     public void insert(Session session) {
         sessionMapper.insert(session);
+    }
+
+    @Override
+    public void insert(List<Session> sessions) {
+        sessionMapper.insert(sessions);
+
     }
 }

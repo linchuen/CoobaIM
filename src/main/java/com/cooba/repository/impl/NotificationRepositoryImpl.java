@@ -7,6 +7,8 @@ import com.cooba.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @DataManipulateLayer
@@ -17,5 +19,11 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     @Override
     public void insert(Notification notification) {
         notificationMapper.insert(notification);
+    }
+
+    @Override
+    public void insert(List<Notification> notifications) {
+        notificationMapper.insert(notifications);
+
     }
 }

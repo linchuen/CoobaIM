@@ -1,5 +1,6 @@
 package com.cooba.core.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -10,13 +11,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Autowired
+    private JwtHandshakeInterceptor jwtHandshakeInterceptor;
+
     @Value("${frontEnd.url:http://localhost:5173")
     private String frontEndUrl;
+
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(new JwtHandshakeInterceptor(jwtUtil)) // 註冊 JWT 驗證攔截器
+                .addInterceptors(jwtHandshakeInterceptor) // 註冊 JWT 驗證攔截器
                 .setAllowedOrigins(frontEndUrl)
                 .withSockJS();
     }

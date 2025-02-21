@@ -13,6 +13,7 @@ import com.cooba.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -54,12 +55,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Chat> getRoomChats(long roomId) {
-        return chatRepository.selectList(new LambdaQueryWrapper<Chat>()
-                .eq(Chat::getRoomId, roomId));
+        return chatRepository.findChatByRoomId(roomId);
     }
 
     @Override
     public List<Notification> getNotifications() {
-        return notificationRepository.selectList(new LambdaQueryWrapper<>());
+        return Collections.emptyList();
     }
 }
