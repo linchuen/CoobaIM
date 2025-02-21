@@ -15,6 +15,8 @@ public enum ErrorEnum {
     ROOM_USER_NOT_EXIST(1004,"room user not exist"),
     FRIEND_APPLY_EXIST(1005,"friend apply exist"),
     FRIEND_APPLY_NOT_EXIST(1006,"friend apply not exist"),
+    SESSION_NOT_EXIST(1007,"session not exist"),
+    USER_NOT_EXIST(1008,"user not exist"),
     UNKNOWN_ERROR(9999,"unknown error"),
     ;
 

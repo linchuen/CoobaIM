@@ -2,6 +2,7 @@ package com.cooba.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.JwtSecret;
 import com.cooba.entity.Session;
 import com.cooba.entity.User;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @BehaviorLayer
@@ -24,8 +26,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session add(User user) {
-        Session dbSession = sessionRepository.selectOne(new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, user.getId()));
+        Optional<Session> dbSession = sessionRepository.find(user.getId());
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -38,9 +39,8 @@ public class SessionServiceImpl implements SessionService {
         session.setToken(jwtUtil.createToken(user, now));
         session.setEnable(true);
 
-        if (dbSession != null) {
-            sessionRepository.update(session, new LambdaQueryWrapper<Session>()
-                    .eq(Session::getUserId, user.getId()));
+        if (dbSession.isPresent()) {
+            sessionRepository.updateByUserId(session);
         } else {
             sessionRepository.insert(session);
         }
@@ -55,18 +55,14 @@ public class SessionServiceImpl implements SessionService {
         Session session = new Session();
         session.setLogoutTime(now);
         session.setEnable(false);
-        sessionRepository.update(session, new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, user.getId()));
+        sessionRepository.updateByUserId(session);
 
         return now;
     }
 
     @Override
     public Session getInfo(long userId) {
-        Session session = sessionRepository.selectOne(new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, userId));
-        if (session == null) throw new BaseException();
-
-        return session;
+        return sessionRepository.find(userId)
+                .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
     }
 }

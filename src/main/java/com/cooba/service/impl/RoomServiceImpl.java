@@ -57,8 +57,7 @@ public class RoomServiceImpl implements RoomService {
     public void destroy(long roomId) {
         roomRepository.deleteById(roomId);
 
-        roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomId));
+        roomUserRepository.delete(roomId);
     }
 
     @Override
@@ -74,48 +73,36 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository.selectById(roomUser.getRoomId());
         if (room == null) throw new BaseException(ErrorEnum.ROOM_NOT_EXIST);
 
-        roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomUser.getRoomId())
-                .eq(RoomUser::getUserId, roomUser.getUserId()));
+        roomUserRepository.delete(roomUser.getRoomId(), roomUser.getUserId());
     }
 
     @Override
     public void deleteUsers(long roomId, List<Long> userIds) {
-        roomUserRepository.delete(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomId)
-                .in(RoomUser::getUserId, userIds));
+        roomUserRepository.delete(roomId, userIds);
     }
 
     @Override
     public List<Room> searchRooms(long userId) {
-        List<RoomUser> roomUsers = roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getUserId, userId));
-        return roomRepository.selectList(new LambdaQueryWrapper<Room>()
-                .in(Room::getId, roomUsers.stream().map(RoomUser::getRoomId).toList()));
+        List<Long> roomIds = roomUserRepository.findByUserId(userId)
+                .stream()
+                .map(RoomUser::getRoomId)
+                .toList();
+        return roomRepository.selectByIds(roomIds);
     }
 
     @Override
     public List<RoomUser> getRoomUsers(long roomId) {
-        return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomId));
+        return roomUserRepository.find(roomId);
     }
 
     @Override
     public RoomUser getRoomUserInfo(long roomId, long userId) {
-        RoomUser roomUser = roomUserRepository.selectOne(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomId)
-                .eq(RoomUser::getUserId, userId));
-
-        if (roomUser == null) throw new BaseException(ErrorEnum.ROOM_USER_NOT_EXIST);
-        return roomUser;
+        return roomUserRepository.find(roomId, userId)
+                .orElseThrow(() -> new BaseException(ErrorEnum.ROOM_USER_NOT_EXIST));
     }
 
     @Override
     public boolean isRoomMember(long roomId, long userId) {
-        RoomUser roomUser = roomUserRepository.selectOne(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getRoomId, roomId)
-                .eq(RoomUser::getUserId, userId));
-
-        return roomUser != null;
+        return roomUserRepository.find(roomId, userId).isPresent();
     }
 }

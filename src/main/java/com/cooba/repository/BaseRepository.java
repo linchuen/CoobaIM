@@ -9,4 +9,6 @@ public interface BaseRepository<T> {
     void insert(List<T> t);
 
     T selectById(long id);
+
+    void deleteById(long id);
 }

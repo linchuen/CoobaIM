@@ -30,7 +30,12 @@ public class FriendRepositoryImpl implements FriendRepository {
 
     @Override
     public Friend selectById(long id) {
-        return null;
+        return friendMapper.selectById(id);
+    }
+
+    @Override
+    public void deleteById(long id) {
+        friendMapper.deleteById(id);
     }
 
     @Override

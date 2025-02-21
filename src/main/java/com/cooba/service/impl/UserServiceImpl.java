@@ -1,7 +1,7 @@
 package com.cooba.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void verifyPassword(User user, String password) {
         String hashPassword = PasswordUtil.hash(password);
-        if (!user.getPassword().equals(hashPassword)){
+        if (!user.getPassword().equals(hashPassword)) {
             throw new BaseException();
         }
     }
@@ -62,22 +62,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getInfo(String email) {
-        User user = userRepository.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getEmail, email));
-        if (user == null) throw new BaseException();
-
-        return user;
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
     }
 
     @Override
     public List<RoomUser> getAllRooms(long userId) {
-        return roomUserRepository.selectList(new LambdaQueryWrapper<RoomUser>()
-                .eq(RoomUser::getUserId, userId));
+        return roomUserRepository.findByUserId(userId);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getName, username));
+        return userRepository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorEnum.USER_NOT_EXIST.getMessage()));
     }
 }

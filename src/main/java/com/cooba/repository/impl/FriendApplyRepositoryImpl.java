@@ -35,6 +35,11 @@ public class FriendApplyRepositoryImpl implements FriendApplyRepository {
         return friendApplyMapper.selectById(id);
     }
 
+    @Override
+    public void deleteById(long id) {
+        friendApplyMapper.deleteById(id);
+    }
+
 
     @Override
     public Optional<FriendApply> findByApplyIdAndPermitId(FriendApply friendApply) {

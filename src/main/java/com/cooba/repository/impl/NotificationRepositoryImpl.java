@@ -24,6 +24,15 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     @Override
     public void insert(List<Notification> notifications) {
         notificationMapper.insert(notifications);
+    }
 
+    @Override
+    public Notification selectById(long id) {
+        return notificationMapper.selectById(id);
+    }
+
+    @Override
+    public void deleteById(long id) {
+        notificationMapper.deleteById(id);
     }
 }

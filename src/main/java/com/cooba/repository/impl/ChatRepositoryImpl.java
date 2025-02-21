@@ -31,6 +31,11 @@ public class ChatRepositoryImpl implements ChatRepository {
         return chatMapper.selectById(id);
     }
 
+    @Override
+    public void deleteById(long id) {
+        chatMapper.deleteById(id);
+    }
+
 
     @Override
     public List<Chat> findChatByRoomId(long roomId) {
