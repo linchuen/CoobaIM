@@ -1,5 +1,6 @@
 package com.cooba.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Chat;
 import com.cooba.mapper.ChatMapper;
@@ -25,9 +26,15 @@ public class ChatRepositoryImpl implements ChatRepository {
         chatMapper.insert(chats);
     }
 
+    @Override
+    public Chat selectById(long id) {
+        return chatMapper.selectById(id);
+    }
+
 
     @Override
     public List<Chat> findChatByRoomId(long roomId) {
-        return List.of();
+        return chatMapper.selectList(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getRoomId, roomId));
     }
 }

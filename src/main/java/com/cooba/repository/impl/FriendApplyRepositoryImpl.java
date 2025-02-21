@@ -2,7 +2,9 @@ package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.FriendApply;
+import com.cooba.exception.BaseException;
 import com.cooba.mapper.FriendApplyMapper;
 import com.cooba.repository.FriendApplyRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +30,14 @@ public class FriendApplyRepositoryImpl implements FriendApplyRepository {
         friendApplyMapper.insert(friendApples);
     }
 
+    @Override
+    public FriendApply selectById(long id) {
+        return friendApplyMapper.selectById(id);
+    }
+
 
     @Override
-    public Optional<FriendApply> findFriendApply(FriendApply friendApply) {
+    public Optional<FriendApply> findByApplyIdAndPermitId(FriendApply friendApply) {
         FriendApply apply = friendApplyMapper.selectOne(new LambdaQueryWrapper<FriendApply>()
                 .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
                 .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
@@ -38,5 +45,32 @@ public class FriendApplyRepositoryImpl implements FriendApplyRepository {
                 .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
                 .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId()));
         return Optional.ofNullable(apply);
+    }
+
+    @Override
+    public void updateByApplyIdAndPermitId(FriendApply friendApply) {
+        int update = friendApplyMapper.update(friendApply, new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+        );
+        if (update == 0) throw new BaseException(ErrorEnum.FRIEND_APPLY_NOT_EXIST);
+    }
+
+    @Override
+    public void deleteByApplyIdAndPermitId(FriendApply friendApply) {
+        friendApplyMapper.delete(new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId()));
+    }
+
+    @Override
+    public void deleteByAllApplyIdAndPermitId(FriendApply friendApply) {
+        friendApplyMapper.delete(new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
+                .or()
+                .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
+                .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId())
+        );
     }
 }

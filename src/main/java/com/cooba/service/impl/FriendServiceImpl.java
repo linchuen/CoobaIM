@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @BehaviorLayer
@@ -29,7 +30,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public long apply(FriendApply friendApply) {
-        friendApplyRepository.findFriendApply(friendApply)
+        friendApplyRepository.findByApplyIdAndPermitId(friendApply)
                 .orElseThrow(() -> new BaseException(ErrorEnum.FRIEND_APPLY_EXIST));
 
         friendApplyRepository.insert(friendApply);
@@ -41,11 +42,7 @@ public class FriendServiceImpl implements FriendService {
     public void bind(FriendApply friendApply) {
         if (friendApply.isPermit()) {
             friendApply.setPermitTime(LocalDateTime.now());
-            int update = friendApplyRepository.update(friendApply, new LambdaQueryWrapper<FriendApply>()
-                    .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
-                    .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
-            );
-            if (update == 0) throw new BaseException(ErrorEnum.FRIEND_APPLY_NOT_EXIST);
+            friendApplyRepository.updateByApplyIdAndPermitId(friendApply);
 
             User permitUser = userRepository.selectById(friendApply.getApplyUserId());
             Friend apply = new Friend();
@@ -61,57 +58,38 @@ public class FriendServiceImpl implements FriendService {
             permit.setShowName(applyUser.getName());
             friendRepository.insert(permit);
         } else {
-            friendApplyRepository.delete(new LambdaQueryWrapper<FriendApply>()
-                    .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
-                    .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
-            );
+            friendApplyRepository.deleteByApplyIdAndPermitId(friendApply);
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void unbind(FriendApply friendApply) {
-        friendApplyRepository.delete(new LambdaQueryWrapper<FriendApply>()
-                .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())
-                .eq(FriendApply::getPermitUserId, friendApply.getPermitUserId())
-                .or()
-                .eq(FriendApply::getApplyUserId, friendApply.getPermitUserId())
-                .eq(FriendApply::getPermitUserId, friendApply.getApplyUserId())
-        );
+        friendApplyRepository.deleteByAllApplyIdAndPermitId(friendApply);
 
-        friendRepository.delete(new LambdaQueryWrapper<Friend>()
-                .eq(Friend::getUserId, friendApply.getApplyUserId())
-                .eq(Friend::getFriendUserId, friendApply.getPermitUserId()));
+        friendRepository.delete(friendApply.getApplyUserId(), friendApply.getPermitUserId());
 
-        friendRepository.delete(new LambdaQueryWrapper<Friend>()
-                .eq(Friend::getUserId, friendApply.getPermitUserId())
-                .eq(Friend::getFriendUserId, friendApply.getApplyUserId()));
+        friendRepository.delete(friendApply.getPermitUserId(), friendApply.getApplyUserId());
     }
 
     @Override
     public void tagRoom(List<Long> userIds, long roomId) {
-        Friend friend = new Friend();
-        friend.setRoomId(roomId);
-        friendRepository.update(friend, new LambdaQueryWrapper<Friend>()
-                .in(Friend::getUserId, userIds));
+        friendRepository.addRoomId(userIds, roomId);
     }
 
     @Override
     public List<Friend> search(long userId, List<Long> friendUserIds) {
         if (friendUserIds.isEmpty()) {
-            return friendRepository.selectList(new LambdaQueryWrapper<Friend>()
-                    .eq(Friend::getUserId, userId));
+            return friendRepository.find(userId);
         }
 
-        return friendRepository.selectList(new LambdaQueryWrapper<Friend>()
-                .eq(Friend::getUserId, userId)
-                .in(Friend::getFriendUserId, friendUserIds));
+        return friendRepository.find(userId).stream()
+                .filter(friend -> friendUserIds.contains(friend.getUserId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean isFriend(Friend friend) {
-        return friendRepository.selectOne(new LambdaQueryWrapper<Friend>()
-                .eq(Friend::getUserId, friend.getUserId())
-                .eq(Friend::getFriendUserId, friend.getFriendUserId())) != null;
+        return friendRepository.find(friend.getUserId(), friend.getFriendUserId()).isPresent();
     }
 }
