@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@MapperScan({"com.cooba.mapper","com.cooba.repository"})
+@MapperScan({"com.cooba.mapper"})
 @EnableConfigurationProperties
 public class WsApplication {
     public static void main(String[] args) {
