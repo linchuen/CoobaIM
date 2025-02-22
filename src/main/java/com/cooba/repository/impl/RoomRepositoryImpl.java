@@ -40,6 +40,9 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public List<Room> selectByIds(List<Long> ids) {
+        if (ids.isEmpty()){
+            return roomMapper.selectList(new LambdaQueryWrapper<>());
+        }
         return roomMapper.selectByIds(ids);
     }
 }
