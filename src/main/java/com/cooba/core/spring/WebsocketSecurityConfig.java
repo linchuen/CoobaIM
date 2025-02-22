@@ -15,8 +15,8 @@ public class WebsocketSecurityConfig {
         MessageMatcherDelegatingAuthorizationManager.Builder messages=MessageMatcherDelegatingAuthorizationManager.builder();
         messages
                 .nullDestMatcher().authenticated()
-                .simpSubscribeDestMatchers("/user/**").hasRole(RoleEnum.USER.getRole())
-                .simpDestMatchers("/app/**").hasRole(RoleEnum.USER.getRole())
+                .simpSubscribeDestMatchers("/user/**").hasAuthority(RoleEnum.USER.getRole())
+                .simpDestMatchers("/app/**").hasAuthority(RoleEnum.USER.getRole())
                 .simpSubscribeDestMatchers( "/topic/broadcast").permitAll()
                 .anyMessage().denyAll();
 

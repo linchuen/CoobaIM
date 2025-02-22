@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getInfo(long userId) {
         User user = userRepository.selectById(userId);
-        if (user == null) throw new BaseException();
+        if (user == null) throw new BaseException(ErrorEnum.USER_NOT_EXIST);
 
         return user;
     }

@@ -2,7 +2,9 @@ package com.cooba.config;
 
 import com.cooba.aop.GlobalExceptionHandler;
 import com.cooba.aop.JwtFilter;
+import com.cooba.constant.FrontEnd;
 import com.cooba.constant.RoleEnum;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,9 +42,9 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-    @Value("${frontEnd.url:http://localhost:5173")
-    private String frontEndUrl;
+    private final FrontEnd frontEnd;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
@@ -99,7 +101,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList(frontEndUrl));
+        configuration.setAllowedOrigins(Collections.singletonList(frontEnd.getUrl()));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

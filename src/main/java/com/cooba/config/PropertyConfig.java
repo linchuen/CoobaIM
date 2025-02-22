@@ -1,5 +1,6 @@
 package com.cooba.config;
 
+import com.cooba.constant.FrontEnd;
 import com.cooba.constant.JwtSecret;
 import com.cooba.constant.Password;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,4 +21,11 @@ public class PropertyConfig {
     public Password password(){
         return new Password();
     }
+
+    @Bean
+    @ConfigurationProperties(prefix = "front-end")
+    public FrontEnd frontEnd(){
+        return new FrontEnd();
+    }
+
 }
