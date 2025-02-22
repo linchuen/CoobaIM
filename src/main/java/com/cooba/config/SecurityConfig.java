@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers(JwtFilter.ALL_PERMIT_PATHS).permitAll()
-                                .anyRequest().denyAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
