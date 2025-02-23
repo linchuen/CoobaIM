@@ -1,6 +1,5 @@
 package com.cooba.core.spring;
 
-import com.cooba.exception.BaseException;
 import com.cooba.exception.JwtValidException;
 import com.cooba.util.JwtHeaderValidator;
 import jakarta.servlet.http.HttpServletRequest;

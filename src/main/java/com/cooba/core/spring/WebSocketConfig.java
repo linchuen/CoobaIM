@@ -14,18 +14,19 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-//    @Autowired
-//    private JwtHandshakeInterceptor jwtHandshakeInterceptor;
-
+    private final JwtHandshakeInterceptor jwtHandshakeInterceptor;
     private final FrontEnd frontEnd;
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-//                .addInterceptors(jwtHandshakeInterceptor) // 註冊 JWT 驗證攔截器
+                .addInterceptors(jwtHandshakeInterceptor) // 註冊 JWT 驗證攔截器
                 .setAllowedOrigins(frontEnd.getUrl())
-                .withSockJS();
+                .withSockJS()
+                .setWebSocketEnabled(true)  // 確保 WebSocket 啟用
+                .setSessionCookieNeeded(false)  // 禁止使用 Cookie
+                .setDisconnectDelay(0); // 立即斷開，不使用輪詢;
     }
 
     @Override

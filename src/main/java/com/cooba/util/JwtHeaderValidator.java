@@ -5,6 +5,7 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.dto.UserInfo;
 import com.cooba.entity.User;
 import com.cooba.exception.JwtValidException;
+import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,26 +19,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtHeaderValidator {
     private final JwtUtil jwtUtil;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final UserThreadLocal userThreadLocal;
 
     public void validHeader(HttpServletRequest servletRequest) throws JwtValidException {
-        // 获取 Authorization Header
         String authToken = servletRequest.getHeader("Authorization");
+        System.out.println(authToken);
         if (authToken == null || !authToken.startsWith("Bearer ")) {
             throw new JwtValidException();
         }
 
-        String token = authToken.substring(7); // 去掉 "Bearer " 前缀
+        String token = authToken.substring(7);
 
         try {
-            // 解析和验证 JWT 令牌
             DecodedJWT decodedJWT = jwtUtil.verifyToken(token);
             Long id = decodedJWT.getClaim("id").asLong();
             String name = decodedJWT.getClaim("name").asString();
             String jwtToken = decodedJWT.getToken();
 
-            User user = userService.getInfo(id);
+            User user = userRepository.selectById(id);
             if (user == null) throw new UsernameNotFoundException(name);
 
             UserInfo userInfo = new UserInfo();
@@ -50,6 +50,7 @@ public class JwtHeaderValidator {
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new JwtValidException();
         }
     }
