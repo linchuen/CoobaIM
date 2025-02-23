@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         try {
-            jwtHeaderValidator.validHeader(servletRequest);
+            jwtHeaderValidator.validHeader(servletRequest.getHeader("Authorization"));
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (JwtValidException e) {
             servletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);

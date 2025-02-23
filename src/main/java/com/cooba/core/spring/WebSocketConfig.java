@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -21,12 +22,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(jwtHandshakeInterceptor) // 註冊 JWT 驗證攔截器
                 .setAllowedOrigins(frontEnd.getUrl())
-                .withSockJS()
-                .setWebSocketEnabled(true)  // 確保 WebSocket 啟用
-                .setSessionCookieNeeded(false)  // 禁止使用 Cookie
-                .setDisconnectDelay(0); // 立即斷開，不使用輪詢;
+                .withSockJS(); // 立即斷開，不使用輪詢;
     }
 
     @Override
@@ -35,5 +32,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(jwtHandshakeInterceptor); // 註冊 JWT 攔截器
     }
 }
