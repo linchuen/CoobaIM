@@ -5,6 +5,7 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomTypeEnum;
+import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
@@ -174,6 +175,16 @@ public class UserComponentImpl implements UserComponent {
         List<Friend> friends = friendService.search(userId, request.getFriendUserIds());
         return FriendSearchResponse.builder()
                 .friends(friends)
+                .build();
+    }
+
+    @Override
+    public FriendSearchApplyResponse searchFriendApply() {
+        long userId = userThreadLocal.getCurrentUserId();
+
+        List<FriendApplyInfo> friendApplyInfoList = friendService.searchApply(userId);
+        return FriendSearchApplyResponse.builder()
+                .applicants(friendApplyInfoList)
                 .build();
     }
 }

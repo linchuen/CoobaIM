@@ -42,6 +42,12 @@ public class FriendApplyRepositoryImpl implements FriendApplyRepository {
 
 
     @Override
+    public List<FriendApply> findByPermitId(long permitId) {
+        return friendApplyMapper.selectList(new LambdaQueryWrapper<FriendApply>()
+                .eq(FriendApply::getPermitUserId, permitId));
+    }
+
+    @Override
     public Optional<FriendApply> findByApplyIdAndPermitId(FriendApply friendApply) {
         FriendApply apply = friendApplyMapper.selectOne(new LambdaQueryWrapper<FriendApply>()
                 .eq(FriendApply::getApplyUserId, friendApply.getApplyUserId())

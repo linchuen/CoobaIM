@@ -3,6 +3,7 @@ package com.cooba.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
+import com.cooba.dto.FriendApplyInfo;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
 import com.cooba.entity.User;
@@ -31,7 +32,9 @@ public class FriendServiceImpl implements FriendService {
     @Transactional(rollbackFor = Exception.class)
     public long apply(FriendApply friendApply) {
         friendApplyRepository.findByApplyIdAndPermitId(friendApply)
-                .orElseThrow(() -> new BaseException(ErrorEnum.FRIEND_APPLY_EXIST));
+                .ifPresent(apply -> {
+                    throw new BaseException(ErrorEnum.FRIEND_APPLY_EXIST);
+                });
 
         friendApplyRepository.insert(friendApply);
         return friendApply.getId();
@@ -86,6 +89,22 @@ public class FriendServiceImpl implements FriendService {
         return friendRepository.find(userId).stream()
                 .filter(friend -> friendUserIds.contains(friend.getUserId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FriendApplyInfo> searchApply(long userId) {
+        return friendApplyRepository.findByPermitId(userId)
+                .stream()
+                .map(friendApply -> {
+                    User applyUser = userRepository.selectById(friendApply.getApplyUserId());
+
+                    FriendApplyInfo friendApplyInfo = new FriendApplyInfo();
+                    friendApplyInfo.setId(friendApply.getId());
+                    friendApplyInfo.setApplyId(applyUser.getId());
+                    friendApplyInfo.setName(applyUser.getName());
+                    return friendApplyInfo;
+                })
+                .toList();
     }
 
     @Override

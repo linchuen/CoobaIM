@@ -4,10 +4,7 @@ import com.cooba.component.UserComponent;
 import com.cooba.dto.request.FriendRemoveRequest;
 import com.cooba.dto.request.FriendRequest;
 import com.cooba.dto.request.FriendSearchRequest;
-import com.cooba.dto.response.FriendApplyResponse;
-import com.cooba.dto.response.FriendPermitResponse;
-import com.cooba.dto.response.FriendSearchResponse;
-import com.cooba.dto.response.ResultResponse;
+import com.cooba.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +36,13 @@ public class FriendController {
     public ResultResponse<?> remove(@RequestBody FriendRemoveRequest request) {
         userComponent.removeFriend(request);
         return ResultResponse.builder().data(true).build();
+    }
+
+    @PostMapping("/apply/search")
+    @Operation(summary = "好友申請搜尋")
+    public ResultResponse<?> searchApply() {
+        FriendSearchApplyResponse response = userComponent.searchFriendApply();
+        return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/search")

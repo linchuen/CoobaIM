@@ -27,4 +27,6 @@ public interface UserComponent {
     void removeFriend(FriendRemoveRequest request);
 
     FriendSearchResponse searchFriend(FriendSearchRequest request);
+
+    FriendSearchApplyResponse searchFriendApply();
 }

@@ -1,5 +1,6 @@
 package com.cooba.service;
 
+import com.cooba.dto.FriendApplyInfo;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
 
@@ -16,6 +17,8 @@ public interface FriendService {
     void tagRoom(List<Long> userIds, long roomId);
 
     List<Friend> search(long userId, List<Long> friendUserIds);
+
+    List<FriendApplyInfo> searchApply(long userId);
 
     boolean isFriend(Friend friend);
 }
