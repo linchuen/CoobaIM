@@ -47,7 +47,7 @@ public class FriendServiceImpl implements FriendService {
             friendApply.setPermitTime(LocalDateTime.now());
             friendApplyRepository.updateByApplyIdAndPermitId(friendApply);
 
-            User permitUser = userRepository.selectById(friendApply.getApplyUserId());
+            User permitUser = userRepository.selectById(friendApply.getPermitUserId());
             Friend apply = new Friend();
             apply.setUserId(friendApply.getApplyUserId());
             apply.setFriendUserId(friendApply.getPermitUserId());
@@ -95,6 +95,7 @@ public class FriendServiceImpl implements FriendService {
     public List<FriendApplyInfo> searchApply(long userId) {
         return friendApplyRepository.findByPermitId(userId)
                 .stream()
+                .filter(friendApply -> !friendApply.isPermit())
                 .map(friendApply -> {
                     User applyUser = userRepository.selectById(friendApply.getApplyUserId());
 
