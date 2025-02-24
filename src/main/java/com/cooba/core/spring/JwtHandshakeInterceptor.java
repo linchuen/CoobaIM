@@ -24,7 +24,6 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
             String authToken = accessor.getFirstNativeHeader("Authorization");
 
             jwtHeaderValidator.validHeader(authToken);
-            log.info("通過websocket驗證");
         }
         return message;
     }

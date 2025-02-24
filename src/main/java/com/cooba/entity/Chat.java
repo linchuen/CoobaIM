@@ -48,8 +48,8 @@ public class Chat {
 
     public Chat(SendMessage sendMessage) {
         this.roomId = sendMessage.getRoomId();
-        this.userId = sendMessage.getUser().getId();
-        this.name = sendMessage.getUser().getName();
+        this.userId = sendMessage.getUserId();
+        this.name = sendMessage.getName();
         this.message = sendMessage.getMessage();
         this.type = sendMessage.getType();
     }

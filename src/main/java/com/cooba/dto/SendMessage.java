@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class SendMessage {
     private long roomId;
-    private User user;
+    private long userId;
+    private String name;
     private String message;
     private MessageTypeEnum type = MessageTypeEnum.TEXT;
 }

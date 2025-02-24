@@ -12,12 +12,12 @@ public class WebsocketSecurityConfig {
 
     @Bean
     public AuthorizationManager<Message<?>> messageAuthorizationManager() {
-        MessageMatcherDelegatingAuthorizationManager.Builder messages=MessageMatcherDelegatingAuthorizationManager.builder();
+        MessageMatcherDelegatingAuthorizationManager.Builder messages = MessageMatcherDelegatingAuthorizationManager.builder();
         messages
                 .nullDestMatcher().authenticated()
                 .simpSubscribeDestMatchers("/user/**").hasAuthority(RoleEnum.USER.getRole())
                 .simpDestMatchers("/app/**").hasAuthority(RoleEnum.USER.getRole())
-                .simpSubscribeDestMatchers( "/topic/broadcast").permitAll()
+                .simpSubscribeDestMatchers("/topic/broadcast").permitAll()
                 .anyMessage().denyAll();
 
         return messages.build();

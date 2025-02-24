@@ -10,6 +10,7 @@ import com.cooba.dto.request.ChatLoadRequest;
 import com.cooba.dto.request.SpeakRequest;
 import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.entity.Chat;
+import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.*;
@@ -28,40 +29,38 @@ public class ChatComponentImpl implements ChatComponent {
 
     @Override
     public void speakToUser(SpeakRequest request) {
-        User user = userThreadLocal.getCurrentUser();
+        Long userId = request.getUserId();
 
-        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
-        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+        RoomUser roomUserInfo = roomService.getRoomUserInfo(request.getRoomId(), userId);
 
         SendMessage message = new SendMessage();
         message.setMessage(request.getMessage());
-        message.setUser(user);
-        message.setRoomId(request.getRoomId());
+        message.setUserId(roomUserInfo.getUserId());
+        message.setName(roomUserInfo.getShowName());
+        message.setRoomId(roomUserInfo.getRoomId());
 
         messageService.sendToUser(message);
     }
 
     @Override
     public void speakToRoom(SpeakRequest request) {
-        User user = userThreadLocal.getCurrentUser();
+        Long userId = request.getUserId();
 
-        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), user.getId());
-        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+        RoomUser roomUserInfo = roomService.getRoomUserInfo(request.getRoomId(), userId);
 
         SendMessage message = new SendMessage();
         message.setMessage(request.getMessage());
-        message.setUser(user);
-        message.setRoomId(request.getRoomId());
+        message.setUserId(roomUserInfo.getUserId());
+        message.setName(roomUserInfo.getShowName());
+        message.setRoomId(roomUserInfo.getRoomId());
 
         messageService.sendToRoom(message);
     }
 
     @Override
     public void speakToAll(SpeakRequest request) {
-        Long userId = userThreadLocal.getCurrentUserId();
-
         NotifyMessage message = new NotifyMessage();
-        message.setUserId(userId);
+        message.setUserId(request.getUserId());
         message.setMessage(request.getMessage());
 
         messageService.sendToAll(message);

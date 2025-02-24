@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class SpeakRequest {
     private Long roomId;
+    private Long userId;
     private String message;
 }

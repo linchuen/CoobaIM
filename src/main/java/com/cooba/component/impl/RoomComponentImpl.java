@@ -84,7 +84,8 @@ public class RoomComponentImpl implements RoomComponent {
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
-        message.setUser(newUser);
+        message.setUserId(newUser.getId());
+        message.setName(newUser.getName());
         message.setMessage(newUser.getName() + "進入聊天室");
         messageService.sendToRoom(message);
     }
@@ -111,7 +112,8 @@ public class RoomComponentImpl implements RoomComponent {
 
         SendMessage message = new SendMessage();
         message.setRoomId(request.getRoomId());
-        message.setUser(removeUser);
+        message.setUserId(removeUser.getId());
+        message.setName(removeUser.getName());
         message.setMessage(removeUser.getName() + "離開聊天室");
         messageService.sendToRoom(message);
     }
