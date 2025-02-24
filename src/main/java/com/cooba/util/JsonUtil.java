@@ -1,11 +1,12 @@
 package com.cooba.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 
 
 public class JsonUtil {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
 
     @SneakyThrows
