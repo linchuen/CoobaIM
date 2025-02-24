@@ -2,6 +2,7 @@ package com.cooba.core.spring;
 
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.Chat;
+import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,12 @@ public class StompSocketConnection implements SocketConnection {
 
     @Override
     public void sendToUser(String userid, Chat chat) {
-        messagingTemplate.convertAndSendToUser(userid, "/private",  chat);
+        messagingTemplate.convertAndSendToUser(userid, "/private", JsonUtil.toJson(chat));
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
-        messagingTemplate.convertAndSend("/group/" + group, chat);
+        messagingTemplate.convertAndSend("/group/" + group, JsonUtil.toJson(chat));
     }
 
     @Override
