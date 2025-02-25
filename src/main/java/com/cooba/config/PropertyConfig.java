@@ -3,6 +3,7 @@ package com.cooba.config;
 import com.cooba.constant.FrontEnd;
 import com.cooba.constant.JwtSecret;
 import com.cooba.constant.Password;
+import com.cooba.constant.StompMQ;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,12 @@ public class PropertyConfig {
     @ConfigurationProperties(prefix = "front-end")
     public FrontEnd frontEnd(){
         return new FrontEnd();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "stomp.mq")
+    public StompMQ stompMQ(){
+        return new StompMQ();
     }
 
 }

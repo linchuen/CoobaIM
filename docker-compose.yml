@@ -57,3 +57,17 @@ services:
       CLICKHOUSE_PASSWORD: ${CLICKHOUSE_DB_PASSWORD}
     ports:
       - 18123:8123
+
+  artemis:
+    image: apache/activemq-artemis:2.39.0-alpine
+    container_name: im_activemq-artemis
+    env_file:
+      - .env
+    environment:
+      ARTEMIS_USERNAME: ${ARTEMIS_USERNAME}
+      ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
+    ports:
+      - 8161:8161   # Web管理界面
+      - 61616:61616 # AMQP
+      - 61613:61613 # STOMP
+      - 5672:5672   # MQTT

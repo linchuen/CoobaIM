@@ -39,21 +39,9 @@ logging:
   level:
     root: info
 
-tio:
-  websocket:
-    server:
-      port: 9999
-      heartbeat-timeout: 600000
-
-#    ssl:
-#      enabled: true
-#      keyStore: classpath:ssl/keystore.jks
-#      trustStore: classpath:ssl/keystore.jks
-#      password: 214323428310224
-    #是否支持集群，集群开启需要redis
-    cluster:
-      enabled: false
-      all: true
-      group: true
-      ip: true
-      user: true
+stomp:
+  mq:
+    relay-host: ${ARTEMIS_HOST:127.0.0.1}
+    relay-port: ${ARTEMIS_PORT:61616}
+    login: ${ARTEMIS_USERNAME:admin}
+    passcode: ${ARTEMIS_PASSWORD:admin}
