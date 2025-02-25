@@ -17,6 +17,10 @@ services:
       MYSQL_DB_HOST: ${MYSQL_DB_HOST}
       MYSQL_DB_USERNAME: ${MYSQL_DB_USERNAME}
       MYSQL_DB_PASSWORD: ${MYSQL_DB_PASSWORD}
+      ARTEMIS_HOST: ${ARTEMIS_HOST}
+      ARTEMIS_PORT: ${ARTEMIS_PORT}
+      ARTEMIS_USER: ${ARTEMIS_USER}
+      ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
     ports:
       - 8080:8080
     depends_on:
@@ -64,7 +68,7 @@ services:
     env_file:
       - .env
     environment:
-      ARTEMIS_USERNAME: ${ARTEMIS_USERNAME}
+      ARTEMIS_USER: ${ARTEMIS_USER}
       ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
     ports:
       - 8161:8161   # Web管理界面

@@ -3,8 +3,6 @@ package com.cooba.core.spring;
 import com.cooba.constant.FrontEnd;
 import com.cooba.constant.StompMQ;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -32,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableStompBrokerRelay("/topic", "/queue", "/group")
                 .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
-                .setRelayPort(stompMQ.getRelayPost())
+                .setRelayPort(stompMQ.getRelayPort())
                 .setClientLogin(stompMQ.getLogin())
                 .setClientPasscode(stompMQ.getPasscode());
 
