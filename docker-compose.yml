@@ -70,6 +70,7 @@ services:
     environment:
       ARTEMIS_USER: ${ARTEMIS_USER}
       ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
+      ANONYMOUS_LOGIN: true
     ports:
       - 8161:8161   # Web管理界面
       - 61616:61616 # AMQP
