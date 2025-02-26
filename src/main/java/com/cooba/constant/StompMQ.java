@@ -8,4 +8,5 @@ public class StompMQ {
     private Integer relayPort;
     private String login;
     private String passcode;
+    private Boolean enable = false;
 }

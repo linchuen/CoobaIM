@@ -5,6 +5,7 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomTypeEnum;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
@@ -29,6 +30,7 @@ public class UserComponentImpl implements UserComponent {
     private final FriendService friendService;
     private final SessionService sessionService;
     private final UserThreadLocal userThreadLocal;
+    private final SocketConnection socketConnection;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -126,6 +128,7 @@ public class UserComponentImpl implements UserComponent {
 
         long applyId = friendService.apply(friendApply);
 
+        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()),"friendApply");
         return FriendApplyResponse.builder()
                 .applyId(applyId)
                 .build();
@@ -146,10 +149,16 @@ public class UserComponentImpl implements UserComponent {
 
         friendService.bind(friendApply);
 
+        if(!request.getIsPermit()){
+            return FriendPermitResponse.builder().build();
+        }
+
         Room room = new Room();
         room.setName(UUID.randomUUID().toString());
         room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
         long roomId = roomService.build(room, List.of(applyUserId));
+
+        socketConnection.sendUserEvent(String.valueOf(applyUserId),"addRoom");
 
         friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
         return FriendPermitResponse.builder()

@@ -28,11 +28,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableStompBrokerRelay("/topic", "/queue", "/group")
-                .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
-                .setRelayPort(stompMQ.getRelayPort())
-                .setClientLogin(stompMQ.getLogin())
-                .setClientPasscode(stompMQ.getPasscode());
+        if (!stompMQ.getEnable()) {
+            registry.enableSimpleBroker("/topic", "/queue", "/group");
+        } else {
+            registry.enableStompBrokerRelay("/topic", "/queue", "/group")
+                    .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
+                    .setRelayPort(stompMQ.getRelayPort())
+                    .setClientLogin(stompMQ.getLogin())
+                    .setClientPasscode(stompMQ.getPasscode());
+        }
+
 
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");

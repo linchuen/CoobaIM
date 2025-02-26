@@ -25,6 +25,11 @@ public class StompSocketConnection implements SocketConnection {
     }
 
     @Override
+    public void sendUserEvent(String userid, String event) {
+        messagingTemplate.convertAndSendToUser(userid, "/private", event);
+    }
+
+    @Override
     public void sendToUser(String userid, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         messagingTemplate.convertAndSendToUser(userid, "/private", payload);
