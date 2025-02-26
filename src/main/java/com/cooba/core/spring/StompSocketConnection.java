@@ -15,27 +15,27 @@ public class StompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void bindGroup(String userid, String group) {
+    public void bindGroup(String userId, String group) {
 
     }
 
     @Override
-    public void unbindGroup(String userid, String group) {
+    public void unbindGroup(String userId, String group) {
 
     }
 
     @Override
-    public <T> void sendUserEvent(String userid, String event, T t) {
+    public <T> void sendUserEvent(String userId, String event, T t) {
         String payload = JsonUtil.toJson(t);
-        messagingTemplate.convertAndSendToUser(userid, event, payload);
-        log.debug("/{}/{} content:{}", event, userid, payload);
+        messagingTemplate.convertAndSendToUser(userId, event, payload);
+        log.debug("/{}/{} content:{}", event, userId, payload);
     }
 
     @Override
-    public void sendToUser(String userid, Chat chat) {
+    public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
-        messagingTemplate.convertAndSendToUser(userid, "/private", payload);
-        log.debug("/private/{} content:{}", userid, payload);
+        messagingTemplate.convertAndSendToUser(userId, "/private", payload);
+        log.debug("/private/{} content:{}", userId, payload);
     }
 
     @Override

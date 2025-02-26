@@ -5,13 +5,13 @@ import com.cooba.entity.Chat;
 public interface SocketConnection {
 
 
-    void bindGroup(String userid, String group);
+    void bindGroup(String userId, String group);
 
-    void unbindGroup(String userid, String group);
+    void unbindGroup(String userId, String group);
 
-    <T> void sendUserEvent(String userid, String event, T t);
+    <T> void sendUserEvent(String userId, String event, T t);
 
-    void sendToUser(String userid, Chat chat);
+    void sendToUser(String userId, Chat chat);
 
     void sendToGroup(String group, Chat chat);
 

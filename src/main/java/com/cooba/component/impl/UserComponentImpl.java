@@ -160,7 +160,7 @@ public class UserComponentImpl implements UserComponent {
 
         friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
 
-        Friend friend = friendService.search(userId, List.of(applyUserId)).getFirst();
+        Friend friend = friendService.search(userId, List.of(applyUserId)).get(0);
         socketConnection.sendUserEvent(String.valueOf(applyUserId), "room_add", friend);
         return FriendPermitResponse.builder()
                 .roomId(roomId)

@@ -22,7 +22,7 @@ public class JwtHeaderValidator {
     private final UserRepository userRepository;
     private final UserThreadLocal userThreadLocal;
 
-    public void validHeader(String authToken) throws JwtValidException {
+    public Long validHeader(String authToken) throws JwtValidException {
         if (authToken == null || !authToken.startsWith("Bearer ")) {
             throw new JwtValidException();
         }
@@ -47,6 +47,7 @@ public class JwtHeaderValidator {
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            return id;
         } catch (Exception e) {
             throw new JwtValidException();
         }

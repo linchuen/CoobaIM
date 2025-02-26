@@ -1,5 +1,7 @@
 package com.cooba.core.spring;
 
+import com.cooba.constant.ErrorEnum;
+import com.cooba.exception.BaseException;
 import com.cooba.util.JwtHeaderValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,10 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String authToken = accessor.getFirstNativeHeader("Authorization");
 
-            jwtHeaderValidator.validHeader(authToken);
+            Long userId = jwtHeaderValidator.validHeader(authToken);
+            if (!userId.toString().equals(accessor.getUser().getName())) {
+                throw new BaseException(ErrorEnum.INVALID_AUTHORIZATION);
+            }
         }
         return message;
     }
