@@ -128,7 +128,7 @@ public class UserComponentImpl implements UserComponent {
 
         long applyId = friendService.apply(friendApply);
 
-        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()),"friendApply");
+        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()), "friend_apply", friendApply);
         return FriendApplyResponse.builder()
                 .applyId(applyId)
                 .build();
@@ -139,7 +139,7 @@ public class UserComponentImpl implements UserComponent {
         Long permitUserId = request.getPermitUserId();
         Long applyUserId = request.getApplyUserId();
 
-        Long userId = userThreadLocal.getCurrentUserId();
+        long userId = userThreadLocal.getCurrentUserId();
         if (!Objects.equals(userId, permitUserId)) throw new BaseException(ErrorEnum.FORBIDDEN);
 
         FriendApply friendApply = new FriendApply();
@@ -149,7 +149,7 @@ public class UserComponentImpl implements UserComponent {
 
         friendService.bind(friendApply);
 
-        if(!request.getIsPermit()){
+        if (!request.getIsPermit()) {
             return FriendPermitResponse.builder().build();
         }
 
@@ -158,9 +158,10 @@ public class UserComponentImpl implements UserComponent {
         room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
         long roomId = roomService.build(room, List.of(applyUserId));
 
-        socketConnection.sendUserEvent(String.valueOf(applyUserId),"addRoom");
-
         friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
+
+        Friend friend = friendService.search(userId, List.of(applyUserId)).getFirst();
+        socketConnection.sendUserEvent(String.valueOf(applyUserId), "room_add", friend);
         return FriendPermitResponse.builder()
                 .roomId(roomId)
                 .build();

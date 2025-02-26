@@ -9,7 +9,7 @@ public interface SocketConnection {
 
     void unbindGroup(String userid, String group);
 
-    void sendUserEvent(String userid, String event);
+    <T> void sendUserEvent(String userid, String event, T t);
 
     void sendToUser(String userid, Chat chat);
 
