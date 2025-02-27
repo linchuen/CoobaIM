@@ -1,7 +1,6 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
-import com.cooba.aop.UserThreadLocal;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
@@ -14,11 +13,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.UnexpectedRollbackException;
 
 
 @MybatisLocalTest
@@ -59,7 +55,7 @@ class FriendServiceImplTest {
         FriendApply friendApply = Instancio.create(FriendApply.class);
         friendApply.setPermit(true);
         friendService.apply(friendApply);
-        friendService.bind(friendApply);
+        friendService.bind(friendApply, );
 
         Friend apply = new Friend();
         apply.setUserId(friendApply.getApplyUserId());
@@ -80,7 +76,7 @@ class FriendServiceImplTest {
         FriendApply friendApply = Instancio.create(FriendApply.class);
         friendApply.setPermit(false);
         friendService.apply(friendApply);
-        friendService.bind(friendApply);
+        friendService.bind(friendApply, );
 
         Friend apply = new Friend();
         apply.setUserId(friendApply.getApplyUserId());
@@ -101,7 +97,7 @@ class FriendServiceImplTest {
         FriendApply friendApply = Instancio.create(FriendApply.class);
         friendApply.setPermit(true);
         friendService.apply(friendApply);
-        friendService.bind(friendApply);
+        friendService.bind(friendApply, );
         friendService.unbind(friendApply);
 
         FriendApply select = friendApplyRepository.selectById(friendApply.getId());

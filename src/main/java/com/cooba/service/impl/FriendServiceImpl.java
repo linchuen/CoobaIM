@@ -1,11 +1,12 @@
 package com.cooba.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.FriendApplyInfo;
+import com.cooba.dto.FriendBindResult;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
+import com.cooba.entity.Room;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.repository.FriendApplyRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,8 +44,10 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void bind(FriendApply friendApply) {
+    public FriendBindResult bind(FriendApply friendApply, Supplier<Room> roomSupplier) {
         if (friendApply.isPermit()) {
+            Long roomId = roomSupplier.get().getId();
+
             friendApply.setPermitTime(LocalDateTime.now());
             friendApplyRepository.updateByApplyIdAndPermitId(friendApply);
 
@@ -52,6 +56,7 @@ public class FriendServiceImpl implements FriendService {
             apply.setUserId(friendApply.getApplyUserId());
             apply.setFriendUserId(friendApply.getPermitUserId());
             apply.setShowName(permitUser.getName());
+            apply.setRoomId(roomId);
             friendRepository.insert(apply);
 
             User applyUser = userRepository.selectById(friendApply.getApplyUserId());
@@ -59,9 +64,17 @@ public class FriendServiceImpl implements FriendService {
             permit.setUserId(friendApply.getPermitUserId());
             permit.setFriendUserId(friendApply.getApplyUserId());
             permit.setShowName(applyUser.getName());
+            permit.setRoomId(roomId);
             friendRepository.insert(permit);
+
+            return FriendBindResult.builder()
+                    .applyUser(apply)
+                    .permitUser(permit)
+                    .build();
         } else {
             friendApplyRepository.deleteByApplyIdAndPermitId(friendApply);
+            return FriendBindResult.builder()
+                    .build();
         }
     }
 

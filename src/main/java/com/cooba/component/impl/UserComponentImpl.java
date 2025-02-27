@@ -7,6 +7,7 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomTypeEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.FriendApplyInfo;
+import com.cooba.dto.FriendBindResult;
 import com.cooba.dto.UserInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
@@ -153,9 +154,8 @@ public class UserComponentImpl implements UserComponent {
         friendApply.setPermitUserId(permitUserId);
         friendApply.setPermit(request.getIsPermit());
 
-        friendService.bind(friendApply);
-
         if (!request.getIsPermit()) {
+            friendService.bind(friendApply, () -> null);
             return FriendPermitResponse.builder().build();
         }
 
@@ -163,11 +163,9 @@ public class UserComponentImpl implements UserComponent {
         room.setName(UUID.randomUUID().toString());
         room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
         long roomId = roomService.build(room, List.of(applyUserId));
+        FriendBindResult friendBindResult = friendService.bind(friendApply, () -> room);
 
-        friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
-
-        Friend friend = friendService.search(userId, List.of(applyUserId)).get(0);
-        socketConnection.sendUserEvent(String.valueOf(applyUserId), "friend_add", friend);
+        socketConnection.sendUserEvent(String.valueOf(applyUserId), "friend_add", friendBindResult.getPermitUser());
         return FriendPermitResponse.builder()
                 .roomId(roomId)
                 .build();
