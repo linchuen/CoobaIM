@@ -7,6 +7,7 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomTypeEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.FriendApplyInfo;
+import com.cooba.dto.UserInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
@@ -128,7 +129,12 @@ public class UserComponentImpl implements UserComponent {
 
         long applyId = friendService.apply(friendApply);
 
-        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()), "friend_apply", friendApply);
+        UserInfo userInfo = userThreadLocal.get();
+        FriendApplyInfo applyInfo = new FriendApplyInfo();
+        applyInfo.setId(applyId);
+        applyInfo.setApplyId(userInfo.getId());
+        applyInfo.setName(userInfo.getName());
+        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()), "friend_apply", applyInfo);
         return FriendApplyResponse.builder()
                 .applyId(applyId)
                 .build();
@@ -161,7 +167,7 @@ public class UserComponentImpl implements UserComponent {
         friendService.tagRoom(List.of(applyUserId, permitUserId), roomId);
 
         Friend friend = friendService.search(userId, List.of(applyUserId)).get(0);
-        socketConnection.sendUserEvent(String.valueOf(applyUserId), "room_add", friend);
+        socketConnection.sendUserEvent(String.valueOf(applyUserId), "friend_add", friend);
         return FriendPermitResponse.builder()
                 .roomId(roomId)
                 .build();
