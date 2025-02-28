@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EventEnum {
-    FRIEND_APPLY("FRIEND_APPLY"),
-    FRIEND_ADD("FRIEND_ADD"),
-    ROOM_ADD("ROOM_ADD"),
+    FRIEND_APPLY("friend_apply"),
+    FRIEND_ADD("friend_add"),
+    ROOM_ADD("room_add"),
+    ERROR("error"),
     ;
 
     private final String type;
