@@ -32,6 +32,11 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     }
 
     @Override
+    public List<Notification> selectByIds(List<Long> ids) {
+        return notificationMapper.selectByIds(ids);
+    }
+
+    @Override
     public void deleteById(long id) {
         notificationMapper.deleteById(id);
     }

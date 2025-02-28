@@ -37,6 +37,11 @@ public class RoomUserRepositoryImpl implements RoomUserRepository {
     }
 
     @Override
+    public List<RoomUser> selectByIds(List<Long> ids) {
+        return roomUserMapper.selectByIds(ids);
+    }
+
+    @Override
     public void deleteById(long id) {
         roomUserMapper.deleteById(id);
     }

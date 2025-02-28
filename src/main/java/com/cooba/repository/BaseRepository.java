@@ -10,5 +10,7 @@ public interface BaseRepository<T> {
 
     T selectById(long id);
 
+    List<T> selectByIds(List<Long> ids);
+
     void deleteById(long id);
 }

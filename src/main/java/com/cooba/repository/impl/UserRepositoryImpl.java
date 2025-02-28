@@ -34,6 +34,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<User> selectByIds(List<Long> ids) {
+        return userMapper.selectByIds(ids);
+    }
+
+    @Override
     public void deleteById(long id) {
         userMapper.deleteById(id);
     }

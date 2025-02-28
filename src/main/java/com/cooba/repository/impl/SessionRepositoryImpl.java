@@ -34,6 +34,11 @@ public class SessionRepositoryImpl implements SessionRepository {
     }
 
     @Override
+    public List<Session> selectByIds(List<Long> ids) {
+        return sessionMapper.selectByIds(ids);
+    }
+
+    @Override
     public void deleteById(long id) {
         sessionMapper.deleteById(id);
     }

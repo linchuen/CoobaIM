@@ -38,6 +38,7 @@ public class RoomServiceImpl implements RoomService {
         RoomUser roomMaster = new RoomUser();
         roomMaster.setUserId(userThreadLocal.getCurrentUserId());
         roomMaster.setRoomId(room.getId());
+        roomMaster.setShowName(userThreadLocal.getCurrentUserName());
         roomMaster.setRoomRoleEnum(RoomRoleEnum.MASTER);
 
         List<RoomUser> roomUsers = userIds.stream().map(userId -> {

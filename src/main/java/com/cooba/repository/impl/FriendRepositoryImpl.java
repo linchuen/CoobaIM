@@ -34,6 +34,11 @@ public class FriendRepositoryImpl implements FriendRepository {
     }
 
     @Override
+    public List<Friend> selectByIds(List<Long> ids) {
+        return friendMapper.selectByIds(ids);
+    }
+
+    @Override
     public void deleteById(long id) {
         friendMapper.deleteById(id);
     }
