@@ -1,21 +1,23 @@
 package com.cooba.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
+import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.repository.RoomRepository;
 import com.cooba.repository.RoomUserRepository;
+import com.cooba.repository.UserRepository;
 import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomUserRepository roomUserRepository;
+    private final UserRepository userRepository;
     private final UserThreadLocal userThreadLocal;
 
     @Override
@@ -35,6 +38,9 @@ public class RoomServiceImpl implements RoomService {
     public long build(Room room, List<Long> userIds) {
         roomRepository.insert(room);
 
+        Map<Long, String> userMap = userRepository.selectByIds(userIds).stream()
+                .collect(Collectors.toMap(User::getId, User::getName));
+
         RoomUser roomMaster = new RoomUser();
         roomMaster.setUserId(userThreadLocal.getCurrentUserId());
         roomMaster.setRoomId(room.getId());
@@ -45,6 +51,7 @@ public class RoomServiceImpl implements RoomService {
             RoomUser roomUser = new RoomUser();
             roomUser.setUserId(userId);
             roomUser.setRoomId(room.getId());
+            roomUser.setShowName(userMap.getOrDefault(userId, String.valueOf(userId)));
             roomUser.setRoomRoleEnum(RoomRoleEnum.MEMBER);
             return roomUser;
         }).collect(Collectors.toList());
