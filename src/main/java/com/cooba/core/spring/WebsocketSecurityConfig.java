@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.socket.EnableWebSocket
 import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
 
 @Configuration
-//@EnableWebSocketSecurity 目前會有依賴衝突
+@EnableWebSocketSecurity
 public class WebsocketSecurityConfig {
 
     @Bean
