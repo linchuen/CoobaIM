@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class LoginResponse {
     private long userId;
+    private String name;
     private String token;
     private String platform;
     private String ip;

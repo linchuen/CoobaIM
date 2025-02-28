@@ -64,6 +64,7 @@ public class UserComponentImpl implements UserComponent {
         userService.getAllRooms(user.getId()).forEach(userService::connectRoom);
 
         return LoginResponse.builder()
+                .name(user.getName())
                 .userId(session.getUserId())
                 .platform(session.getPlatform())
                 .token(session.getToken())
