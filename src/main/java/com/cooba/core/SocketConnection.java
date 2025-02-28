@@ -1,5 +1,6 @@
 package com.cooba.core;
 
+import com.cooba.constant.EventEnum;
 import com.cooba.entity.Chat;
 
 public interface SocketConnection {
@@ -9,7 +10,7 @@ public interface SocketConnection {
 
     void unbindGroup(String userId, String group);
 
-    <T> void sendUserEvent(String userId, String event, T t);
+    <T> void sendUserEvent(String userId, EventEnum event, T t);
 
     void sendToUser(String userId, Chat chat);
 

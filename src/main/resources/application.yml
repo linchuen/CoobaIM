@@ -51,3 +51,4 @@ stomp:
     relay-port: ${ARTEMIS_PORT:61616}
     login: ${ARTEMIS_USER:artemis}
     passcode: ${ARTEMIS_PASSWORD:artemis}
+    enable: true

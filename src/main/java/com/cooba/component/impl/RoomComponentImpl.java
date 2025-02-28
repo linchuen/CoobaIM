@@ -4,8 +4,10 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.RoomComponent;
 import com.cooba.constant.ErrorEnum;
+import com.cooba.constant.EventEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.constant.RoomTypeEnum;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
@@ -34,6 +36,7 @@ public class RoomComponentImpl implements RoomComponent {
     private final UserService userService;
     private final RoomService roomService;
     private final MessageService messageService;
+    private final SocketConnection socketConnection;
     private final UserThreadLocal userThreadLocal;
 
     @Override
@@ -43,6 +46,12 @@ public class RoomComponentImpl implements RoomComponent {
 
         long roomId = roomService.build(room, request.getUserIds());
 
+        long currentUserId = userThreadLocal.getCurrentUserId();
+        for (Long userId : request.getUserIds()) {
+            if (currentUserId == userId) continue;
+
+            socketConnection.sendUserEvent(String.valueOf(userId), EventEnum.ROOM_ADD, room);
+        }
         return BuildRoomResponse.builder()
                 .roomId(roomId)
                 .build();

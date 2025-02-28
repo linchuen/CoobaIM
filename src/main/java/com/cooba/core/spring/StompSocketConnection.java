@@ -1,5 +1,6 @@
 package com.cooba.core.spring;
 
+import com.cooba.constant.EventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
@@ -25,24 +26,24 @@ public class StompSocketConnection implements SocketConnection {
     }
 
     @Override
-    public <T> void sendUserEvent(String userId, String event, T t) {
+    public <T> void sendUserEvent(String userId, EventEnum event, T t) {
         String payload = JsonUtil.toJson(t);
-        messagingTemplate.convertAndSendToUser(userId, "/queue/" + event, payload);
-        log.debug("/queue/{} {} content:{}", event, userId, payload);
+        messagingTemplate.convertAndSendToUser(userId, "/queue/" + event.getType(), payload);
+        log.info("/queue/{} {} content:{}", event, userId, payload);
     }
 
     @Override
     public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         messagingTemplate.convertAndSendToUser(userId, "/private", payload);
-        log.debug("/private/{} content:{}", userId, payload);
+        log.info("/private/{} content:{}", userId, payload);
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         messagingTemplate.convertAndSend("/group/" + group, payload);
-        log.debug("/group/{} content:{}", group, payload);
+        log.info("/group/{} content:{}", group, payload);
     }
 
     @Override
