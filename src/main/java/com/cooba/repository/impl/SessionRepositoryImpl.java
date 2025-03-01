@@ -46,7 +46,7 @@ public class SessionRepositoryImpl implements SessionRepository {
     @Override
     public void updateByUserId(Session session) {
         sessionMapper.update(session, new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, session.getId()));
+                .eq(Session::getUserId, session.getUserId()));
     }
 
     @Override

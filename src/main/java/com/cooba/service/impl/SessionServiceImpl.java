@@ -53,6 +53,7 @@ public class SessionServiceImpl implements SessionService {
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
+        session.setUserId(user.getId());
         session.setLogoutTime(now);
         session.setEnable(false);
         sessionRepository.updateByUserId(session);
