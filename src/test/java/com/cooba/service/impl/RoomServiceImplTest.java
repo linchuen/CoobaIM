@@ -2,6 +2,7 @@ package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.aop.UserThreadLocal;
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.repository.RoomRepository;
@@ -23,7 +24,7 @@ import java.util.List;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {RoomServiceImpl.class})
-@Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql", "/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class RoomServiceImplTest {
     @Autowired
     RoomService roomService;
@@ -51,6 +52,28 @@ class RoomServiceImplTest {
     }
 
     @Test
+    @DisplayName("建立聊天室和添加用戶")
+    void buildWithUser() {
+        long masterId = 1L;
+        long memberId = 2L;
+        Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(masterId);
+
+        Room room = Instancio.create(Room.class);
+        roomService.build(room, List.of(memberId));
+
+        Room select = roomRepository.selectById(room.getId());
+        Assertions.assertNotNull(select);
+
+        RoomUser roomMaster = roomService.getRoomUserInfo(room.getId(), masterId);
+        Assertions.assertNotNull(roomMaster);
+        Assertions.assertSame(roomMaster.getRoomRoleEnum(), RoomRoleEnum.MASTER);
+
+        RoomUser roomMember = roomService.getRoomUserInfo(room.getId(), memberId);
+        Assertions.assertNotNull(roomMember);
+        Assertions.assertSame(roomMember.getRoomRoleEnum(), RoomRoleEnum.MEMBER);
+    }
+
+    @Test
     @DisplayName("刪除聊天室")
     void destroy() {
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(1L);
@@ -67,6 +90,7 @@ class RoomServiceImplTest {
     }
 
     @Test
+    @DisplayName("新增聊天室用戶")
     void addUser() {
         Room room = Instancio.create(Room.class);
         roomService.build(room);
@@ -81,6 +105,7 @@ class RoomServiceImplTest {
     }
 
     @Test
+    @DisplayName("刪除聊天室用戶")
     void deleteUser() {
         Room room = Instancio.create(Room.class);
         roomService.build(room);

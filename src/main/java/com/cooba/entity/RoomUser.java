@@ -29,7 +29,7 @@ public class RoomUser {
     @Column(nullable = false)
     private Long userId;
 
-    @Column
+    @Column(nullable = false)
     private String showName;
 
     @Column(nullable = false)
