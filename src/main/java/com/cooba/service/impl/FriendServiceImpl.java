@@ -89,11 +89,6 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void tagRoom(List<Long> userIds, long roomId) {
-        friendRepository.addRoomId(userIds, roomId);
-    }
-
-    @Override
     public List<Friend> search(long userId, List<Long> friendUserIds) {
         if (friendUserIds.isEmpty()) {
             return friendRepository.find(userId);

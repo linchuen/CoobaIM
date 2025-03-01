@@ -4,9 +4,12 @@ import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
+import com.cooba.entity.Room;
+import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.repository.FriendApplyRepository;
 import com.cooba.repository.FriendRepository;
+import com.cooba.repository.UserRepository;
 import com.cooba.service.FriendService;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @MybatisLocalTest
 @ContextConfiguration(classes = {FriendServiceImpl.class})
-@Sql(scripts = {"/sql/Friend-schema.sql", "/sql/FriendApply-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Friend-schema.sql", "/sql/FriendApply-schema.sql", "/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class FriendServiceImplTest {
     @Autowired
     FriendService friendService;
@@ -27,6 +30,8 @@ class FriendServiceImplTest {
     FriendApplyRepository friendApplyRepository;
     @Autowired
     FriendRepository friendRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @DisplayName("朋友申請")
@@ -53,9 +58,16 @@ class FriendServiceImplTest {
     @DisplayName("允許加入朋友")
     void bindPermit() {
         FriendApply friendApply = Instancio.create(FriendApply.class);
+        User applyUser = Instancio.create(User.class);
+        applyUser.setId(friendApply.getApplyUserId());
+        userRepository.insert(applyUser);
+        User permitUser = Instancio.create(User.class);
+        permitUser.setId(friendApply.getPermitUserId());
+        userRepository.insert(permitUser);
+
         friendApply.setPermit(true);
         friendService.apply(friendApply);
-        friendService.bind(friendApply, );
+        friendService.bind(friendApply, Room::new);
 
         Friend apply = new Friend();
         apply.setUserId(friendApply.getApplyUserId());
@@ -76,7 +88,7 @@ class FriendServiceImplTest {
         FriendApply friendApply = Instancio.create(FriendApply.class);
         friendApply.setPermit(false);
         friendService.apply(friendApply);
-        friendService.bind(friendApply, );
+        friendService.bind(friendApply, () -> null);
 
         Friend apply = new Friend();
         apply.setUserId(friendApply.getApplyUserId());
@@ -95,9 +107,16 @@ class FriendServiceImplTest {
     @DisplayName("刪除朋友")
     void unbind() {
         FriendApply friendApply = Instancio.create(FriendApply.class);
+        User applyUser = Instancio.create(User.class);
+        applyUser.setId(friendApply.getApplyUserId());
+        userRepository.insert(applyUser);
+        User permitUser = Instancio.create(User.class);
+        permitUser.setId(friendApply.getPermitUserId());
+        userRepository.insert(permitUser);
+
         friendApply.setPermit(true);
         friendService.apply(friendApply);
-        friendService.bind(friendApply, );
+        friendService.bind(friendApply, Room::new);
         friendService.unbind(friendApply);
 
         FriendApply select = friendApplyRepository.selectById(friendApply.getId());
