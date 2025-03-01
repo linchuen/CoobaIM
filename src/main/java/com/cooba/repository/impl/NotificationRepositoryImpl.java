@@ -1,5 +1,6 @@
 package com.cooba.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Notification;
 import com.cooba.mapper.NotificationMapper;
@@ -39,5 +40,10 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     @Override
     public void deleteById(long id) {
         notificationMapper.deleteById(id);
+    }
+
+    @Override
+    public List<Notification> findAll() {
+        return notificationMapper.selectList(new LambdaQueryWrapper<>());
     }
 }

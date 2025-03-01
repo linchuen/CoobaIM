@@ -59,6 +59,6 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Notification> getNotifications() {
-        return Collections.emptyList();
+        return notificationRepository.findAll();
     }
 }
