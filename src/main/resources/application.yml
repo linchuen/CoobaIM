@@ -54,11 +54,11 @@ stomp:
     enable: true
 
 minio:
-  endpoint: http://localhost:9000
-  accessKey: minioadmin
-  secretKey: minioadmin
+  endpoint:  ${MINIO_URL:http://127.0.0.1:9000}
+  accessKey: ${MINIO_ROOT_USER:minioadmin}
+  secretKey: ${MINIO_ROOT_PASSWORD:minioadmin}
 
 livekit:
-  url: wss://your-livekit-server.com
-  key: your-api-key
-  secret: your-api-secret
+  url: ${LIVEKIT_URL:ws://127.0.0.1:7881}
+  key: ${LIVEKIT_API_KEY:livekit_api_key}
+  secret: ${LIVEKIT_API_SECRET:this_is_livekit_secret_key_for_test}

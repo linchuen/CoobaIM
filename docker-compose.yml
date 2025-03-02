@@ -21,20 +21,27 @@ services:
       ARTEMIS_PORT: ${ARTEMIS_PORT}
       ARTEMIS_USER: ${ARTEMIS_USER}
       ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - redis
       - mysql
       - clickhouse
       - artemis
+      - livekit
 
   redis:
     image: redis:alpine
     restart: always
     container_name: im_redis
     ports:
-      - 16379:6379
+      - "16379:6379"
 
   mysql:
     image: bitnami/mysql:8.3.0
@@ -47,9 +54,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
       MYSQL_DATABASE: im
     ports:
-      - 13306:3306
-    
-      
+      - "13306:3306"
+
+
   clickhouse:
     image: clickhouse:24.12
     restart: always
@@ -61,7 +68,7 @@ services:
       CLICKHOUSE_USER: ${CLICKHOUSE_DB_USERNAME}
       CLICKHOUSE_PASSWORD: ${CLICKHOUSE_DB_PASSWORD}
     ports:
-      - 18123:8123
+      - "18123:8123"
 
   artemis:
     image: apache/activemq-artemis:2.39.0-alpine
@@ -74,19 +81,34 @@ services:
       ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
       ANONYMOUS_LOGIN: true
     ports:
-      - 8161:8161   # Web管理界面
-      - 61616:61616 # AMQP
-      - 61613:61613 # STOMP
-      - 5672:5672   # MQTT
+      - "8161:8161"   # Web管理界面
+      - "61616:61616" # AMQP
+      - "61613:61613" # STOMP
+      - "5672:5672"   # MQTT
 
   minio:
     image: quay.io/minio/minio
     container_name: minio
     restart: always
     ports:
-      - 9000:9000  # API 端口
-      - 9001:9001  # 控制台端口
+      - "9000:9000"  # API 端口
+      - "9001:9001"  # 控制台端口
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
+
+  livekit:
+    image: livekit/livekit-server:v1.8.4
+    container_name: livekit-server
+    restart: always
+    ports:
+      - "7880:7880"  # API 端口
+      - "7881:7881"  # WebSocket 端口
+      - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
+    environment:
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+      LIVEKIT_KEYS: ${LIVEKIT_KEYS}
+      LIVEKIT_LOG_LEVEL: debug
+      LIVEKIT_UDP_PORTS: 50000,60000
