@@ -4,6 +4,7 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.ChatComponent;
 import com.cooba.constant.ErrorEnum;
+import com.cooba.constant.MessageTypeEnum;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.dto.request.ChatLoadRequest;
@@ -38,6 +39,10 @@ public class ChatComponentImpl implements ChatComponent {
         message.setUserId(roomUserInfo.getUserId());
         message.setName(roomUserInfo.getShowName());
         message.setRoomId(roomUserInfo.getRoomId());
+        message.setUrl(request.getUrl());
+        if (request.getType()!=null){
+            message.setType(MessageTypeEnum.valueOf(request.getType()));
+        }
 
         messageService.sendToUser(message);
     }
@@ -53,6 +58,10 @@ public class ChatComponentImpl implements ChatComponent {
         message.setUserId(roomUserInfo.getUserId());
         message.setName(roomUserInfo.getShowName());
         message.setRoomId(roomUserInfo.getRoomId());
+        message.setUrl(request.getUrl());
+        if (request.getType()!=null){
+            message.setType(MessageTypeEnum.valueOf(request.getType()));
+        }
 
         messageService.sendToRoom(message);
     }

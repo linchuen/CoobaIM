@@ -54,6 +54,7 @@ public class Chat {
         this.userId = sendMessage.getUserId();
         this.name = sendMessage.getName();
         this.message = sendMessage.getMessage();
+        this.url = sendMessage.getUrl();
         this.type = sendMessage.getType();
     }
 }

@@ -6,6 +6,7 @@
         name varchar(255) not null,
         room_id bigint not null,
         type tinyint not null,
+        url varchar(255),
         user_id bigint not null,
         version integer,
         primary key (id)

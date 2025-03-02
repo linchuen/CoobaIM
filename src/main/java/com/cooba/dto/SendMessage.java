@@ -10,5 +10,6 @@ public class SendMessage {
     private long userId;
     private String name;
     private String message;
+    private String url;
     private MessageTypeEnum type = MessageTypeEnum.TEXT;
 }
