@@ -34,6 +34,9 @@ public class Chat {
     @Column(nullable = false)
     private String message;
 
+    @Column
+    private String url;
+
     @Column(nullable = false)
     private MessageTypeEnum type = MessageTypeEnum.TEXT;
 

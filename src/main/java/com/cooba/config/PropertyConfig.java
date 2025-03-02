@@ -1,9 +1,6 @@
 package com.cooba.config;
 
-import com.cooba.constant.FrontEnd;
-import com.cooba.constant.JwtSecret;
-import com.cooba.constant.Password;
-import com.cooba.constant.StompMQ;
+import com.cooba.constant.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +30,12 @@ public class PropertyConfig {
     @ConfigurationProperties(prefix = "stomp.mq")
     public StompMQ stompMQ(){
         return new StompMQ();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "minio")
+    public Minio minio(){
+        return new Minio();
     }
 
 }

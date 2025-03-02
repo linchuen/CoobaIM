@@ -52,3 +52,9 @@ stomp:
     login: ${ARTEMIS_USER:artemis}
     passcode: ${ARTEMIS_PASSWORD:artemis}
     enable: true
+
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket: my-bucket
