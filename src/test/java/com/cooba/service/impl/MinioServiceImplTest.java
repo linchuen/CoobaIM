@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ContextConfiguration(classes = {MinioServiceImpl.class})
 class MinioServiceImplTest {
     @Autowired
-    private MinioService minioService;
+    MinioService minioService;
     @MockitoBean
     MinioClient minioClient;
 

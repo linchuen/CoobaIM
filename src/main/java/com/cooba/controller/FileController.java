@@ -8,25 +8,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
-@RestController
+@Controller
 @RequestMapping("/file")
 @RequiredArgsConstructor
 public class FileController {
     private final FileComponent fileComponent;
 
-    @PostMapping("/upload")
-    public ResultResponse<?> uploadFile(@RequestParam Long roomId, @RequestParam MultipartFile file) {
+    @PostMapping("/upload/{roomId}")
+    @ResponseBody
+    public ResultResponse<?> uploadFile(@PathVariable Long roomId, @RequestParam MultipartFile file) {
         UploadFileResponse response = fileComponent.uploadFile(roomId, file);
         return ResultResponse.builder().data(response).build();
     }
 
     // 下載檔案
     @GetMapping("/download/{roomId}/{fileName}")
+    @ResponseBody
     public ResponseEntity<byte[]> downloadFile(@PathVariable Long roomId, @PathVariable String fileName) {
         try (InputStream stream = fileComponent.downloadFile(roomId, fileName)) {
             byte[] bytes = stream.readAllBytes();
@@ -41,6 +44,7 @@ public class FileController {
 
 
     @DeleteMapping("/delete/{roomId}/{fileName}")
+    @ResponseBody
     public ResultResponse<?> deleteFile(@PathVariable Long roomId, @PathVariable String fileName) {
         fileComponent.deleteFile(roomId, fileName);
         return ResultResponse.builder().build();

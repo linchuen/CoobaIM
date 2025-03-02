@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
+import static com.cooba.constant.Minio.BUCKET_PREFIX;
+
 @Slf4j
 @ObjectLayer
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class FileComponentImpl implements FileComponent {
     @Override
     public UploadFileResponse uploadFile(Long roomId, MultipartFile file) {
         try {
-            String bucketName = "BUCKET" + roomId;
+            String bucketName = BUCKET_PREFIX + roomId;
             String fileName = minioService.uploadFile(bucketName, file);
             String fileUrl = minioService.getFileUrl(bucketName, fileName);
 
@@ -36,7 +38,7 @@ public class FileComponentImpl implements FileComponent {
     @Override
     public InputStream downloadFile(Long roomId, String fileName) {
         try {
-            String bucketName = "BUCKET" + roomId;
+            String bucketName = BUCKET_PREFIX + roomId;
             return minioService.downloadFile(bucketName, fileName);
         } catch (Exception e) {
             log.error("Failed to download file {} for room {}", fileName, roomId, e);
@@ -47,7 +49,7 @@ public class FileComponentImpl implements FileComponent {
     @Override
     public void deleteFile(Long roomId, String fileName) {
         try {
-            String bucketName = "BUCKET" + roomId;
+            String bucketName = BUCKET_PREFIX + roomId;
             minioService.deleteFile(bucketName, fileName);
             log.info("File {} deleted successfully for room {}", fileName, roomId);
         } catch (Exception e) {
