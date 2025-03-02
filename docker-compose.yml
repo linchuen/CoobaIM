@@ -66,6 +66,7 @@ services:
   artemis:
     image: apache/activemq-artemis:2.39.0-alpine
     container_name: im_activemq-artemis
+    restart: always
     env_file:
       - .env
     environment:
@@ -81,6 +82,7 @@ services:
   minio:
     image: quay.io/minio/minio
     container_name: minio
+    restart: always
     ports:
       - 9000:9000  # API 端口
       - 9001:9001  # 控制台端口
