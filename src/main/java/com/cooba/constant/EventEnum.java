@@ -9,6 +9,7 @@ public enum EventEnum {
     FRIEND_APPLY("friend_apply"),
     FRIEND_ADD("friend_add"),
     ROOM_ADD("room_add"),
+    LIVE_CALL("live_call"),
     ERROR("error"),
     ;
 

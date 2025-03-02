@@ -38,4 +38,10 @@ public class PropertyConfig {
         return new Minio();
     }
 
+    @Bean
+    @ConfigurationProperties(prefix = "livekit")
+    public Livekit livekit(){
+        return new Livekit();
+    }
+
 }

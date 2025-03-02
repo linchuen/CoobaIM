@@ -18,6 +18,7 @@ public enum ErrorEnum {
     SESSION_NOT_EXIST(1007,"session not exist"),
     USER_NOT_EXIST(1008,"user not exist"),
     ROOM_USER_EMPTY(1009,"room user is empty"),
+    NETWORK_ERROR(1010,"network error"),
     UNKNOWN_ERROR(9999,"unknown error"),
     ;
 

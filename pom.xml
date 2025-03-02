@@ -168,6 +168,13 @@
             <version>8.5.17</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/io.livekit/livekit-server -->
+        <dependency>
+            <groupId>io.livekit</groupId>
+            <artifactId>livekit-server</artifactId>
+            <version>0.8.5</version>
+        </dependency>
+
         <!-- Spring Boot Test Starter (for testing, optional) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

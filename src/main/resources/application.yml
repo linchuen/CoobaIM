@@ -57,4 +57,8 @@ minio:
   endpoint: http://localhost:9000
   accessKey: minioadmin
   secretKey: minioadmin
-  bucket: my-bucket
+
+livekit:
+  url: wss://your-livekit-server.com
+  key: your-api-key
+  secret: your-api-secret
