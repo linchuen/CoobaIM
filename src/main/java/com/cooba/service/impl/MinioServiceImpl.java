@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.service.MinioService;
 import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Slf4j
 @BehaviorLayer
 @RequiredArgsConstructor
-public class MinioServiceImpl {
+public class MinioServiceImpl implements MinioService {
     private final MinioClient minioClient;
 
     public String uploadFile(String bucketName, MultipartFile file) throws Exception {
