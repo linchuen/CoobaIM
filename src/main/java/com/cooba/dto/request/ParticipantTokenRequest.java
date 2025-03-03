@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ParticipantTokenRequest {
     private String name;
-    private String id;
+    private String identity;
     private String roomName;
     private String passcode;
 }

@@ -63,7 +63,7 @@ public class LiveComponentImpl implements LiveComponent {
     public String createAccessToken(ParticipantTokenRequest request) {
         return liveKitService.createAccessToken(
                 request.getName(),
-                request.getId(),
+                request.getIdentity(),
                 request.getRoomName(),
                 request.getPasscode());
     }
