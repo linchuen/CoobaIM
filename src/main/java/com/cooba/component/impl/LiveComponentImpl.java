@@ -7,6 +7,7 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.EventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.request.LiveBuildRequest;
+import com.cooba.dto.request.LiveCloseRequest;
 import com.cooba.dto.request.ParticipantTokenRequest;
 import com.cooba.dto.response.LiveCall;
 import com.cooba.entity.RoomUser;
@@ -35,6 +36,10 @@ public class LiveComponentImpl implements LiveComponent {
         String type = request.getType();
         long userId = userThreadLocal.getCurrentUserId();
         List<RoomUser> roomUsers = roomService.getRoomUsers(roomId);
+        if (roomUsers.stream().noneMatch(roomUser -> roomUser.getUserId() == userId)) {
+            throw new BaseException(ErrorEnum.ROOM_USER_NOT_EXIST);
+        }
+
         int total = roomUsers.size();
         try {
             String roomName = liveKitService.createRoom(total + 2);
@@ -56,6 +61,24 @@ public class LiveComponentImpl implements LiveComponent {
             }
             return masterCall;
         } catch (IOException exception) {
+            throw new BaseException(ErrorEnum.NETWORK_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteRoom(LiveCloseRequest request) {
+        long roomId = request.getRoomId();
+        long userId = userThreadLocal.getCurrentUserId();
+        List<RoomUser> roomUsers = roomService.getRoomUsers(roomId);
+        if (roomUsers.stream().noneMatch(roomUser -> roomUser.getUserId() == userId)) {
+            throw new BaseException(ErrorEnum.ROOM_USER_NOT_EXIST);
+        }
+        int total = roomUsers.size();
+        try {
+            if (total == 2) {
+                liveKitService.deleteRoom(request.getRoomName());
+            }
+        } catch (IOException e) {
             throw new BaseException(ErrorEnum.NETWORK_ERROR);
         }
     }

@@ -30,6 +30,12 @@ public class LiveKitServiceImpl implements LiveKitService {
         return roomName;
     }
 
+    @Override
+    public void deleteRoom(String roomName) throws IOException {
+        Call<Void> call = client.deleteRoom(roomName);
+        call.execute();
+    }
+
     public String createAccessToken(String name, String identity, String roomName, String passcode) {
         AccessToken token = new AccessToken(livekit.getKey(), livekit.getSecret());
         token.setName(name);
