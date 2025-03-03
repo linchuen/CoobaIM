@@ -88,7 +88,7 @@ services:
 
   minio:
     image: quay.io/minio/minio
-    container_name: minio
+    container_name: im_minio
     restart: always
     ports:
       - "9000:9000"  # API 端口
@@ -100,7 +100,7 @@ services:
 
   livekit:
     image: livekit/livekit-server:v1.8.4
-    container_name: livekit-server
+    container_name: im_livekit-server
     restart: always
     ports:
       - "7880:7880"  # API 端口
