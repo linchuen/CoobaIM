@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.cooba.constant.MessageTypeEnum;
 import com.cooba.dto.SendMessage;
-
 import jakarta.persistence.*;
-
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -34,7 +32,7 @@ public class Chat {
     @Column(nullable = false)
     private String message;
 
-    @Column
+    @Column(length = 1000)
     private String url;
 
     @Column(nullable = false)
