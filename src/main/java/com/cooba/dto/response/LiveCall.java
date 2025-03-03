@@ -12,4 +12,5 @@ public class LiveCall {
     private String roomName;
     private String passcode;
     private String token;
+    private String type;
 }

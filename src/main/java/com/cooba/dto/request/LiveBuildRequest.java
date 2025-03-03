@@ -6,4 +6,5 @@ import lombok.Data;
 public class LiveBuildRequest {
     private long roomId;
     private String passcode;
+    private String type;
 }

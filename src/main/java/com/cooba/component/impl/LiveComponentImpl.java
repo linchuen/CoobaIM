@@ -32,6 +32,7 @@ public class LiveComponentImpl implements LiveComponent {
     public LiveCall createRoom(LiveBuildRequest request) {
         long roomId = request.getRoomId();
         String passcode = request.getPasscode();
+        String type = request.getType();
         long userId = userThreadLocal.getCurrentUserId();
         List<RoomUser> roomUsers = roomService.getRoomUsers(roomId);
         int total = roomUsers.size();
@@ -47,9 +48,9 @@ public class LiveComponentImpl implements LiveComponent {
                         passcode);
 
                 if (userId == roomUserId) {
-                    masterCall = new LiveCall(roomId, roomName, passcode, accessToken);
+                    masterCall = new LiveCall(roomId, roomName, passcode, accessToken, type);
                 } else {
-                    LiveCall liveCall = new LiveCall(roomId, roomName, passcode, accessToken);
+                    LiveCall liveCall = new LiveCall(roomId, roomName, passcode, accessToken, type);
                     socketConnection.sendUserEvent(String.valueOf(roomUserId), EventEnum.LIVE_CALL, liveCall);
                 }
             }
@@ -63,7 +64,7 @@ public class LiveComponentImpl implements LiveComponent {
     public String createAccessToken(ParticipantTokenRequest request) {
         return liveKitService.createAccessToken(
                 request.getName(),
-                request.getId(),
+                request.getIdentity(),
                 request.getRoomName(),
                 request.getPasscode());
     }

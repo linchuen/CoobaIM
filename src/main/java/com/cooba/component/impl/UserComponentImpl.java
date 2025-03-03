@@ -167,7 +167,7 @@ public class UserComponentImpl implements UserComponent {
         long roomId = roomService.build(room, List.of(applyUserId));
         FriendBindResult friendBindResult = friendService.bind(friendApply, () -> room);
 
-        socketConnection.sendUserEvent(String.valueOf(applyUserId), EventEnum.FRIEND_ADD, friendBindResult.getPermitUser());
+        socketConnection.sendUserEvent(String.valueOf(applyUserId), EventEnum.FRIEND_ADD, friendBindResult.getApplyUser());
         return FriendPermitResponse.builder()
                 .roomId(roomId)
                 .build();

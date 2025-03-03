@@ -6,5 +6,5 @@ public interface LiveKitService {
 
     String createRoom(int maxParticipants) throws IOException;
 
-    String createAccessToken(String name,String id, String roomName, String passcode);
+    String createAccessToken(String name, String identity, String roomName, String passcode);
 }
