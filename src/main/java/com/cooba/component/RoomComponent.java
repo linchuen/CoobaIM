@@ -6,6 +6,7 @@ import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.response.BuildRoomResponse;
 import com.cooba.dto.response.RoomDestroyResponse;
+import com.cooba.dto.response.RoomMemberResponse;
 import com.cooba.dto.response.RoomSearchResponse;
 
 public interface RoomComponent {
@@ -19,4 +20,6 @@ public interface RoomComponent {
     void evict(RoomUserRequest request);
 
     RoomSearchResponse search(RoomSearchRequest request);
+
+    RoomMemberResponse search(RoomRequest request);
 }

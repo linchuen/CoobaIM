@@ -5,10 +5,7 @@ import com.cooba.dto.request.RoomBuildRequest;
 import com.cooba.dto.request.RoomRequest;
 import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
-import com.cooba.dto.response.BuildRoomResponse;
-import com.cooba.dto.response.RoomDestroyResponse;
-import com.cooba.dto.response.ResultResponse;
-import com.cooba.dto.response.RoomSearchResponse;
+import com.cooba.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -51,8 +48,15 @@ public class RoomController {
 
     @PostMapping("/search")
     @Operation(summary = "聊天室列表")
-    public ResultResponse<?> evictUser(@RequestBody RoomSearchRequest request) {
+    public ResultResponse<?> searchRoom(@RequestBody RoomSearchRequest request) {
         RoomSearchResponse response = roomComponent.search(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/search/users")
+    @Operation(summary = "聊天室成員")
+    public ResultResponse<?> searchUser(@RequestBody RoomRequest request) {
+        RoomMemberResponse response = roomComponent.search(request);
         return ResultResponse.builder().data(response).build();
     }
 }

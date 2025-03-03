@@ -15,6 +15,7 @@ import com.cooba.dto.request.RoomSearchRequest;
 import com.cooba.dto.request.RoomUserRequest;
 import com.cooba.dto.response.BuildRoomResponse;
 import com.cooba.dto.response.RoomDestroyResponse;
+import com.cooba.dto.response.RoomMemberResponse;
 import com.cooba.dto.response.RoomSearchResponse;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
@@ -137,6 +138,14 @@ public class RoomComponentImpl implements RoomComponent {
                 .toList();
         return RoomSearchResponse.builder()
                 .rooms(rooms)
+                .build();
+    }
+
+    @Override
+    public RoomMemberResponse search(RoomRequest request) {
+        List<RoomUser> roomUsers = roomService.getRoomUsers(request.getRoomId());
+        return RoomMemberResponse.builder()
+                .roomUsers(roomUsers)
                 .build();
     }
 }
