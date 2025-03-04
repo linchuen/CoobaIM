@@ -44,4 +44,10 @@ public class PropertyConfig {
         return new Livekit();
     }
 
+    @Bean
+    @ConfigurationProperties(prefix = "webhook")
+    public Webhook webhook(){
+        return new Webhook();
+    }
+
 }

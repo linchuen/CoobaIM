@@ -1,6 +1,7 @@
 spring:
   application.name: im
   port: 8080
+  main.web-application-type: SERVLET
   resources:
     add-mappings: false
   data:
@@ -44,6 +45,14 @@ logging:
     # path: logs         # 或者僅指定目錄
   level:
     root: info
+
+webhook:
+  enabled: false
+  url: ""
+  accessKey: ""
+  event:
+    addFriend: ""
+
 
 stomp:
   mq:
