@@ -38,7 +38,7 @@ public class WebhookAspect {
         }
 
         WebhookPayload payload = new WebhookPayload();
-        payload.setMethod(webhookEnum.name());
+        payload.setEvent(webhookEnum.name());
         payload.setRequest(joinPoint.getArgs()[0]);
         payload.setType("before");
 
@@ -58,7 +58,7 @@ public class WebhookAspect {
         }
 
         WebhookPayload payload = new WebhookPayload();
-        payload.setMethod(webhookEnum.name());
+        payload.setEvent(webhookEnum.name());
         payload.setRequest(joinPoint.getArgs()[0]);
         payload.setResult(result);
         payload.setType("after");
