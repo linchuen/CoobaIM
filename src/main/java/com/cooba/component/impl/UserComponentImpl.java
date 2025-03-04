@@ -1,11 +1,13 @@
 package com.cooba.component.impl;
 
 import com.cooba.annotation.ObjectLayer;
+import com.cooba.annotation.WebhookTrigger;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.EventEnum;
 import com.cooba.constant.RoomTypeEnum;
+import com.cooba.constant.WebhookEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.FriendBindResult;
@@ -125,6 +127,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @WebhookTrigger(WebhookEnum.APPLY_FRIEND)
     public FriendApplyResponse applyFriend(FriendRequest request) {
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(request.getApplyUserId());

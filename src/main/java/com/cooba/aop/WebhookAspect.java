@@ -4,6 +4,7 @@ import com.cooba.annotation.WebhookTrigger;
 import com.cooba.constant.Webhook;
 import com.cooba.constant.WebhookEnum;
 import com.cooba.dto.WebhookPayload;
+import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -15,7 +16,6 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Map;
 
 @Aspect
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebhookAspect {
     private final Webhook webhookConfig;
-    private final WebClient webClient;
+    private final WebClient webClient = WebClient.create();
 
     @Before("@annotation(webhookTrigger)")
     public void sendBeforeWebhook(JoinPoint joinPoint, WebhookTrigger webhookTrigger) {
@@ -38,8 +38,8 @@ public class WebhookAspect {
         }
 
         WebhookPayload payload = new WebhookPayload();
-        payload.setMethod(webhookEnum.name()); // 從註解取得方法名稱
-        payload.setArguments(Arrays.toString(joinPoint.getArgs()));
+        payload.setMethod(webhookEnum.name());
+        payload.setRequest(joinPoint.getArgs()[0]);
         payload.setType("before");
 
         sendWebhookWithRetry(domain + url, payload);
@@ -59,7 +59,7 @@ public class WebhookAspect {
 
         WebhookPayload payload = new WebhookPayload();
         payload.setMethod(webhookEnum.name());
-        payload.setArguments(Arrays.toString(joinPoint.getArgs()));
+        payload.setRequest(joinPoint.getArgs()[0]);
         payload.setResult(result);
         payload.setType("after");
 

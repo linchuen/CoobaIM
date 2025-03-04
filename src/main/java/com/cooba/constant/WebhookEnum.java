@@ -1,12 +1,9 @@
 package com.cooba.constant;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public enum WebhookEnum {
-    ADD_FRIEND("addFriend");
+    APPLY_FRIEND;
 
-    private final String name;
 }

@@ -1,5 +1,7 @@
 package com.cooba.component;
 
+import com.cooba.annotation.WebhookTrigger;
+import com.cooba.constant.WebhookEnum;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.User;

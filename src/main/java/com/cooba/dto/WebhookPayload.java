@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class WebhookPayload {
     private String method;
-    private String arguments;
+    private Object request;
     private Object result;
     private String type;
 }
