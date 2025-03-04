@@ -1,6 +1,7 @@
-package com.cooba.core.spring;
+package com.cooba.service.impl;
 
-import com.cooba.core.OfflineMessageService;
+import com.cooba.util.ConnectionManager;
+import com.cooba.service.OfflineMessageService;
 import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -16,12 +17,12 @@ import java.util.function.Supplier;
 @Component
 @RequiredArgsConstructor
 public class FcmOfflineMessageService implements OfflineMessageService {
-    private final WebSocketSessionManager webSocketSessionManager;
+    private final ConnectionManager connectionManager;
 
     @Async
     @Override
     public void sendToUser(String userId, Chat chat) {
-        boolean online = webSocketSessionManager.isUserOnline(userId);
+        boolean online = connectionManager.isUserOnline(userId);
         if (online) return;
 
         FirebaseMessaging messaging = FirebaseMessaging.getInstance();
@@ -43,7 +44,7 @@ public class FcmOfflineMessageService implements OfflineMessageService {
         List<String> userIds = userIdSupplier.get();
 
         for (String userId : userIds) {
-            boolean online = webSocketSessionManager.isUserOnline(userId);
+            boolean online = connectionManager.isUserOnline(userId);
             if (online) continue;
 
             FirebaseMessaging messaging = FirebaseMessaging.getInstance();

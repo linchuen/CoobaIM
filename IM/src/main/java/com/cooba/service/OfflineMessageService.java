@@ -1,4 +1,4 @@
-package com.cooba.core;
+package com.cooba.service;
 
 import com.cooba.entity.Chat;
 
