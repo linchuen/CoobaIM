@@ -8,7 +8,7 @@
         <artifactId>coobaIM</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
+    <packaging>jar</packaging>
     <artifactId>CustomerService</artifactId>
 
     <properties>
@@ -17,4 +17,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.cooba</groupId>
+            <artifactId>IM</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
