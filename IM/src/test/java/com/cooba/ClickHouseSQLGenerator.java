@@ -10,26 +10,19 @@ import java.util.List;
 
 public class ClickHouseSQLGenerator {
     public static String generateCreateTableSQL(Class<?> clazz) {
-        if (!clazz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Class must be annotated with @Entity");
-        }
-
         Table tableAnnotation = clazz.getAnnotation(Table.class);
-        String tableName = !tableAnnotation.name().isEmpty()
-                ? tableAnnotation.name()
-                : clazz.getSimpleName().toLowerCase();
+        String tableName = toSnakeCase(tableAnnotation.name().isEmpty() ? clazz.getSimpleName() : tableAnnotation.name());
 
         StringBuilder createTableSQL = new StringBuilder("CREATE TABLE ").append(tableName).append(" (\n");
         List<String> orderByColumns = new ArrayList<>();
 
         for (Index index : tableAnnotation.indexes()) {
-            if (!index.columnList().isEmpty()) {
-                String[] columns = index.columnList().split(", ");
-                orderByColumns.addAll(Arrays.asList(columns));
+            String[] columns = index.columnList().split(", ");
+            for (String col : columns) {
+                orderByColumns.add(toSnakeCase(col));
             }
             break;
         }
-
 
         String idColumn = null;
 
@@ -37,7 +30,7 @@ public class ClickHouseSQLGenerator {
             Column columnAnnotation = field.getAnnotation(Column.class);
             Id idAnnotation = field.getAnnotation(Id.class);
             Enumerated enumAnnotation = field.getAnnotation(Enumerated.class);
-            String columnName = field.getName();
+            String columnName = toSnakeCase(field.getName());
             String columnType;
 
             if (enumAnnotation != null) {
@@ -55,15 +48,21 @@ public class ClickHouseSQLGenerator {
         }
 
         createTableSQL.setLength(createTableSQL.length() - 2);
-        createTableSQL.append("\n)\nENGINE = MergeTree()\nPARTITION BY toYYYYMM(createdTime)\nORDER BY (");
+        createTableSQL.append("\n)\nENGINE = MergeTree()\nPARTITION BY toYYYYMM(created_time)\nORDER BY (");
 
-        if (idColumn != null && orderByColumns.isEmpty()) {
+        if (orderByColumns.isEmpty()) {
+            orderByColumns.add(idColumn);
+        } else if (!orderByColumns.contains(idColumn)) {
             orderByColumns.add(idColumn);
         }
 
         createTableSQL.append(String.join(", ", orderByColumns)).append(");");
 
         return createTableSQL.toString();
+    }
+
+    private static String toSnakeCase(String str) {
+        return str.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
     }
 
     private static String mapJavaTypeToClickHouseType(Class<?> javaType) {
@@ -96,4 +95,5 @@ public class ClickHouseSQLGenerator {
         System.out.println("\nGenerated SQL:\n" + sql);
     }
 }
+
 
