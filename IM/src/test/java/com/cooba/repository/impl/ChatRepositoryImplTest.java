@@ -31,6 +31,7 @@ class ChatRepositoryImplTest {
     @Test
     void insert() {
         Chat chat = Instancio.create(Chat.class);
+        chat.setId(null);
         chatRepository.insert(chat);
     }
 
