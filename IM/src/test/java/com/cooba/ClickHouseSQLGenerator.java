@@ -4,27 +4,17 @@ import com.cooba.entity.Chat;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ClickHouseSQLGenerator {
     public static String generateCreateTableSQL(Class<?> clazz) {
         Table tableAnnotation = clazz.getAnnotation(Table.class);
-        String tableName = toSnakeCase(tableAnnotation.name().isEmpty() ? clazz.getSimpleName() : tableAnnotation.name());
+        String tableName = "t_" + toSnakeCase(tableAnnotation.name().isEmpty() ? clazz.getSimpleName() : tableAnnotation.name());
 
         StringBuilder createTableSQL = new StringBuilder("CREATE TABLE ").append(tableName).append(" (\n");
-        List<String> orderByColumns = new ArrayList<>();
-
-        for (Index index : tableAnnotation.indexes()) {
-            String[] columns = index.columnList().split(", ");
-            for (String col : columns) {
-                orderByColumns.add(toSnakeCase(col));
-            }
-            break;
-        }
-
-        String idColumn = null;
+        String idColumn = "id";
 
         for (Field field : clazz.getDeclaredFields()) {
             Column columnAnnotation = field.getAnnotation(Column.class);
@@ -33,31 +23,39 @@ public class ClickHouseSQLGenerator {
             String columnName = toSnakeCase(field.getName());
             String columnType;
 
-            if (enumAnnotation != null) {
-                columnType = "Int8"; // Enums are stored as Int8
+            if (idAnnotation != null) {
+                columnType = "UInt64";
+            } else if (enumAnnotation != null) {
+                EnumType enumType = enumAnnotation.value();
+                columnType = enumType == EnumType.STRING ? "String" : "Int8"; // Enums are stored as Int8
             } else {
                 columnType = mapJavaTypeToClickHouseType(field.getType());
             }
-
-            if (idAnnotation != null) {
-                columnType = "UInt64";
-                idColumn = columnName;
-            }
-
             createTableSQL.append("    ").append(columnName).append(" ").append(columnType).append(",\n");
         }
 
         createTableSQL.setLength(createTableSQL.length() - 2);
-        createTableSQL.append("\n)\nENGINE = MergeTree()\nPARTITION BY toYYYYMM(created_time)\nORDER BY (");
+        createTableSQL.append("\n)")
+                .append("\nENGINE = MergeTree()")
+                .append("\nPARTITION BY toYYYYMM(created_time)")
+                .append("\nORDER BY (").append(idColumn).append(");\n");
 
-        if (orderByColumns.isEmpty()) {
-            orderByColumns.add(idColumn);
-        } else if (!orderByColumns.contains(idColumn)) {
-            orderByColumns.add(idColumn);
+        // Append projections based on indexes
+        for (Index index : tableAnnotation.indexes()) {
+            String projectionName = "proj_" + index.name();
+            String[] columns = index.columnList().split(",");
+            List<String> projectionColumns = new ArrayList<>();
+            for (String col : columns) {
+                projectionColumns.add(toSnakeCase(col.trim()));
+            }
+            projectionColumns.add(idColumn);
+
+            createTableSQL.append("\nALTER TABLE ").append(tableName)
+                    .append(" ADD PROJECTION ").append(projectionName)
+                    .append(" (\n    ")
+                    .append(String.join(", ", projectionColumns))
+                    .append("\n);");
         }
-
-        createTableSQL.append(String.join(", ", orderByColumns)).append(");");
-
         return createTableSQL.toString();
     }
 
@@ -66,20 +64,22 @@ public class ClickHouseSQLGenerator {
     }
 
     private static String mapJavaTypeToClickHouseType(Class<?> javaType) {
-        if (javaType == Long.class) {
+        if (javaType == Long.class || javaType == long.class) {
             return "Int64";
-        } else if (javaType == Integer.class) {
+        } else if (javaType == Integer.class || javaType == int.class) {
             return "Int32";
-        } else if (javaType == Short.class) {
+        } else if (javaType == Short.class || javaType == short.class) {
             return "Int16";
-        } else if (javaType == Byte.class) {
+        } else if (javaType == Byte.class || javaType == byte.class) {
             return "Int8";
-        } else if (javaType == Double.class) {
-            return "Float64";
-        } else if (javaType == Float.class) {
-            return "Float32";
-        } else if (javaType == Boolean.class) {
-            return "UInt8";
+        } else if (javaType == Double.class || javaType == double.class) {
+            return "Decimal(18,5)";
+        } else if (javaType == Float.class || javaType == float.class) {
+            return "Decimal(18,5)";
+        } else if (javaType == BigDecimal.class) {
+            return "Decimal(18,5)";
+        } else if (javaType == Boolean.class || javaType == boolean.class) {
+            return "Bool";
         } else if (javaType == String.class) {
             return "String";
         } else if (javaType == java.time.LocalDate.class) {
@@ -95,5 +95,3 @@ public class ClickHouseSQLGenerator {
         System.out.println("\nGenerated SQL:\n" + sql);
     }
 }
-
-

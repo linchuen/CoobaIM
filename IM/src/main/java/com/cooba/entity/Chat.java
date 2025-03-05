@@ -36,6 +36,7 @@ public class Chat {
     private String url;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private MessageTypeEnum type = MessageTypeEnum.TEXT;
 
     @Column
