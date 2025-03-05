@@ -1,14 +1,18 @@
-CREATE TABLE chat (
-                id UInt64,
-                roomId UInt64,
-                userId UInt64,
-                name String,
-                message String,
-                url String,
-                type Enum8('TEXT' = 1, 'IMAGE' = 2, 'VIDEO' = 3),
-                version Int32,
-                createdTime DateTime DEFAULT now()
-            )
-            ENGINE = ReplacingMergeTree(version)
-            PARTITION BY toYYYYMM(createdTime)
-            ORDER BY (roomId, userId, id);
+CREATE TABLE t_chat (
+    id UInt64 NOT NULL,
+    uuid String NOT NULL,
+    room_id Int64 NOT NULL,
+    user_id Int64 NOT NULL,
+    name String NOT NULL,
+    message String NOT NULL,
+    url String NULL,
+    type Int8 NOT NULL,
+    version Int32 NULL,
+    created_time DateTime DEFAULT now() NOT NULL
+)
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(created_time)
+ORDER BY (id);
+
+ALTER TABLE t_chat ADD PROJECTION proj_idx_roomId
+( SELECT  *  ORDER BY room_id, user_id, id );

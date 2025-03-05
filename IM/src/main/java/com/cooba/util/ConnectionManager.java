@@ -17,6 +17,14 @@ public class ConnectionManager {
         redisTemplate.opsForSet().remove("socket-connection:" + userId, sessionId);
     }
 
+    public void addGroupUser(String group, String userId, String sessionId) {
+        redisTemplate.opsForHash().put("socket-connection:" + group, userId, sessionId);
+    }
+
+    public void removeGroupUser(String group, String userId, String sessionId) {
+        redisTemplate.opsForHash().delete("socket-connection:" + group, userId, sessionId);
+    }
+
     public boolean isUserOnline(String userId) {
         return redisTemplate.hasKey("socket-connection:" + userId);
     }

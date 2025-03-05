@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class SendMessage {
+    private String uuid;
     private long roomId;
     private long userId;
     private String name;

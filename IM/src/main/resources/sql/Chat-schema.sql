@@ -6,8 +6,9 @@
         name varchar(255) not null,
         room_id bigint not null,
         type tinyint not null,
-        url varchar(255),
+        url varchar(1000),
         user_id bigint not null,
+        uuid varchar(100) not null,
         version integer,
         primary key (id)
     ) engine=InnoDB;

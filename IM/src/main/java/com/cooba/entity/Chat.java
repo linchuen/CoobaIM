@@ -20,6 +20,9 @@ public class Chat {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
+    @Column(nullable = false, length = 100)
+    private String uuid;
+
     @Column(nullable = false)
     private Long roomId;
 
@@ -49,6 +52,7 @@ public class Chat {
     }
 
     public Chat(SendMessage sendMessage) {
+        this.uuid = sendMessage.getUuid();
         this.roomId = sendMessage.getRoomId();
         this.userId = sendMessage.getUserId();
         this.name = sendMessage.getName();

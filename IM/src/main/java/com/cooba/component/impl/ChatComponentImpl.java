@@ -35,6 +35,7 @@ public class ChatComponentImpl implements ChatComponent {
         RoomUser roomUserInfo = roomService.getRoomUserInfo(request.getRoomId(), userId);
 
         SendMessage message = new SendMessage();
+        message.setUuid(request.getUuid());
         message.setMessage(request.getMessage());
         message.setUserId(roomUserInfo.getUserId());
         message.setName(roomUserInfo.getShowName());
@@ -54,6 +55,7 @@ public class ChatComponentImpl implements ChatComponent {
         RoomUser roomUserInfo = roomService.getRoomUserInfo(request.getRoomId(), userId);
 
         SendMessage message = new SendMessage();
+        message.setUuid(request.getUuid());
         message.setMessage(request.getMessage());
         message.setUserId(roomUserInfo.getUserId());
         message.setName(roomUserInfo.getShowName());
@@ -69,6 +71,7 @@ public class ChatComponentImpl implements ChatComponent {
     @Override
     public void speakToAll(SpeakRequest request) {
         NotifyMessage message = new NotifyMessage();
+        message.setUuid(request.getUuid());
         message.setUserId(request.getUserId());
         message.setMessage(request.getMessage());
 
