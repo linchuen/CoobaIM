@@ -1,10 +1,12 @@
 package com.cooba.core.spring;
 
+
 import com.cooba.constant.FrontEnd;
 import com.cooba.constant.StompMQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.WebSocketHandler;
@@ -14,6 +16,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -58,5 +61,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtHandshakeInterceptor); // 註冊 JWT 攔截器
+    }
+
+    @Override
+    public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
+        messageConverters.add(new Lz4MessageConverter()); // 添加 LZ4 消息转换器
+        return false; // 返回 false，避免 Spring Boot 添加默认的 JSON 转换器
     }
 }
