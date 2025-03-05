@@ -27,7 +27,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
         String sessionId = accessor.getSessionId();
         String user = Objects.requireNonNull(accessor.getUser()).getName();
         String destination = accessor.getDestination();
-        System.out.println(accessor.getCommand() + destination);
+
         switch (Objects.requireNonNull(accessor.getCommand())) {
             case CONNECT -> {
                 String authToken = accessor.getFirstNativeHeader("Authorization");
@@ -56,6 +56,9 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
                     String roomId = destination.split("/")[1];
                     connectionManager.removeGroupUser(roomId, user, sessionId);
                 }
+            }
+            default -> {
+                log.info("Command: {} destination: {}", accessor.getCommand(), destination);
             }
         }
         return message;
