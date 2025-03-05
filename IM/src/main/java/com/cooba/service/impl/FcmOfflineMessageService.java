@@ -1,8 +1,8 @@
 package com.cooba.service.impl;
 
-import com.cooba.util.ConnectionManager;
-import com.cooba.service.OfflineMessageService;
 import com.cooba.entity.Chat;
+import com.cooba.service.OfflineMessageService;
+import com.cooba.util.ConnectionManager;
 import com.cooba.util.JsonUtil;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @Component
 @RequiredArgsConstructor
@@ -40,8 +39,12 @@ public class FcmOfflineMessageService implements OfflineMessageService {
 
     @Async
     @Override
-    public void sendToGroup(Supplier<List<String>> userIdSupplier, Chat chat) {
-        List<String> userIds = userIdSupplier.get();
+    public void sendToGroup(String group, Chat chat) {
+        List<String> userIds = connectionManager.getGroupMembers(group)
+                .keySet()
+                .stream()
+                .map(object -> (String) object)
+                .toList();
 
         for (String userId : userIds) {
             boolean online = connectionManager.isUserOnline(userId);

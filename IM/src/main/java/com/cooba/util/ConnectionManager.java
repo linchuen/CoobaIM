@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
 public class ConnectionManager {
@@ -23,6 +25,10 @@ public class ConnectionManager {
 
     public void removeGroupUser(String group, String userId, String sessionId) {
         redisTemplate.opsForHash().delete("socket-connection:" + group, userId, sessionId);
+    }
+
+    public Map<Object, Object> getGroupMembers(String group) {
+        return redisTemplate.opsForHash().entries("socket-connection:" + group);
     }
 
     public boolean isUserOnline(String userId) {
