@@ -190,6 +190,19 @@
                 <version>6.6.5.Final</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/io.protostuff/protostuff-runtime -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>1.8.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
