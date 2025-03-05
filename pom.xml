@@ -109,14 +109,6 @@
                 <version>31.0.1-jre</version>
             </dependency>
 
-            <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
-            <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java</artifactId>
-                <version>4.29.3</version>
-            </dependency>
-
-
             <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
             <dependency>
                 <groupId>com.auth0</groupId>
@@ -189,19 +181,6 @@
                 <artifactId>hibernate-ant</artifactId>
                 <version>6.6.5.Final</version>
                 <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>io.protostuff</groupId>
-                <artifactId>protostuff-core</artifactId>
-                <version>1.8.0</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/io.protostuff/protostuff-runtime -->
-            <dependency>
-                <groupId>io.protostuff</groupId>
-                <artifactId>protostuff-runtime</artifactId>
-                <version>1.8.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
