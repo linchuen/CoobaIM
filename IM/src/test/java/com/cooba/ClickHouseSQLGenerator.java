@@ -18,6 +18,7 @@ public class ClickHouseSQLGenerator {
 
         for (Field field : clazz.getDeclaredFields()) {
             Column columnAnnotation = field.getAnnotation(Column.class);
+            boolean isNullable = columnAnnotation == null || columnAnnotation.nullable();
             Id idAnnotation = field.getAnnotation(Id.class);
             Enumerated enumAnnotation = field.getAnnotation(Enumerated.class);
             String columnName = toSnakeCase(field.getName());
@@ -25,13 +26,21 @@ public class ClickHouseSQLGenerator {
 
             if (idAnnotation != null) {
                 columnType = "UInt64";
+                idColumn = columnName;
+                isNullable = false; // ID 不應該為 NULL
             } else if (enumAnnotation != null) {
                 EnumType enumType = enumAnnotation.value();
                 columnType = enumType == EnumType.STRING ? "String" : "Int8"; // Enums are stored as Int8
             } else {
                 columnType = mapJavaTypeToClickHouseType(field.getType());
             }
-            createTableSQL.append("    ").append(columnName).append(" ").append(columnType).append(",\n");
+            createTableSQL.append("    ").append(columnName).append(" ").append(columnType);
+            if (isNullable) {
+                createTableSQL.append(" NULL");
+            } else {
+                createTableSQL.append(" NOT NULL");
+            }
+            createTableSQL.append(",\n");
         }
 
         createTableSQL.setLength(createTableSQL.length() - 2);
@@ -52,9 +61,10 @@ public class ClickHouseSQLGenerator {
 
             createTableSQL.append("\nALTER TABLE ").append(tableName)
                     .append(" ADD PROJECTION ").append(projectionName)
-                    .append(" (\n    ")
-                    .append(String.join(", ", projectionColumns))
-                    .append("\n);");
+                    .append(" \n( SELECT ")
+                    .append(" * ")
+                    .append(" ORDER BY ").append(String.join(", ", projectionColumns))
+                    .append(" );");
         }
         return createTableSQL.toString();
     }
