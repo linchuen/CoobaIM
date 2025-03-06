@@ -7,8 +7,8 @@ import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.MessageListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 //@Component
@@ -34,11 +34,31 @@ public class StompSocketConnection implements SocketConnection {
         log.info("/queue/{} {} content:{}", event, userId, payload);
     }
 
+    public MessageListener<String, String> kafkaHandleSendUserEvent() {
+        return data -> {
+            String topic = data.topic();
+            String[] strings = topic.split("-");
+            String userId = strings[0];
+            String payload = data.value();
+            messagingTemplate.convertAndSendToUser(userId, strings[1], payload);
+        };
+    }
+
     @Override
     public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         messagingTemplate.convertAndSendToUser(userId, "/private", payload);
         log.info("/private/{} content:{}", userId, payload);
+    }
+
+    public MessageListener<String, String> kafkaHandleSendToUser() {
+        return data -> {
+            String topic = data.topic();
+            String[] strings = topic.split("-");
+            String userId = strings[0];
+            String payload = data.value();
+            messagingTemplate.convertAndSendToUser(userId, strings[1], payload);
+        };
     }
 
     @Override
@@ -49,9 +69,13 @@ public class StompSocketConnection implements SocketConnection {
         log.info("/group/{} content:{}", group, payload);
     }
 
-    private void kafkaHandleSendToGroup(String topic, String payload){
-        messagingTemplate.convertAndSend(topic, payload);
-        log.info("{} content:{}", topic, payload);
+    public MessageListener<String, String> kafkaHandleSendToGroup() {
+        return data -> {
+            String topic = data.topic();
+            String payload = data.value();
+            messagingTemplate.convertAndSend(topic, payload);
+            log.info("{} content:{}", topic, payload);
+        };
     }
 
     @Override
