@@ -1,0 +1,73 @@
+spring:
+  application.name: im
+  port: 8080
+  main.web-application-type: SERVLET
+  resources:
+    add-mappings: false
+  data:
+    redis:
+      database: 0
+      host: ${REDIS_DB_HOST:127.0.0.1}
+      port: ${REDIS_DB_PORT:16379}
+  datasource:
+    dynamic:
+      primary: mysql
+      strict: false
+      datasource:
+        clickhouse:
+          url: jdbc:clickhouse://${CLICKHOUSE_DB_HOST:127.0.0.1:18123}/im
+          username: ${CLICKHOUSE_DB_USERNAME:default}
+          password: ${CLICKHOUSE_DB_PASSWORD:example}
+          driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+        mysql:
+          url: jdbc:mysql://${MYSQL_DB_HOST:127.0.0.1:13306}/im
+          username: ${MYSQL_DB_USERNAME:root}
+          password: ${MYSQL_DB_PASSWORD:example}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  artemis:
+    mode: native
+    host: ${ARTEMIS_HOST:127.0.0.1}
+    port: ${ARTEMIS_PORT:61616}
+    user: ${ARTEMIS_USER:artemis}
+    password: ${ARTEMIS_PASSWORD:artemis}
+
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: t_
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+logging:
+  file:
+    name: logs/app.log  # 指定日誌文件名
+    # path: logs         # 或者僅指定目錄
+  level:
+    root: info
+
+webhook:
+  enabled: false
+  url: ""
+  accessKey: ""
+  event:
+    APPLY_FRIEND: ""
+
+
+stomp:
+  mq:
+    relay-host: ${ARTEMIS_HOST:127.0.0.1}
+    relay-port: ${ARTEMIS_PORT:61616}
+    login: ${ARTEMIS_USER:artemis}
+    passcode: ${ARTEMIS_PASSWORD:artemis}
+    enable: true
+
+minio:
+  endpoint:  ${MINIO_URL:http://127.0.0.1:9000}
+  accessKey: ${MINIO_ROOT_USER:minioadmin}
+  secretKey: ${MINIO_ROOT_PASSWORD:minioadmin}
+
+livekit:
+  url: ${LIVEKIT_URL:http://127.0.0.1:7880}
+  key: ${LIVEKIT_API_KEY:livekit_api_key}
+  secret: ${LIVEKIT_API_SECRET:this_is_livekit_secret_key_for_test}

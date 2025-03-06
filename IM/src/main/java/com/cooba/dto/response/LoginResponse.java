@@ -12,7 +12,6 @@ public class LoginResponse {
     private String name;
     private String token;
     private String platform;
-    private String ip;
     private LocalDateTime loginTime;
     private LocalDateTime expireTime;
 }

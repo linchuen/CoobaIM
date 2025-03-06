@@ -70,7 +70,6 @@ public class UserComponentImpl implements UserComponent {
                 .userId(session.getUserId())
                 .platform(session.getPlatform())
                 .token(session.getToken())
-                .ip(session.getIp())
                 .loginTime(session.getLoginTime())
                 .expireTime(session.getExpireTime())
                 .build();

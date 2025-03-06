@@ -17,6 +17,7 @@ import static com.cooba.constant.AuthorityEnum.*;
 @RequiredArgsConstructor
 public enum RoleEnum {
     USER("ROLE_USER", Set.of(CREATE.auth())),
+    GUEST("ROLE_GUEST", Set.of(READ.auth())),
     ADMIN("ROLE_ADMIN", Set.of(
             CREATE.auth(),
             READ.auth(),
