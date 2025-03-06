@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.entity.Chat;
+import com.cooba.repository.RoomUserRepository;
 import com.cooba.service.OfflineMessageService;
 import com.cooba.util.ConnectionManager;
 import com.cooba.util.JsonUtil;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FcmOfflineMessageService implements OfflineMessageService {
     private final ConnectionManager connectionManager;
+    private final RoomUserRepository roomUserRepository;
 
     @Async
     @Override
@@ -40,10 +42,9 @@ public class FcmOfflineMessageService implements OfflineMessageService {
     @Async
     @Override
     public void sendToGroup(String group, Chat chat) {
-        List<String> userIds = connectionManager.getGroupMembers(group)
-                .keySet()
+        List<String> userIds = roomUserRepository.find(Long.parseLong(group))
                 .stream()
-                .map(object -> (String) object)
+                .map(roomUser -> String.valueOf(roomUser.getUserId()))
                 .toList();
 
         for (String userId : userIds) {

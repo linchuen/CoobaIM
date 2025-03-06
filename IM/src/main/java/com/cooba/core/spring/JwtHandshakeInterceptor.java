@@ -42,22 +42,6 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
             case DISCONNECT -> {
                 connectionManager.removeUser(user, sessionId);
             }
-            case SUBSCRIBE -> {
-                assert destination != null;
-                boolean group = destination.startsWith("group");
-                if (group) {
-                    String roomId = destination.split("/")[1];
-                    connectionManager.addGroupUser(roomId, user, sessionId);
-                }
-            }
-            case UNSUBSCRIBE -> {
-                assert destination != null;
-                boolean group = destination.startsWith("group");
-                if (group) {
-                    String roomId = destination.split("/")[1];
-                    connectionManager.removeGroupUser(roomId, user);
-                }
-            }
             default -> {
                 log.info("Command: {} destination: {}", accessor.getCommand(), destination);
             }
