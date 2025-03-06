@@ -5,17 +5,62 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.MessageListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 //@Service
 @RequiredArgsConstructor
 public class DynamicKafkaConsumerService {
-    private final  ConcurrentMessageListenerContainer<String, String> containers;
+    private final Map<String, ConcurrentMessageListenerContainer<String, String>> listenerContainers = new ConcurrentHashMap<>();
 
-    public void subscribeToTopic(String topic) {
+    public void addConsumer(String topicName, String consumerGroup) {
+        if (listenerContainers.containsKey(consumerGroup)) {
+            System.out.println("Consumer Group " + consumerGroup + " 已經存在");
+            return;
+        }
 
+        ConsumerFactory<String, String> consumerFactory = createConsumerFactory(consumerGroup);
+        ContainerProperties containerProperties = new ContainerProperties(topicName);
+        containerProperties.setMessageListener((MessageListener<String, String>) record -> {
+            System.out.println("Consumer Group [" + consumerGroup + "] 收到消息: " + record.value());
+        });
+
+        ConcurrentMessageListenerContainer<String, String> container =
+                new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
+        container.start();
+        listenerContainers.put(consumerGroup, container);
+
+        System.out.println("已啟動 Consumer Group: " + consumerGroup + " 訂閱 Topic: " + topicName);
     }
 
-    public void unsubscribeFromTopic(String topic) {
+    public void removeConsumer(String consumerGroup) {
+        ConcurrentMessageListenerContainer<String, String> container = listenerContainers.remove(consumerGroup);
+        if (container != null) {
+            container.stop();
+            System.out.println("已停止 Consumer Group: " + consumerGroup);
+        } else {
+            System.out.println("Consumer Group " + consumerGroup + " 不存在");
+        }
+    }
 
+    private ConsumerFactory<String, String> createConsumerFactory(String consumerGroup) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup); // 動態設置 Consumer Group
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+        return new DefaultKafkaConsumerFactory<>(config);
     }
 }
+
 

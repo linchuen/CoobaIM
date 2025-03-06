@@ -55,7 +55,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
                 boolean group = destination.startsWith("group");
                 if (group) {
                     String roomId = destination.split("/")[1];
-                    connectionManager.removeGroupUser(roomId, user, sessionId);
+                    connectionManager.removeGroupUser(roomId, user);
                 }
             }
             default -> {
