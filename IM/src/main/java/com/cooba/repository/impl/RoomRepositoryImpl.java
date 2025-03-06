@@ -3,7 +3,6 @@ package com.cooba.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Room;
-import com.cooba.entity.RoomUser;
 import com.cooba.mapper.RoomMapper;
 import com.cooba.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;

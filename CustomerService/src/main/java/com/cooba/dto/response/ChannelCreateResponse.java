@@ -6,4 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ChannelCreateResponse {
+    private Long channelId;
 }

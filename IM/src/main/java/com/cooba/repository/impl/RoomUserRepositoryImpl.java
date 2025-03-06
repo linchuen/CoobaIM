@@ -2,11 +2,8 @@ package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
-import com.cooba.entity.Chat;
 import com.cooba.entity.RoomUser;
-import com.cooba.mapper.ChatMapper;
 import com.cooba.mapper.RoomUserMapper;
-import com.cooba.repository.ChatRepository;
 import com.cooba.repository.RoomUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

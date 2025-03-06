@@ -3,7 +3,6 @@ package com.cooba.repository.impl;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Guest;
 import com.cooba.mapper.GuestMapper;
-import com.cooba.mapper.OfficialChannelMapper;
 import com.cooba.repository.GuestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

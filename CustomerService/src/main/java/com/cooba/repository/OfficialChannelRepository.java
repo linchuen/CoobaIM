@@ -1,4 +1,6 @@
 package com.cooba.repository;
 
-public interface OfficialChannelRepository {
+import com.cooba.entity.OfficialChannel;
+
+public interface OfficialChannelRepository extends BaseRepository<OfficialChannel>{
 }
