@@ -128,7 +128,7 @@ public class UserComponentImpl implements UserComponent {
     @Override
     @WebhookTrigger(WebhookEnum.APPLY_FRIEND)
     public FriendApplyResponse applyFriend(FriendRequest request) {
-        if ((request.getApplyUserId().equals(request.getPermitUserId())){
+        if ((request.getApplyUserId().equals(request.getPermitUserId()))) {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);
         }
 
