@@ -1,14 +1,11 @@
 package com.cooba.core.kafka;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.MessageListener;
 
@@ -21,33 +18,28 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DynamicKafkaConsumerService {
     private final Map<String, ConcurrentMessageListenerContainer<String, String>> listenerContainers = new ConcurrentHashMap<>();
 
-    public void addConsumer(String topicName, String consumerGroup) {
-        if (listenerContainers.containsKey(consumerGroup)) {
-            System.out.println("Consumer Group " + consumerGroup + " 已經存在");
-            return;
-        }
+    public void addConsumer(String topicName, String consumerGroup, MessageListener<String, String> messageListener) {
+        if (listenerContainers.containsKey(topicName + consumerGroup)) return;
 
         ConsumerFactory<String, String> consumerFactory = createConsumerFactory(consumerGroup);
         ContainerProperties containerProperties = new ContainerProperties(topicName);
-        containerProperties.setMessageListener((MessageListener<String, String>) record -> {
-            System.out.println("Consumer Group [" + consumerGroup + "] 收到消息: " + record.value());
-        });
+        containerProperties.setMessageListener(messageListener);
 
         ConcurrentMessageListenerContainer<String, String> container =
                 new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
         container.start();
-        listenerContainers.put(consumerGroup, container);
+        listenerContainers.put(topicName + consumerGroup, container);
 
         System.out.println("已啟動 Consumer Group: " + consumerGroup + " 訂閱 Topic: " + topicName);
     }
 
-    public void removeConsumer(String consumerGroup) {
-        ConcurrentMessageListenerContainer<String, String> container = listenerContainers.remove(consumerGroup);
+    public void removeConsumer(String topicName, String consumerGroup) {
+        ConcurrentMessageListenerContainer<String, String> container = listenerContainers.remove(topicName + consumerGroup);
         if (container != null) {
             container.stop();
-            System.out.println("已停止 Consumer Group: " + consumerGroup);
+            System.out.println("已停止 Consumer Group: " + topicName + " 訂閱 Topic: " + topicName);
         } else {
-            System.out.println("Consumer Group " + consumerGroup + " 不存在");
+            System.out.println("Consumer Group " + consumerGroup + " 訂閱 Topic: " + topicName + " 不存在");
         }
     }
 
