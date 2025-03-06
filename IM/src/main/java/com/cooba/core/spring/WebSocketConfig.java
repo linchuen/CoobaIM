@@ -62,10 +62,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtHandshakeInterceptor); // 註冊 JWT 攔截器
     }
-
-    @Override
-    public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
-        messageConverters.add(new Lz4MessageConverter()); // 添加 LZ4 消息转换器
-        return false; // 返回 false，避免 Spring Boot 添加默认的 JSON 转换器
-    }
 }
