@@ -8,6 +8,7 @@ import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.Agent;
+import com.cooba.entity.AgentCustomer;
 import com.cooba.entity.Ticket;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
@@ -114,11 +115,31 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public void bindCustomer(AgentCustomerRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
+        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
 
+        List<Long> customerUserIds = request.getUserIds();
+
+        List<User> users = userService.getInfoList(customerUserIds);
+
+        List<AgentCustomer> agentCustomers = users.stream()
+                .map(user -> {
+                    AgentCustomer agentCustomer = new AgentCustomer();
+                    agentCustomer.setAgentId(agent.getId());
+                    agentCustomer.setAgentUserId(agent.getUserId());
+                    agentCustomer.setCustomerUserId(user.getId());
+                    agentCustomer.setShowName(user.getName());
+                    return agentCustomer;
+                })
+                .toList();
+        agentService.bindCustomer(agentCustomers);
     }
 
     @Override
     public void unbindCustomer(AgentCustomerRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
+        agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
 
+        agentService.unbindCustomer(request.getUserIds());
     }
 }

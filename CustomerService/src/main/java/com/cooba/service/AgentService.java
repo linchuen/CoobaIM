@@ -16,7 +16,12 @@ public interface AgentService {
 
     List<Agent> search(List<Long> agentIds);
 
+    void disable(Agent agent);
+
     List<AgentCustomer> searchCustomer(long agentId);
 
-    void disable(Agent agent);
+    void bindCustomer(List<AgentCustomer> agentCustomers);
+
+    void unbindCustomer(List<Long> customerUserIds);
+
 }

@@ -67,6 +67,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getInfoList(List<Long> userIds) {
+        return userRepository.selectByIds(userIds);
+    }
+
+    @Override
     public List<RoomUser> getAllRooms(long userId) {
         return roomUserRepository.findByUserId(userId);
     }

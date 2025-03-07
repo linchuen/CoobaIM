@@ -19,5 +19,7 @@ public interface UserService extends UserDetailsService {
 
     User getInfo(String email);
 
+    List<User> getInfoList(List<Long> userIds);
+
     List<RoomUser> getAllRooms(long userId);
 }
