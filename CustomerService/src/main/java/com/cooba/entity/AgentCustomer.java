@@ -20,7 +20,13 @@ public class AgentCustomer {
     private Long agentId;
 
     @Column(nullable = false)
-    private Long customerId;
+    private Long agentUserId;
+
+    @Column(nullable = false)
+    private Long customerUserId;
+
+    @Column(nullable = false)
+    private String showName;
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();

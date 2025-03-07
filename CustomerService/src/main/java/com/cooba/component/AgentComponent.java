@@ -4,10 +4,7 @@ import com.cooba.dto.request.AgentCreateRequest;
 import com.cooba.dto.request.AgentDisableRequest;
 import com.cooba.dto.request.AgentSearchRequest;
 import com.cooba.dto.request.AgentUpdateRequest;
-import com.cooba.dto.response.AgentCreateResponse;
-import com.cooba.dto.response.AgentDisableResponse;
-import com.cooba.dto.response.AgentSearchResponse;
-import com.cooba.dto.response.AgentUpdateResponse;
+import com.cooba.dto.response.*;
 
 public interface AgentComponent {
 
@@ -19,7 +16,7 @@ public interface AgentComponent {
 
     AgentSearchResponse searchAgent(AgentSearchRequest request);
 
-    void searchCustomer();
+    CustomerSearchResponse searchCustomer();
 
     void searchCustomerTicket();
 

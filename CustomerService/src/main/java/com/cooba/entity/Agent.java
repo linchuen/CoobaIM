@@ -24,4 +24,7 @@ public class Agent {
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
+
+    @Column(nullable = false)
+    private LocalDateTime updatedTime = LocalDateTime.now();
 }

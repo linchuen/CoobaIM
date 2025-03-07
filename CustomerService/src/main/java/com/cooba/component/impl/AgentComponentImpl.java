@@ -3,22 +3,23 @@ package com.cooba.component.impl;
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
-import com.cooba.constant.ErrorEnum;
+import com.cooba.constatnt.CsErrorEnum;
+import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.request.AgentCreateRequest;
 import com.cooba.dto.request.AgentDisableRequest;
 import com.cooba.dto.request.AgentSearchRequest;
 import com.cooba.dto.request.AgentUpdateRequest;
-import com.cooba.dto.response.AgentCreateResponse;
-import com.cooba.dto.response.AgentDisableResponse;
-import com.cooba.dto.response.AgentSearchResponse;
-import com.cooba.dto.response.AgentUpdateResponse;
+import com.cooba.dto.response.*;
 import com.cooba.entity.Agent;
+import com.cooba.entity.AgentCustomer;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.AgentService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 
 @Slf4j
@@ -51,14 +52,18 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public AgentUpdateResponse updateAgent(AgentUpdateRequest request) {
-        long userId = userThreadLocal.getCurrentUserId();
-        return null;
+        Agent agent = agentService.search(request.getAgentId()).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        agent.setDisable(request.getIsDisable());
+
+        agentService.update(agent);
+        return AgentUpdateResponse.builder()
+                .build();
     }
 
     @Override
     public AgentDisableResponse disableAgent(AgentDisableRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(ErrorEnum.INVALID_AUTHORIZATION));
+        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
         agent.setDisable(true);
         agentService.disable(agent);
 
@@ -68,13 +73,24 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public AgentSearchResponse searchAgent(AgentSearchRequest request) {
-
-        return null;
+        List<Agent> agents = agentService.search(request.getAgentIds());
+        return AgentSearchResponse.builder()
+                .agents(agents)
+                .build();
     }
 
     @Override
-    public void searchCustomer() {
+    public CustomerSearchResponse searchCustomer() {
+        long userId = userThreadLocal.getCurrentUserId();
+        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        List<CustomerInfo> customerInfos = agentService.searchCustomer(agent.getId())
+                .stream()
+                .map(CustomerInfo::new)
+                .toList();
 
+        return CustomerSearchResponse.builder()
+                .customerInfos(customerInfos)
+                .build();
     }
 
     @Override
