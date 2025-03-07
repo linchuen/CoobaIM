@@ -9,12 +9,13 @@ import com.cooba.dto.request.RegisterRequest;
 import com.cooba.dto.response.CustomerEnterResponse;
 import com.cooba.dto.response.LoginResponse;
 import com.cooba.dto.response.RegisterResponse;
-import com.cooba.entity.Session;
-import com.cooba.entity.Ticket;
-import com.cooba.entity.User;
+import com.cooba.entity.*;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @ObjectLayer
@@ -22,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerComponentImpl implements CustomerComponent {
     private final UserService userService;
     private final TicketService ticketService;
+    private final RoomService roomService;
+    private final MessageService messageService;
     private final SessionService sessionService;
     private final RouteAgentService routeAgentService;
     private final GuestService guestService;
@@ -46,20 +49,38 @@ public class CustomerComponentImpl implements CustomerComponent {
 
         boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
 
-        Ticket ticket;
-        if (isGuest || request.isUsePreviousChat()) {
-            ticket = ticketService.create();
+        if (isGuest || !request.isUsePreviousChat()) {
+            Agent suitableAgent = routeAgentService.findSuitableAgent();
+
+            Room room = new Room();
+            room.setName(UUID.randomUUID().toString());
+            roomService.build(room, List.of(suitableAgent.getUserId(), currentUser.getId()));
+
+            Ticket ticket = new Ticket();
+            ticket.setName(room.getName());
+            ticket.setRoomId(room.getId());
+            ticket.setAgentUserId(suitableAgent.getUserId());
+            ticket.setCustomerUserId(currentUser.getId());
+            ticketService.create(ticket);
+
+            return CustomerEnterResponse.builder()
+                    .ticket(ticket)
+                    .build();
         } else {
-            ticket = ticketService.findLastTicket();
+            Ticket ticket = ticketService.findLastTicket(currentUser.getId());
+            List<Chat> chats = messageService.getRoomChats(ticket.getRoomId());
+
+            User redirectAgentInfo = routeAgentService.redirectAgent(ticket.getAgentUserId());
+            RoomUser roomUser = new RoomUser();
+            roomUser.setRoomId(ticket.getRoomId());
+            roomUser.setUserId(redirectAgentInfo.getId());
+            roomUser.setShowName(redirectAgentInfo.getName());
+            roomService.addUser(roomUser);
+            return CustomerEnterResponse.builder()
+                    .ticket(ticket)
+                    .chats(chats)
+                    .build();
         }
-        if (request.isNeedRoute()) {
-            routeAgentService.findSuitableAgent();
-        }
-
-
-        return CustomerEnterResponse.builder()
-
-                .build();
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.cooba.service;
 
+import com.cooba.entity.Agent;
+import com.cooba.entity.User;
+
 import java.util.List;
 
 public abstract class RouteAgentService {
@@ -9,6 +12,7 @@ public abstract class RouteAgentService {
         this.routeRuleList = routeRuleList;
     }
 
-    public abstract void findSuitableAgent();
+    public abstract Agent findSuitableAgent();
 
+    public abstract User redirectAgent(long agentUserId);
 }

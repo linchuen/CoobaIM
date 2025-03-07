@@ -5,9 +5,9 @@ import com.cooba.entity.Ticket;
 import java.util.List;
 
 public interface TicketService {
-    Ticket create();
+    long create(Ticket ticket);
 
-    Ticket findLastTicket();
+    Ticket findLastTicket(long customerUserId);
 
     List<Ticket> searchCustomerTicket(long agentUserId, long customerUserId);
 }
