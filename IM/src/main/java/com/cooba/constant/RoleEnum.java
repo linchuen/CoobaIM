@@ -18,6 +18,7 @@ import static com.cooba.constant.AuthorityEnum.*;
 public enum RoleEnum {
     USER("ROLE_USER", Set.of(CREATE.auth())),
     GUEST("ROLE_GUEST", Set.of(READ.auth())),
+    AGENT("ROLE_AGENT", Set.of(CREATE.auth())),
     ADMIN("ROLE_ADMIN", Set.of(
             CREATE.auth(),
             READ.auth(),
