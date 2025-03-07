@@ -30,5 +30,8 @@ public class Ticket {
     private Long customerUserId;
 
     @Column(nullable = false)
+    private boolean isOpen = true;
+
+    @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 }

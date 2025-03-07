@@ -4,6 +4,7 @@ import brave.Tracer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.response.ResultResponse;
 import com.cooba.exception.BaseException;
+import com.cooba.exception.IMError;
 import com.cooba.util.JsonUtil;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +43,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     @ResponseBody
     public ResultResponse<?> handleBaseException(BaseException ex, WebRequest request) {
-        ErrorEnum errorEnum = ex.getErrorEnum() == null ? ErrorEnum.BUSINESS_ERROR : ex.getErrorEnum();
+        IMError imError = ex.getError() == null ? ErrorEnum.BUSINESS_ERROR : ex.getError();
         return ResultResponse.builder()
                 .traceId(tracer.currentSpan().context().traceIdString())
-                .errorMessage(errorEnum.getMessage())
-                .code(errorEnum.getCode())
+                .errorMessage(imError.getMessage())
+                .code(imError.getCode())
                 .logMessage(ex.getMessage())
                 .build();
     }

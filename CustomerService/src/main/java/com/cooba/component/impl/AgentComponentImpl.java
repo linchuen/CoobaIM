@@ -8,9 +8,11 @@ import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.Agent;
+import com.cooba.entity.Ticket;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.AgentService;
+import com.cooba.service.TicketService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.util.List;
 public class AgentComponentImpl implements AgentComponent {
     private final UserService userService;
     private final AgentService agentService;
+    private final TicketService ticketService;
     private final UserThreadLocal userThreadLocal;
 
     @Override
@@ -90,8 +93,16 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
-    public CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest customerTicketSearchRequest) {
+    public CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
+        agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+
+        List<Ticket> tickets = ticketService.searchCustomerTicket(userId, request.getCustomerUserId())
+                .stream()
+                .filter(Ticket::isOpen)
+                .toList();
         return CustomerTicketSearchResponse.builder()
+                .tickets(tickets)
                 .build();
     }
 
