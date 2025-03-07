@@ -1,11 +1,12 @@
 package com.cooba.constant;
 
+import com.cooba.exception.IMError;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ErrorEnum {
+public enum ErrorEnum implements IMError {
     INVALID_AUTHORIZATION(401,"invalid authorization"),
     JWT_TOKEN_INVALID(401,"jwt token invalid"),
     FORBIDDEN(403,"forbidden"),
