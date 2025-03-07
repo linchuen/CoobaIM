@@ -1,9 +1,6 @@
 package com.cooba.component;
 
-import com.cooba.dto.request.AgentCreateRequest;
-import com.cooba.dto.request.AgentDisableRequest;
-import com.cooba.dto.request.AgentSearchRequest;
-import com.cooba.dto.request.AgentUpdateRequest;
+import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 
 public interface AgentComponent {
@@ -18,10 +15,12 @@ public interface AgentComponent {
 
     CustomerSearchResponse searchCustomer();
 
-    void searchCustomerTicket();
+    CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest customerTicketSearchRequest);
 
-    void transferTicket();
+    TicketTransferResponse transferTicket(TicketTransferRequest request);
 
-    void manageCustomer();
+    void bindCustomer(AgentCustomerRequest request);
+
+    void unbindCustomer(AgentCustomerRequest request);
 
 }

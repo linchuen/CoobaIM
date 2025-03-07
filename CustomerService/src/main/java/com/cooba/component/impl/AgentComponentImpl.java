@@ -5,13 +5,9 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
 import com.cooba.constatnt.CsErrorEnum;
 import com.cooba.dto.CustomerInfo;
-import com.cooba.dto.request.AgentCreateRequest;
-import com.cooba.dto.request.AgentDisableRequest;
-import com.cooba.dto.request.AgentSearchRequest;
-import com.cooba.dto.request.AgentUpdateRequest;
+import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.Agent;
-import com.cooba.entity.AgentCustomer;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
 import com.cooba.service.AgentService;
@@ -94,17 +90,24 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
-    public void searchCustomerTicket() {
+    public CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest customerTicketSearchRequest) {
+        return CustomerTicketSearchResponse.builder()
+                .build();
+    }
+
+    @Override
+    public TicketTransferResponse transferTicket(TicketTransferRequest request) {
+        return TicketTransferResponse.builder()
+                .build();
+    }
+
+    @Override
+    public void bindCustomer(AgentCustomerRequest request) {
 
     }
 
     @Override
-    public void transferTicket() {
-
-    }
-
-    @Override
-    public void manageCustomer() {
+    public void unbindCustomer(AgentCustomerRequest request) {
 
     }
 }
