@@ -1,5 +1,6 @@
 package com.cooba.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Ticket;
 import com.cooba.mapper.TicketMapper;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @DataManipulateLayer
@@ -37,5 +39,23 @@ public class TicketRepositoryImpl implements TicketRepository {
     @Override
     public void deleteById(long id) {
         ticketMapper.deleteById(id);
+    }
+
+    @Override
+    public Optional<Ticket> findLastTicketByCustomerId(long customerUserId) {
+        Ticket ticket = ticketMapper.selectOne(new LambdaQueryWrapper<Ticket>()
+                .eq(Ticket::getCustomerUserId, customerUserId)
+                .orderByDesc(Ticket::getCreatedTime)
+                .last("limit 1")
+        );
+        return Optional.ofNullable(ticket);
+    }
+
+    @Override
+    public List<Ticket> findTicketsByAgentAndCustomer(long agentUserId, long customerUserId) {
+        return ticketMapper.selectList(new LambdaQueryWrapper<Ticket>()
+                .eq(Ticket::getAgentUserId, agentUserId)
+                .eq(Ticket::getCustomerUserId, customerUserId)
+        );
     }
 }
