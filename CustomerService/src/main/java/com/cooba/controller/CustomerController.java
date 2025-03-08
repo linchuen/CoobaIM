@@ -1,17 +1,17 @@
 package com.cooba.controller;
 
 import com.cooba.component.CustomerComponent;
+import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
+import com.cooba.dto.response.CustomerEnterResponse;
+import com.cooba.dto.response.LoginResponse;
 import com.cooba.dto.response.RegisterResponse;
 import com.cooba.dto.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer")
@@ -24,6 +24,27 @@ public class CustomerController {
     @Operation(summary = "用戶建立")
     public ResultResponse<?> createUser(@Valid @RequestBody RegisterRequest request) {
         RegisterResponse response = customerComponent.create(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/create")
+    @Operation(summary = "用戶建立")
+    public ResultResponse<?> enterRoom(@Valid @RequestBody CustomerEnterRequest request) {
+        CustomerEnterResponse response = customerComponent.enterRoom(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/guest/{id}")
+    @Operation(summary = "用戶建立")
+    public ResultResponse<?> createGuest(@PathVariable int id) {
+        customerComponent.createGuest(id);
+        return ResultResponse.builder().data(true).build();
+    }
+
+    @GetMapping("/guest")
+    @Operation(summary = "用戶建立")
+    public ResultResponse<?> createUser() {
+        LoginResponse response = customerComponent.getGuestToken();
         return ResultResponse.builder().data(response).build();
     }
 }
