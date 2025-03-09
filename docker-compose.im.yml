@@ -39,15 +39,17 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
     container_name: im_redis
+    restart: always
+    env_file:
+      - .env
     ports:
       - "16379:6379"
 
   mysql:
     image: bitnami/mysql:8.3.0
-    restart: always
     container_name: im_mysql
+    restart: always
     env_file:
       - .env
     environment:
@@ -91,25 +93,29 @@ services:
     image: quay.io/minio/minio
     container_name: im_minio
     restart: always
-    ports:
-      - "9000:9000"  # API 端口
-      - "9001:9001"  # 控制台端口
+    env_file:
+      - .env
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"  # API 端口
+      - "9001:9001"  # 控制台端口
 
   livekit:
     image: livekit/livekit-server:v1.8.4
     container_name: im_livekit-server
     restart: always
-    ports:
-      - "7880:7880"  # API 端口
-      - "7881:7881"  # WebSocket 端口
-      - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
+    env_file:
+      - .env
     environment:
       LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
       LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
       LIVEKIT_KEYS: ${LIVEKIT_KEYS}
       LIVEKIT_LOG_LEVEL: debug
       LIVEKIT_UDP_PORTS: 50000,60000
+    ports:
+      - "7880:7880"  # API 端口
+      - "7881:7881"  # WebSocket 端口
+      - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
