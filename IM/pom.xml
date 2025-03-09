@@ -155,11 +155,6 @@
             <artifactId>livekit-server</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-        </dependency>
-
         <!-- Spring Boot Test Starter (for testing, optional) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

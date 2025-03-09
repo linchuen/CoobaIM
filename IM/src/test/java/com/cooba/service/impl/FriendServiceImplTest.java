@@ -51,7 +51,7 @@ class FriendServiceImplTest {
 
         BaseException baseException = Assertions.assertThrows(BaseException.class, () -> friendService.apply(friendApply));
 
-        Assertions.assertEquals(ErrorEnum.FRIEND_APPLY_EXIST, baseException.getErrorEnum());
+        Assertions.assertEquals(ErrorEnum.FRIEND_APPLY_EXIST, baseException.getError());
     }
 
     @Test

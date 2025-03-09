@@ -4,10 +4,6 @@ import com.cooba.entity.Chat;
 import com.cooba.repository.RoomUserRepository;
 import com.cooba.service.OfflineMessageService;
 import com.cooba.util.ConnectionManager;
-import com.cooba.util.JsonUtil;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -26,17 +22,6 @@ public class FcmOfflineMessageService implements OfflineMessageService {
         boolean online = connectionManager.isUserOnline(userId);
         if (online) return;
 
-        FirebaseMessaging messaging = FirebaseMessaging.getInstance();
-        Message message = Message.builder()
-                .putData("body", JsonUtil.toJson(chat))
-                .setToken("token")
-                .build();
-
-        try {
-            messaging.send(message);
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
-        }
     }
 
     @Async
@@ -50,18 +35,6 @@ public class FcmOfflineMessageService implements OfflineMessageService {
         for (String userId : userIds) {
             boolean online = connectionManager.isUserOnline(userId);
             if (online) continue;
-
-            FirebaseMessaging messaging = FirebaseMessaging.getInstance();
-            Message message = Message.builder()
-                    .putData("body", JsonUtil.toJson(chat))
-                    .setToken("token")
-                    .build();
-
-            try {
-                messaging.send(message);
-            } catch (FirebaseMessagingException e) {
-                e.printStackTrace();
-            }
         }
     }
 
