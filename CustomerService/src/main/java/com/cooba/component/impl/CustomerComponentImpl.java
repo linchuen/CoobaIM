@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -50,24 +51,13 @@ public class CustomerComponentImpl implements CustomerComponent {
         boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
 
         if (isGuest || !request.isUsePreviousChat()) {
-            Agent suitableAgent = routeAgentService.findSuitableAgent();
-
-            Room room = new Room();
-            room.setName(UUID.randomUUID().toString());
-            roomService.build(room, List.of(suitableAgent.getUserId(), currentUser.getId()));
-
-            Ticket ticket = new Ticket();
-            ticket.setName(room.getName());
-            ticket.setRoomId(room.getId());
-            ticket.setAgentUserId(suitableAgent.getUserId());
-            ticket.setCustomerUserId(currentUser.getId());
-            ticketService.create(ticket);
-
-            return CustomerEnterResponse.builder()
-                    .ticket(ticket)
-                    .build();
+            return createNewTicket(currentUser);
         } else {
-            Ticket ticket = ticketService.findLastTicket(currentUser.getId());
+            Optional<Ticket> lastTicket = ticketService.findLastTicket(currentUser.getId());
+            if (lastTicket.isEmpty()){
+                return createNewTicket(currentUser);
+            }
+            Ticket ticket = lastTicket.get();
             List<Chat> chats = messageService.getRoomChats(ticket.getRoomId());
 
             User redirectAgentInfo = routeAgentService.redirectAgent(ticket.getAgentUserId());
@@ -81,6 +71,25 @@ public class CustomerComponentImpl implements CustomerComponent {
                     .chats(chats)
                     .build();
         }
+    }
+
+    private CustomerEnterResponse createNewTicket(User currentUser) {
+        Agent suitableAgent = routeAgentService.findSuitableAgent();
+
+        Room room = new Room();
+        room.setName(UUID.randomUUID().toString());
+        roomService.build(room, List.of(suitableAgent.getUserId(), currentUser.getId()));
+
+        Ticket ticket = new Ticket();
+        ticket.setName(room.getName());
+        ticket.setRoomId(room.getId());
+        ticket.setAgentUserId(suitableAgent.getUserId());
+        ticket.setCustomerUserId(currentUser.getId());
+        ticketService.create(ticket);
+
+        return CustomerEnterResponse.builder()
+                .ticket(ticket)
+                .build();
     }
 
     @Override
