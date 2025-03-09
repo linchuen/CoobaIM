@@ -52,7 +52,7 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public AgentUpdateResponse updateAgent(AgentUpdateRequest request) {
-        Agent agent = agentService.search(request.getAgentId()).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        Agent agent = agentService.search(request.getAgentUserId());
         agent.setDisable(request.getIsDisable());
 
         agentService.update(agent);
@@ -63,8 +63,8 @@ public class AgentComponentImpl implements AgentComponent {
     @Override
     public AgentDisableResponse disableAgent(AgentDisableRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
-        agent.setDisable(true);
+        Agent agent = agentService.search(userId);
+
         agentService.disable(agent);
 
         return AgentDisableResponse.builder()
@@ -82,23 +82,23 @@ public class AgentComponentImpl implements AgentComponent {
     @Override
     public CustomerSearchResponse searchCustomer() {
         long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
-        List<CustomerInfo> customerInfos = agentService.searchCustomer(agent.getId())
+        Agent agent = agentService.search(userId);
+        List<CustomerInfo> customerInfoList = agentService.searchCustomer(agent.getId())
                 .stream()
                 .map(CustomerInfo::new)
                 .toList();
 
         return CustomerSearchResponse.builder()
-                .customerInfos(customerInfos)
+                .customerInfos(customerInfoList)
                 .build();
     }
 
     @Override
     public CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        Agent agent = agentService.search(userId);
 
-        List<Ticket> tickets = ticketService.searchCustomerTicket(userId, request.getCustomerUserId())
+        List<Ticket> tickets = ticketService.searchCustomerTicket(agent.getUserId(), request.getCustomerUserId())
                 .stream()
                 .filter(Ticket::isOpen)
                 .toList();
@@ -116,7 +116,7 @@ public class AgentComponentImpl implements AgentComponent {
     @Override
     public void bindCustomer(AgentCustomerRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        Agent agent = agentService.search(userId);
 
         List<Long> customerUserIds = request.getUserIds();
 
@@ -138,8 +138,8 @@ public class AgentComponentImpl implements AgentComponent {
     @Override
     public void unbindCustomer(AgentCustomerRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        agentService.search(userId).orElseThrow(() -> new BaseException(CsErrorEnum.AGENT_NOT_EXIST));
+        Agent agent = agentService.search(userId);
 
-        agentService.unbindCustomer(request.getUserIds());
+        agentService.unbindCustomer(agent.getUserId(), request.getUserIds());
     }
 }

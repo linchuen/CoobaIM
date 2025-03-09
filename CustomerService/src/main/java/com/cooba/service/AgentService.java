@@ -4,7 +4,6 @@ import com.cooba.entity.Agent;
 import com.cooba.entity.AgentCustomer;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AgentService {
 
@@ -12,7 +11,7 @@ public interface AgentService {
 
     void update(Agent agent);
 
-    Optional<Agent> search(long userId);
+    Agent search(long agentUserId);
 
     List<Agent> search(List<Long> agentIds);
 
@@ -22,6 +21,6 @@ public interface AgentService {
 
     void bindCustomer(List<AgentCustomer> agentCustomers);
 
-    void unbindCustomer(List<Long> customerUserIds);
+    void unbindCustomer(long agentUserId, List<Long> customerUserIds);
 
 }

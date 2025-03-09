@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AgentUpdateRequest {
-    private Long agentId;
+    private Long agentUserId;
     private Boolean isDisable;
 }

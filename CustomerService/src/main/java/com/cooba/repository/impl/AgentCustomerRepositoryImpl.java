@@ -1,5 +1,6 @@
 package com.cooba.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.AgentCustomer;
 import com.cooba.mapper.AgentCustomerMapper;
@@ -37,5 +38,21 @@ public class AgentCustomerRepositoryImpl implements AgentCustomerRepository {
     @Override
     public void deleteById(long id) {
         agentCustomerMapper.deleteById(id);
+    }
+
+
+    @Override
+    public List<AgentCustomer> findByAgentId(long agentId) {
+        return agentCustomerMapper.selectList(new LambdaQueryWrapper<AgentCustomer>()
+                .eq(AgentCustomer::getAgentId, agentId)
+        );
+    }
+
+    @Override
+    public void deleteByCustomerUserIds(long agentUserId, List<Long> customerUserIds) {
+        agentCustomerMapper.delete(new LambdaQueryWrapper<AgentCustomer>()
+                .eq(AgentCustomer::getAgentUserId, agentUserId)
+                .in(AgentCustomer::getCustomerUserId,customerUserIds)
+        );
     }
 }

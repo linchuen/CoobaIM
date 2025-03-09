@@ -2,5 +2,10 @@ package com.cooba.repository;
 
 import com.cooba.entity.AgentCustomer;
 
-public interface AgentCustomerRepository extends BaseRepository<AgentCustomer>{
+import java.util.List;
+
+public interface AgentCustomerRepository extends BaseRepository<AgentCustomer> {
+    List<AgentCustomer> findByAgentId(long agentId);
+
+    void deleteByCustomerUserIds(long agentUserId, List<Long> customerUserIds);
 }
