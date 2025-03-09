@@ -7,9 +7,9 @@ public interface AgentComponent {
 
     AgentCreateResponse createAgent(AgentCreateRequest request);
 
-    AgentUpdateResponse updateAgent(AgentUpdateRequest request);
+    void updateAgent(AgentUpdateRequest request);
 
-    AgentDisableResponse disableAgent(AgentDisableRequest request);
+    void disableAgent(AgentDisableRequest request);
 
     AgentSearchResponse searchAgent(AgentSearchRequest request);
 

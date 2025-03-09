@@ -6,4 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TicketTransferResponse {
+    private Long roomId;
+    private Long userId;
+    private String showName;
 }

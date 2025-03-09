@@ -3,16 +3,13 @@ package com.cooba.component.impl;
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
-import com.cooba.constatnt.CsErrorEnum;
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-import com.cooba.entity.Agent;
-import com.cooba.entity.AgentCustomer;
-import com.cooba.entity.Ticket;
-import com.cooba.entity.User;
-import com.cooba.exception.BaseException;
+import com.cooba.entity.*;
 import com.cooba.service.AgentService;
+import com.cooba.service.RoomService;
 import com.cooba.service.TicketService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +24,7 @@ import java.util.List;
 public class AgentComponentImpl implements AgentComponent {
     private final UserService userService;
     private final AgentService agentService;
+    private final RoomService roomService;
     private final TicketService ticketService;
     private final UserThreadLocal userThreadLocal;
 
@@ -51,24 +49,18 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
-    public AgentUpdateResponse updateAgent(AgentUpdateRequest request) {
+    public void updateAgent(AgentUpdateRequest request) {
         Agent agent = agentService.search(request.getAgentUserId());
         agent.setDisable(request.getIsDisable());
 
         agentService.update(agent);
-        return AgentUpdateResponse.builder()
-                .build();
     }
 
     @Override
-    public AgentDisableResponse disableAgent(AgentDisableRequest request) {
-        long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId);
+    public void disableAgent(AgentDisableRequest request) {
+        Agent agent = agentService.search(request.getAgentUserId());
 
         agentService.disable(agent);
-
-        return AgentDisableResponse.builder()
-                .build();
     }
 
     @Override
@@ -109,7 +101,29 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public TicketTransferResponse transferTicket(TicketTransferRequest request) {
+        User currentUser = userThreadLocal.getCurrentUser();
+        Agent agent = agentService.search(currentUser.getId());
+        Agent transferAgent = agentService.search(request.getTransferUserId());
+        User transferUser = userService.getInfo(transferAgent.getUserId());
+
+        RoomUser roomUser = new RoomUser();
+        roomUser.setRoomId(request.getRoomId());
+        roomUser.setUserId(transferAgent.getId());
+        roomUser.setShowName(transferUser.getName());
+        roomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
+        roomService.addUser(roomUser);
+
+        RoomUser removeRoomUser = new RoomUser();
+        removeRoomUser.setRoomId(request.getRoomId());
+        removeRoomUser.setUserId(agent.getId());
+        removeRoomUser.setShowName(currentUser.getName());
+        removeRoomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
+        roomService.deleteUser(removeRoomUser);
+
         return TicketTransferResponse.builder()
+                .roomId(request.getRoomId())
+                .userId(transferAgent.getId())
+                .showName(transferUser.getName())
                 .build();
     }
 

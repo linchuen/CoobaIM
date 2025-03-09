@@ -25,15 +25,15 @@ public class AgentController {
     @PostMapping("/update")
     @Operation(summary = "更新客服")
     public ResultResponse<?> updateAgent(@Valid @RequestBody AgentUpdateRequest request) {
-        AgentUpdateResponse response = agentComponent.updateAgent(request);
-        return ResultResponse.builder().data(response).build();
+        agentComponent.updateAgent(request);
+        return ResultResponse.builder().data(true).build();
     }
 
     @PostMapping("/disable")
     @Operation(summary = "停用客服")
     public ResultResponse<?> disableAgent(@Valid @RequestBody AgentDisableRequest request) {
-        AgentDisableResponse response = agentComponent.disableAgent(request);
-        return ResultResponse.builder().data(response).build();
+        agentComponent.disableAgent(request);
+        return ResultResponse.builder().data(true).build();
     }
 
     @PostMapping("/search")

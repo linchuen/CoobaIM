@@ -33,7 +33,7 @@ public class OfficialChannelController {
         return ResultResponse.builder().data(true).build();
     }
 
-    @DeleteMapping("/search")
+    @GetMapping("/search")
     @Operation(summary = "搜尋頻道")
     public ResultResponse<?> searchChannel() {
         ChannelSearchResponse response = officialChannelComponent.search();
