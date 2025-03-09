@@ -58,6 +58,13 @@ public class AgentRepositoryImpl implements AgentRepository {
     }
 
     @Override
+    public List<Agent> findByDefault() {
+        return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
+                .eq(Agent::isDisable, false)
+                .eq(Agent::isDefault, true));
+    }
+
+    @Override
     public void update(Agent agent) {
         int row = agentMapper.update(new LambdaUpdateWrapper<Agent>()
                 .eq(Agent::getId, agent.getId())

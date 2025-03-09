@@ -5,14 +5,9 @@ import com.cooba.entity.User;
 
 import java.util.List;
 
-public abstract class RouteAgentService {
-    private final List<RouteRule> routeRuleList;
+public interface RouteAgentService {
+    Agent findSuitableAgent(User customer);
 
-    protected RouteAgentService(List<RouteRule> routeRuleList) {
-        this.routeRuleList = routeRuleList;
-    }
+    Agent findSuitableAgent(List<Agent> agents, User customer);
 
-    public abstract Agent findSuitableAgent();
-
-    public abstract User redirectAgent(long agentUserId);
 }

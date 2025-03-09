@@ -11,6 +11,7 @@ import com.cooba.dto.response.LoginResponse;
 import com.cooba.dto.response.RegisterResponse;
 import com.cooba.entity.*;
 import com.cooba.service.*;
+import com.cooba.util.ConnectionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     private final RouteAgentService routeAgentService;
     private final GuestService guestService;
     private final UserThreadLocal userThreadLocal;
+    private final ConnectionManager connectionManager;
 
     @Override
     public RegisterResponse create(RegisterRequest request) {
@@ -54,18 +56,23 @@ public class CustomerComponentImpl implements CustomerComponent {
             return createNewTicket(currentUser);
         } else {
             Optional<Ticket> lastTicket = ticketService.findLastTicket(currentUser.getId());
-            if (lastTicket.isEmpty()){
+            if (lastTicket.isEmpty()) {
                 return createNewTicket(currentUser);
             }
             Ticket ticket = lastTicket.get();
             List<Chat> chats = messageService.getRoomChats(ticket.getRoomId());
 
-            User redirectAgentInfo = routeAgentService.redirectAgent(ticket.getAgentUserId());
-            RoomUser roomUser = new RoomUser();
-            roomUser.setRoomId(ticket.getRoomId());
-            roomUser.setUserId(redirectAgentInfo.getId());
-            roomUser.setShowName(redirectAgentInfo.getName());
-            roomService.addUser(roomUser);
+            boolean isOnline = connectionManager.isUserOnline(String.valueOf(ticket.getAgentUserId()));
+            if (!isOnline) {
+                Agent suitableAgent = routeAgentService.findSuitableAgent(currentUser);
+                User redirectAgentInfo = userService.getInfo(suitableAgent.getUserId());
+
+                RoomUser roomUser = new RoomUser();
+                roomUser.setRoomId(ticket.getRoomId());
+                roomUser.setUserId(redirectAgentInfo.getId());
+                roomUser.setShowName(redirectAgentInfo.getName());
+                roomService.addUser(roomUser);
+            }
             return CustomerEnterResponse.builder()
                     .ticket(ticket)
                     .chats(chats)
@@ -74,7 +81,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     }
 
     private CustomerEnterResponse createNewTicket(User currentUser) {
-        Agent suitableAgent = routeAgentService.findSuitableAgent();
+        Agent suitableAgent = routeAgentService.findSuitableAgent(currentUser);
 
         Room room = new Room();
         room.setName(UUID.randomUUID().toString());

@@ -23,6 +23,9 @@ public class Agent {
     private boolean isDisable = false;
 
     @Column(nullable = false)
+    private boolean isDefault = false;
+
+    @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 
     @Column(nullable = false)

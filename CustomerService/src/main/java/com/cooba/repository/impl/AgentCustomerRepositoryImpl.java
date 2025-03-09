@@ -49,6 +49,13 @@ public class AgentCustomerRepositoryImpl implements AgentCustomerRepository {
     }
 
     @Override
+    public List<AgentCustomer> findByCustomerId(long customerUserId) {
+        return agentCustomerMapper.selectList(new LambdaQueryWrapper<AgentCustomer>()
+                .eq(AgentCustomer::getCustomerUserId, customerUserId)
+        );
+    }
+
+    @Override
     public void deleteByCustomerUserIds(long agentUserId, List<Long> customerUserIds) {
         agentCustomerMapper.delete(new LambdaQueryWrapper<AgentCustomer>()
                 .eq(AgentCustomer::getAgentUserId, agentUserId)

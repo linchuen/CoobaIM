@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @DataManipulateLayer
@@ -57,5 +58,11 @@ public class TicketRepositoryImpl implements TicketRepository {
                 .eq(Ticket::getAgentUserId, agentUserId)
                 .eq(Ticket::getCustomerUserId, customerUserId)
         );
+    }
+
+    @Override
+    public List<Ticket> findTicketByByAgent(long agentUserId) {
+        return ticketMapper.selectList(new LambdaQueryWrapper<Ticket>()
+                .eq(Ticket::getAgentUserId, agentUserId));
     }
 }
