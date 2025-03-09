@@ -83,7 +83,7 @@ public class AgentComponentImpl implements AgentComponent {
     public CustomerSearchResponse searchCustomer() {
         long userId = userThreadLocal.getCurrentUserId();
         Agent agent = agentService.search(userId);
-        List<CustomerInfo> customerInfoList = agentService.searchCustomer(agent.getId())
+        List<CustomerInfo> customerInfoList = agentService.searchCustomer(agent.getUserId())
                 .stream()
                 .map(CustomerInfo::new)
                 .toList();
@@ -125,7 +125,6 @@ public class AgentComponentImpl implements AgentComponent {
         List<AgentCustomer> agentCustomers = users.stream()
                 .map(user -> {
                     AgentCustomer agentCustomer = new AgentCustomer();
-                    agentCustomer.setAgentId(agent.getId());
                     agentCustomer.setAgentUserId(agent.getUserId());
                     agentCustomer.setCustomerUserId(user.getId());
                     agentCustomer.setShowName(user.getName());

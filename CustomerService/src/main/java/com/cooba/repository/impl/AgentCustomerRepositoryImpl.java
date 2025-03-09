@@ -42,9 +42,9 @@ public class AgentCustomerRepositoryImpl implements AgentCustomerRepository {
 
 
     @Override
-    public List<AgentCustomer> findByAgentId(long agentId) {
+    public List<AgentCustomer> findByAgentId(long agentUserId) {
         return agentCustomerMapper.selectList(new LambdaQueryWrapper<AgentCustomer>()
-                .eq(AgentCustomer::getAgentId, agentId)
+                .eq(AgentCustomer::getAgentUserId, agentUserId)
         );
     }
 

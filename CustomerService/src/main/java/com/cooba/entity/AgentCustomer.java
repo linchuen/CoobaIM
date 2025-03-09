@@ -9,15 +9,16 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_agent_user", columnNames = {"agentUserId"})
+}, indexes = {
+        @Index(name = "idx_customer", columnList = "customerUserId"),
+})
 public class AgentCustomer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
     private Long id;
-
-    @Column(nullable = false)
-    private Long agentId;
 
     @Column(nullable = false)
     private Long agentUserId;

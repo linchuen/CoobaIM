@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_name", columnNames = {"name"})
+})
 public class OfficialChannel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

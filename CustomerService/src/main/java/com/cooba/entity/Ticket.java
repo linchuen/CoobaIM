@@ -9,7 +9,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_room_name", columnNames = {"roomId, name"})
+}, indexes = {
+        @Index(name = "idx_customer", columnList = "createdTime, customerUserId"),
+        @Index(name = "idx_agent", columnList = "agentUserId, customerUserId"),
+})
 public class Ticket {
 
     @Id

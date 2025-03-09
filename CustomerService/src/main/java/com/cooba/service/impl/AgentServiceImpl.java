@@ -46,8 +46,8 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public List<AgentCustomer> searchCustomer(long agentId) {
-        return agentCustomerRepository.findByAgentId(agentId);
+    public List<AgentCustomer> searchCustomer(long agentUserId) {
+        return agentCustomerRepository.findByAgentId(agentUserId);
     }
 
     @Override

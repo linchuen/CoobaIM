@@ -2,15 +2,16 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "uk_user", columnNames = {"userId"})
+})
 public class Guest {
 
     @Id
