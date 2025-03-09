@@ -35,6 +35,7 @@ services:
       - clickhouse
       - artemis
       - livekit
+      - minio
 
   redis:
     image: redis:alpine
