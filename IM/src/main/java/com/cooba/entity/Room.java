@@ -2,6 +2,7 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.cooba.annotation.IMEntity;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.constant.RoomTypeEnum;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
+@IMEntity
 @Table
 public class Room {
     @Id

@@ -2,6 +2,7 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.cooba.annotation.IMEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import jakarta.persistence.*;
 
 @Data
 @RequiredArgsConstructor
-@Entity
+@IMEntity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "uk", columnNames = {"userId", "authority"})
 })

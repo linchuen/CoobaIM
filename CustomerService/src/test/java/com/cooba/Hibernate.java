@@ -1,6 +1,6 @@
 package com.cooba;
 
-import com.cooba.entity.Chat;
+import com.cooba.annotation.IMEntity;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -34,11 +34,13 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(Chat.class, serviceRegistry);
+//            generateSql(Chat.class, serviceRegistry);
 
-//            for (Class<?> c : classList) {
-//                generateSql(c, serviceRegistry);
-//            }
+            for (Class<?> c : classList) {
+                IMEntity imEntity = c.getAnnotation(IMEntity.class);
+                if (imEntity != null) continue;
+                generateSql(c, serviceRegistry);
+            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
@@ -54,7 +56,7 @@ public class Hibernate {
         schemaExport.setFormat(true);
         schemaExport.setOverrideOutputFileContent();
         schemaExport.setManageNamespaces(true);
-        schemaExport.setOutputFile(c.getSimpleName() + "-schema.sql");
+        schemaExport.setOutputFile("CustomerService/" + c.getSimpleName() + "-schema.sql");
 
         // 指定目標：控制台輸出和數據庫應用
         schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);

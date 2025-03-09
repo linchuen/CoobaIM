@@ -3,6 +3,7 @@ package com.cooba.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.cooba.annotation.IMEntity;
 import com.cooba.constant.RoleEnum;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-@Entity
+@IMEntity
 @Table(uniqueConstraints = {
                 @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
                 @UniqueConstraint(name = "uk_name", columnNames = {"name"})

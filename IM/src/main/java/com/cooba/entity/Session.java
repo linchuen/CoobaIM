@@ -2,13 +2,14 @@ package com.cooba.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.cooba.annotation.IMEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@Entity
+@IMEntity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "uk_userId", columnNames = {"userId"})
 })
