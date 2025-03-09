@@ -1,6 +1,8 @@
+server:
+  port: 8080
+
 spring:
   application.name: im
-  port: 8080
   main.web-application-type: SERVLET
   resources:
     add-mappings: false

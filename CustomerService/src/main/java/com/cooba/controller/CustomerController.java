@@ -27,7 +27,7 @@ public class CustomerController {
         return ResultResponse.builder().data(response).build();
     }
 
-    @PostMapping("/create")
+    @PostMapping("/enter")
     @Operation(summary = "用戶建立")
     public ResultResponse<?> enterRoom(@Valid @RequestBody CustomerEnterRequest request) {
         CustomerEnterResponse response = customerComponent.enterRoom(request);
