@@ -39,6 +39,7 @@ public class AgentRepositoryImpl implements AgentRepository {
 
     @Override
     public List<Agent> selectByIds(List<Long> ids) {
+        if (ids.isEmpty()) return agentMapper.selectList(new LambdaQueryWrapper<>());
         return agentMapper.selectByIds(ids);
     }
 

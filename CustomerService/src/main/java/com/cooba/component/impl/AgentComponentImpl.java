@@ -4,6 +4,7 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
 import com.cooba.constant.RoomRoleEnum;
+import com.cooba.dto.AgentInfo;
 import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
@@ -65,7 +66,7 @@ public class AgentComponentImpl implements AgentComponent {
 
     @Override
     public AgentSearchResponse searchAgent(AgentSearchRequest request) {
-        List<Agent> agents = agentService.search(request.getAgentIds());
+        List<AgentInfo> agents = agentService.search(request.getAgentIds());
         return AgentSearchResponse.builder()
                 .agents(agents)
                 .build();
