@@ -57,6 +57,13 @@ public class AgentController {
         return ResultResponse.builder().data(response).build();
     }
 
+    @GetMapping("/ticket")
+    @Operation(summary = "搜尋近期票務")
+    public ResultResponse<?> searchRecentTicket() {
+        TicketSearchResponse response = agentComponent.searchRecentTicket();
+        return ResultResponse.builder().data(response).build();
+    }
+
     @PostMapping("/ticket/transfer")
     @Operation(summary = "轉移票務")
     public ResultResponse<?> transferTicket(@Valid @RequestBody TicketTransferRequest request) {
