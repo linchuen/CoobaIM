@@ -29,4 +29,12 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> searchCustomerTicket(long agentUserId, long customerUserId) {
         return ticketRepository.findTicketsByAgentAndCustomer(agentUserId, customerUserId);
     }
+
+    @Override
+    public List<Ticket> searchAgentTicket(long agentUserId, Integer limit) {
+        if (limit == null) {
+            return ticketRepository.findTicketByByAgent(agentUserId);
+        }
+        return ticketRepository.findTicketByByAgent(agentUserId, limit);
+    }
 }

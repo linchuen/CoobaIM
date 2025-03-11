@@ -1,7 +1,6 @@
 package com.cooba.service.impl.route_rules;
 
 import com.cooba.entity.Agent;
-import com.cooba.entity.Ticket;
 import com.cooba.entity.User;
 import com.cooba.repository.TicketRepository;
 import com.cooba.service.RouteRule;
@@ -23,7 +22,7 @@ public class LeastBusyAgentRule implements RouteRule {
         Map<Agent, Integer> agentTicketCountMap = agents.stream()
                 .collect(Collectors.toMap(
                         agent -> agent,
-                        agent -> ticketRepository.findTicketByByAgent(agent.getUserId()).size()
+                        agent -> ticketRepository.countOpenTicketByByAgent(agent.getUserId())
                 ));
         Optional<Agent> agent = agentTicketCountMap.entrySet()
                 .stream()

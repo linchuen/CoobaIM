@@ -10,13 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @DataManipulateLayer
 @RequiredArgsConstructor
 public class TicketRepositoryImpl implements TicketRepository {
     private final TicketMapper ticketMapper;
+
     @Override
     public void insert(Ticket ticket) {
         ticketMapper.insert(ticket);
@@ -61,8 +61,23 @@ public class TicketRepositoryImpl implements TicketRepository {
     }
 
     @Override
+    public int countOpenTicketByByAgent(long agentUserId) {
+        return Math.toIntExact(ticketMapper.selectCount(new LambdaQueryWrapper<Ticket>()
+                .eq(Ticket::getAgentUserId, agentUserId)
+                .eq(Ticket::isOpen, true)
+        ));
+    }
+
+    @Override
     public List<Ticket> findTicketByByAgent(long agentUserId) {
         return ticketMapper.selectList(new LambdaQueryWrapper<Ticket>()
                 .eq(Ticket::getAgentUserId, agentUserId));
+    }
+
+    @Override
+    public List<Ticket> findTicketByByAgent(long agentUserId, Integer limit) {
+        return ticketMapper.selectList(new LambdaQueryWrapper<Ticket>()
+                .eq(Ticket::getAgentUserId, agentUserId)
+                .last("limit " + limit));
     }
 }

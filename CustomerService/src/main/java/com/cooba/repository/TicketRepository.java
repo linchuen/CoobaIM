@@ -11,5 +11,9 @@ public interface TicketRepository extends BaseRepository<Ticket> {
 
     List<Ticket> findTicketsByAgentAndCustomer(long agentUserId, long customerUserId);
 
+    int countOpenTicketByByAgent(long agentUserId);
+
     List<Ticket> findTicketByByAgent(long agentUserId);
+
+    List<Ticket> findTicketByByAgent(long agentUserId, Integer limit);
 }

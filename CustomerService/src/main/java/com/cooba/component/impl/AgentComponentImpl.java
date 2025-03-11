@@ -100,6 +100,19 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    public TicketSearchResponse searchRecentTicket() {
+        long userId = userThreadLocal.getCurrentUserId();
+        Agent agent = agentService.search(userId);
+
+        List<Ticket> tickets = ticketService.searchAgentTicket(agent.getUserId(),10)
+                .stream()
+                .toList();
+        return TicketSearchResponse.builder()
+                .tickets(tickets)
+                .build();
+    }
+
+    @Override
     public TicketTransferResponse transferTicket(TicketTransferRequest request) {
         User currentUser = userThreadLocal.getCurrentUser();
         Agent agent = agentService.search(currentUser.getId());

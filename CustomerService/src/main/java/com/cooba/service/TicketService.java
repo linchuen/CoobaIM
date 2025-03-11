@@ -11,4 +11,6 @@ public interface TicketService {
     Optional<Ticket> findLastTicket(long customerUserId);
 
     List<Ticket> searchCustomerTicket(long agentUserId, long customerUserId);
+
+    List<Ticket> searchAgentTicket(long agentUserId, Integer limit);
 }
