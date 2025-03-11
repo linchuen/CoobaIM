@@ -28,22 +28,22 @@ public class CustomerController {
     }
 
     @PostMapping("/enter")
-    @Operation(summary = "用戶建立")
+    @Operation(summary = "進入客服")
     public ResultResponse<?> enterRoom(@Valid @RequestBody CustomerEnterRequest request) {
         CustomerEnterResponse response = customerComponent.enterRoom(request);
         return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/guest/{id}")
-    @Operation(summary = "用戶建立")
+    @Operation(summary = "遊客建立")
     public ResultResponse<?> createGuest(@PathVariable int id) {
         customerComponent.createGuest(id);
         return ResultResponse.builder().data(true).build();
     }
 
     @GetMapping("/guest")
-    @Operation(summary = "用戶建立")
-    public ResultResponse<?> createUser() {
+    @Operation(summary = "取得遊客token")
+    public ResultResponse<?> getGuestToken() {
         LoginResponse response = customerComponent.getGuestToken();
         return ResultResponse.builder().data(response).build();
     }
