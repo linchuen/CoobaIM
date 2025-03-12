@@ -5,6 +5,7 @@ import com.cooba.component.OfficialChannelComponent;
 import com.cooba.dto.request.ChannelCreateRequest;
 import com.cooba.dto.request.ChannelDeleteRequest;
 import com.cooba.dto.response.ChannelCreateResponse;
+import com.cooba.dto.response.ChannelDeleteResponse;
 import com.cooba.dto.response.ChannelSearchResponse;
 import com.cooba.entity.OfficialChannel;
 import com.cooba.service.OfficialChannelService;
@@ -32,8 +33,12 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     }
 
     @Override
-    public void delete(ChannelDeleteRequest request) {
+    public ChannelDeleteResponse delete(ChannelDeleteRequest request) {
         officialChannelService.delete(request.getChannelId());
+
+        return ChannelDeleteResponse.builder()
+                .channelId(request.getChannelId())
+                .build();
     }
 
     @Override

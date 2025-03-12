@@ -4,6 +4,7 @@ import com.cooba.component.OfficialChannelComponent;
 import com.cooba.dto.request.ChannelCreateRequest;
 import com.cooba.dto.request.ChannelDeleteRequest;
 import com.cooba.dto.response.ChannelCreateResponse;
+import com.cooba.dto.response.ChannelDeleteResponse;
 import com.cooba.dto.response.ChannelSearchResponse;
 import com.cooba.dto.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,8 +30,8 @@ public class OfficialChannelController {
     @DeleteMapping("/delete")
     @Operation(summary = "頻道刪除")
     public ResultResponse<?> deleteChannel(@Valid @RequestBody ChannelDeleteRequest request) {
-        officialChannelComponent.delete(request);
-        return ResultResponse.builder().data(true).build();
+        ChannelDeleteResponse response = officialChannelComponent.delete(request);
+        return ResultResponse.builder().data(response).build();
     }
 
     @GetMapping("/search")
