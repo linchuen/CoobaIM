@@ -143,7 +143,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
-    public void bindCustomer(AgentCustomerRequest request) {
+    public CustomerBindResponse bindCustomer(AgentCustomerRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
         Agent agent = agentService.search(userId);
 
@@ -161,6 +161,10 @@ public class AgentComponentImpl implements AgentComponent {
                 })
                 .toList();
         agentService.bindCustomer(agentCustomers);
+
+        return CustomerBindResponse.builder()
+                .agentCustomers(agentCustomers)
+                .build();
     }
 
     @Override

@@ -21,7 +21,7 @@ public interface AgentComponent {
 
     TicketTransferResponse transferTicket(TicketTransferRequest request);
 
-    void bindCustomer(AgentCustomerRequest request);
+    CustomerBindResponse bindCustomer(AgentCustomerRequest request);
 
     void unbindCustomer(AgentCustomerRequest request);
 

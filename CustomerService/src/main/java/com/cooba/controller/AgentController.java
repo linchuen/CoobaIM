@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "/agent", description = "客服管理")
 public class AgentController {
     private final AgentComponent agentComponent;
+
     @PostMapping("/create")
     @Operation(summary = "客服建立")
     public ResultResponse<?> createAgent(@Valid @RequestBody AgentCreateRequest request) {
@@ -74,8 +75,8 @@ public class AgentController {
     @PostMapping("/customer/bind")
     @Operation(summary = "綁定客戶")
     public ResultResponse<?> bindCustomer(@Valid @RequestBody AgentCustomerRequest request) {
-        agentComponent.bindCustomer(request);
-        return ResultResponse.builder().data(true).build();
+        CustomerBindResponse response = agentComponent.bindCustomer(request);
+        return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/customer/unbind")
