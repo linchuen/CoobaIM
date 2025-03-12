@@ -31,7 +31,6 @@ import java.util.UUID;
 public class UserComponentImpl implements UserComponent {
     private final UserService userService;
     private final RoomService roomService;
-    private final MessageService messageService;
     private final FriendService friendService;
     private final SessionService sessionService;
     private final UserThreadLocal userThreadLocal;
