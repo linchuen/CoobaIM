@@ -44,20 +44,6 @@ public class AgentController {
         return ResultResponse.builder().data(response).build();
     }
 
-    @GetMapping("/customer/customer")
-    @Operation(summary = "搜尋客戶")
-    public ResultResponse<?> searchCustomer() {
-        CustomerSearchResponse response = agentComponent.searchCustomer();
-        return ResultResponse.builder().data(response).build();
-    }
-
-    @PostMapping("/customer/ticket")
-    @Operation(summary = "搜尋客戶票務")
-    public ResultResponse<?> searchCustomerTicket(@Valid @RequestBody CustomerTicketSearchRequest request) {
-        CustomerTicketSearchResponse response = agentComponent.searchCustomerTicket(request);
-        return ResultResponse.builder().data(response).build();
-    }
-
     @GetMapping("/ticket")
     @Operation(summary = "搜尋近期票務")
     public ResultResponse<?> searchRecentTicket() {
@@ -69,6 +55,20 @@ public class AgentController {
     @Operation(summary = "轉移票務")
     public ResultResponse<?> transferTicket(@Valid @RequestBody TicketTransferRequest request) {
         TicketTransferResponse response = agentComponent.transferTicket(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @GetMapping("/customer/search")
+    @Operation(summary = "搜尋客戶")
+    public ResultResponse<?> searchCustomer() {
+        CustomerSearchResponse response = agentComponent.searchCustomer();
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/customer/ticket")
+    @Operation(summary = "搜尋客戶票務")
+    public ResultResponse<?> searchCustomerTicket(@Valid @RequestBody CustomerTicketSearchRequest request) {
+        CustomerTicketSearchResponse response = agentComponent.searchCustomerTicket(request);
         return ResultResponse.builder().data(response).build();
     }
 
