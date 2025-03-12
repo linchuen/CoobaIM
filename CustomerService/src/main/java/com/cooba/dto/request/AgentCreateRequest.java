@@ -13,4 +13,7 @@ public class AgentCreateRequest {
 
     @NotEmpty
     private String email;
+
+    @NotEmpty
+    private String department;
 }

@@ -28,6 +28,9 @@ public class Agent {
     private boolean isDefault = false;
 
     @Column(nullable = false)
+    private String department;
+
+    @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();
 
     @Column(nullable = false)
