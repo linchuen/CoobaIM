@@ -67,6 +67,7 @@ public class UserComponentImpl implements UserComponent {
 
         return LoginResponse.builder()
                 .name(user.getName())
+                .role(user.getRole().replace("ROLE_",""))
                 .userId(session.getUserId())
                 .platform(session.getPlatform())
                 .token(session.getToken())
