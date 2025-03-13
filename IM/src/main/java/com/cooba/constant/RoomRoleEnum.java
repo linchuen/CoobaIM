@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RoomRoleEnum {
-    MASTER(1),
-    MANAGER(2),
-    MEMBER(3),
+    MASTER(0),
+    MANAGER(1),
+    MEMBER(2),
     ;
 
     @EnumValue

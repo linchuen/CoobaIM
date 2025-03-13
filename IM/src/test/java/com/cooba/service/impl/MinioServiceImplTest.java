@@ -32,16 +32,4 @@ class MinioServiceImplTest {
         String fileName = minioService.uploadFile("bucket", file);
         Assertions.assertNotNull(fileName);
     }
-
-    @Test
-    void getFileUrl() {
-    }
-
-    @Test
-    void downloadFile() {
-    }
-
-    @Test
-    void deleteFile() {
-    }
 }

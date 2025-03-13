@@ -40,6 +40,7 @@ class RoomServiceImplTest {
     void build() {
         long userId = 1L;
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(userId);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
 
         Room room = Instancio.create(Room.class);
         roomService.build(room);
@@ -57,6 +58,7 @@ class RoomServiceImplTest {
         long masterId = 1L;
         long memberId = 2L;
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(masterId);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
 
         Room room = Instancio.create(Room.class);
         roomService.build(room, List.of(memberId));
@@ -77,6 +79,7 @@ class RoomServiceImplTest {
     @DisplayName("刪除聊天室")
     void destroy() {
         Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(1L);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
 
         Room room = Instancio.create(Room.class);
         roomService.build(room);
@@ -92,6 +95,9 @@ class RoomServiceImplTest {
     @Test
     @DisplayName("新增聊天室用戶")
     void addUser() {
+        Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(1L);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
+
         Room room = Instancio.create(Room.class);
         roomService.build(room);
 
@@ -107,6 +113,9 @@ class RoomServiceImplTest {
     @Test
     @DisplayName("刪除聊天室用戶")
     void deleteUser() {
+        Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(1L);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
+
         Room room = Instancio.create(Room.class);
         roomService.build(room);
 

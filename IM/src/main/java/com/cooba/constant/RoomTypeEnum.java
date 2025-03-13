@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RoomTypeEnum {
-    PERSONAL(1),
-    GROUP(2),
+    PERSONAL(0),
+    GROUP(1),
     ;
 
     @EnumValue
