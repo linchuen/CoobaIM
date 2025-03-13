@@ -17,6 +17,7 @@ import com.cooba.util.ConnectionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,7 +88,9 @@ public class CustomerComponentImpl implements CustomerComponent {
 
         boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
 
-        List<CustomerAgentInfo> customerAgentInfos = agentService.searchAgent(currentUser.getId());
+        List<CustomerAgentInfo> customerAgentInfos = isGuest
+                ? Collections.emptyList()
+                : agentService.searchAgent(currentUser.getId());
         return CustomerAgentSearchResponse.builder()
                 .agentInfos(customerAgentInfos)
                 .build();
