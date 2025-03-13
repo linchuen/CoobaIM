@@ -4,8 +4,10 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.CustomerComponent;
 import com.cooba.constant.RoleEnum;
+import com.cooba.dto.CustomerAgentInfo;
 import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
+import com.cooba.dto.response.CustomerAgentSearchResponse;
 import com.cooba.dto.response.CustomerEnterResponse;
 import com.cooba.dto.response.LoginResponse;
 import com.cooba.dto.response.RegisterResponse;
@@ -80,13 +82,15 @@ public class CustomerComponentImpl implements CustomerComponent {
     }
 
     @Override
-    public void searchAgent() {
+    public CustomerAgentSearchResponse searchAgent() {
         User currentUser = userThreadLocal.getCurrentUser();
 
         boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
 
-        agentService.search(long agentUserId);
-
+        List<CustomerAgentInfo> customerAgentInfos = agentService.searchAgent(currentUser.getId());
+        return CustomerAgentSearchResponse.builder()
+                .agentInfos(customerAgentInfos)
+                .build();
     }
 
     private CustomerEnterResponse createNewTicket(User currentUser) {

@@ -3,10 +3,7 @@ package com.cooba.controller;
 import com.cooba.component.CustomerComponent;
 import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.response.CustomerEnterResponse;
-import com.cooba.dto.response.LoginResponse;
-import com.cooba.dto.response.RegisterResponse;
-import com.cooba.dto.response.ResultResponse;
+import com.cooba.dto.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,7 +34,7 @@ public class CustomerController {
     @GetMapping("/agent/search")
     @Operation(summary = "搜尋專屬客服")
     public ResultResponse<?> searchAgent() {
-        CustomerEnterResponse response = customerComponent.searchAgent();
+        CustomerAgentSearchResponse response = customerComponent.searchAgent();
         return ResultResponse.builder().data(response).build();
     }
 
