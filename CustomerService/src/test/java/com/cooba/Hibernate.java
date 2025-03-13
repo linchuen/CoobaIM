@@ -1,6 +1,7 @@
 package com.cooba;
 
 import com.cooba.annotation.IMEntity;
+import com.cooba.entity.Ticket;
 import com.google.common.reflect.ClassPath;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -34,13 +35,13 @@ public class Hibernate {
                 .build();
 
         try {
-//            generateSql(Chat.class, serviceRegistry);
+            generateSql(Ticket.class, serviceRegistry);
 
-            for (Class<?> c : classList) {
-                IMEntity imEntity = c.getAnnotation(IMEntity.class);
-                if (imEntity != null) continue;
-                generateSql(c, serviceRegistry);
-            }
+//            for (Class<?> c : classList) {
+//                IMEntity imEntity = c.getAnnotation(IMEntity.class);
+//                if (imEntity != null) continue;
+//                generateSql(c, serviceRegistry);
+//            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }

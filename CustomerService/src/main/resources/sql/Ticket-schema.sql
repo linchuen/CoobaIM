@@ -12,10 +12,10 @@
     ) engine=InnoDB;
 
     create index idx_customer 
-       on t_ticket (created_time, customer_user_id);
+       on t_ticket (customer_user_id, created_time);
 
     create index idx_agent 
-       on t_ticket (agent_user_id, customer_user_id);
+       on t_ticket (agent_user_id, customer_user_id, created_time);
 
     alter table t_ticket 
-       add constraint uk_room_name unique (`room_id, name`);
+       add constraint uk_room_name unique (room_id, name);

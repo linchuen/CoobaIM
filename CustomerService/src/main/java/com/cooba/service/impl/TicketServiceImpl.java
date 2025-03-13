@@ -15,7 +15,7 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
 
     @Override
-    public long create(Ticket ticket) {
+    public Long create(Ticket ticket) {
         ticketRepository.insert(ticket);
         return ticket.getId();
     }

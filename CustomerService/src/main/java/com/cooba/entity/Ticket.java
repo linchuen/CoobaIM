@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uk_room_name", columnNames = {"roomId, name"})
+        @UniqueConstraint(name = "uk_room_name", columnNames = {"roomId", "name"})
 }, indexes = {
-        @Index(name = "idx_customer", columnList = "createdTime, customerUserId"),
-        @Index(name = "idx_agent", columnList = "agentUserId, customerUserId"),
+        @Index(name = "idx_customer", columnList = "customerUserId, createdTime"),
+        @Index(name = "idx_agent", columnList = "agentUserId, customerUserId, createdTime"),
 })
 public class Ticket {
 

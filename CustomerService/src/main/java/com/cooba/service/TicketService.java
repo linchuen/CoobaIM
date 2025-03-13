@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketService {
-    long create(Ticket ticket);
+    Long create(Ticket ticket);
 
     Optional<Ticket> findLastTicket(long customerUserId);
 

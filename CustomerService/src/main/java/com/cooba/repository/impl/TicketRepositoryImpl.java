@@ -46,7 +46,7 @@ public class TicketRepositoryImpl implements TicketRepository {
     public Optional<Ticket> findLastTicketByCustomerId(long customerUserId) {
         Ticket ticket = ticketMapper.selectOne(new LambdaQueryWrapper<Ticket>()
                 .eq(Ticket::getCustomerUserId, customerUserId)
-                .orderByDesc(Ticket::getCreatedTime)
+                .orderByDesc(Ticket::getId)
                 .last("limit 1")
         );
         return Optional.ofNullable(ticket);
