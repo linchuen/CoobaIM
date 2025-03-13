@@ -24,6 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomerComponentImpl implements CustomerComponent {
     private final UserService userService;
+    private final AgentService agentService;
     private final TicketService ticketService;
     private final RoomService roomService;
     private final MessageService messageService;
@@ -76,6 +77,16 @@ public class CustomerComponentImpl implements CustomerComponent {
                     .ticket(ticket)
                     .build();
         }
+    }
+
+    @Override
+    public void searchAgent() {
+        User currentUser = userThreadLocal.getCurrentUser();
+
+        boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
+
+        agentService.search(long agentUserId);
+
     }
 
     private CustomerEnterResponse createNewTicket(User currentUser) {

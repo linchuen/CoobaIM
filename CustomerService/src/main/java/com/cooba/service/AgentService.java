@@ -1,6 +1,7 @@
 package com.cooba.service;
 
 import com.cooba.dto.AgentInfo;
+import com.cooba.dto.CustomerAgentInfo;
 import com.cooba.entity.Agent;
 import com.cooba.entity.AgentCustomer;
 
@@ -19,6 +20,8 @@ public interface AgentService {
     void disable(Agent agent);
 
     List<AgentCustomer> searchCustomer(long agentId);
+
+    List<CustomerAgentInfo> searchAgent(long customerUserId);
 
     void bindCustomer(List<AgentCustomer> agentCustomers);
 

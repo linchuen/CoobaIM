@@ -41,6 +41,7 @@ public class AgentComponentImpl implements AgentComponent {
 
         Agent agent = new Agent();
         agent.setUserId(userId);
+        agent.setName(request.getName());
         agent.setDepartment(request.getDepartment());
         long agentId = agentService.create(agent);
         return AgentCreateResponse.builder()

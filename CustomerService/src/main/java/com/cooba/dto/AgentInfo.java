@@ -17,10 +17,10 @@ public class AgentInfo {
     private String department;
     private LocalDateTime createdTime;
 
-    public AgentInfo(Agent agent, String name) {
+    public AgentInfo(Agent agent) {
         this.id = agent.getId();
         this.userId = agent.getUserId();
-        this.name = name;
+        this.name = agent.getName();
         this.isDisable = agent.isDisable();
         this.isDefault = agent.isDefault();
         this.department = agent.getDepartment();

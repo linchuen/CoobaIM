@@ -22,6 +22,9 @@ public class Agent {
     private Long userId;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private boolean isDisable = false;
 
     @Column(nullable = false)

@@ -12,6 +12,8 @@ public interface CustomerComponent {
 
     CustomerEnterResponse enterRoom(CustomerEnterRequest request);
 
+    void searchAgent();
+
     void createGuest(int number);
 
     LoginResponse getGuestToken();

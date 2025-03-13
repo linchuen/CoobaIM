@@ -34,6 +34,13 @@ public class CustomerController {
         return ResultResponse.builder().data(response).build();
     }
 
+    @GetMapping("/agent/search")
+    @Operation(summary = "搜尋專屬客服")
+    public ResultResponse<?> searchAgent() {
+        CustomerEnterResponse response = customerComponent.searchAgent();
+        return ResultResponse.builder().data(response).build();
+    }
+
     @PostMapping("/guest/{id}")
     @Operation(summary = "遊客建立")
     public ResultResponse<?> createGuest(@PathVariable int id) {
