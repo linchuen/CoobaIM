@@ -60,7 +60,6 @@ public class CustomerComponentImpl implements CustomerComponent {
                 return createNewTicket(currentUser);
             }
             Ticket ticket = lastTicket.get();
-            List<Chat> chats = messageService.getRoomChats(ticket.getRoomId());
 
             boolean isOnline = connectionManager.isUserOnline(String.valueOf(ticket.getAgentUserId()));
             if (!isOnline) {
@@ -75,7 +74,6 @@ public class CustomerComponentImpl implements CustomerComponent {
             }
             return CustomerEnterResponse.builder()
                     .ticket(ticket)
-                    .chats(chats)
                     .build();
         }
     }

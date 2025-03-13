@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Slf4j
@@ -153,10 +154,15 @@ public class AgentComponentImpl implements AgentComponent {
 
         List<AgentCustomer> agentCustomers = users.stream()
                 .map(user -> {
+                    Room room = new Room();
+                    room.setName(UUID.randomUUID().toString());
+                    roomService.build(room, List.of(agent.getUserId(), user.getId()));
+
                     AgentCustomer agentCustomer = new AgentCustomer();
                     agentCustomer.setAgentUserId(agent.getUserId());
                     agentCustomer.setCustomerUserId(user.getId());
                     agentCustomer.setShowName(user.getName());
+                    agentCustomer.setRoomId(room.getId());
                     return agentCustomer;
                 })
                 .toList();
