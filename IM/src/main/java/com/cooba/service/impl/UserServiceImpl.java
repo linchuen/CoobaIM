@@ -5,8 +5,10 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
+import com.cooba.entity.UserDetail;
 import com.cooba.exception.BaseException;
 import com.cooba.repository.RoomUserRepository;
+import com.cooba.repository.UserDetailRepository;
 import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
 import com.cooba.util.PasswordUtil;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserDetailRepository userDetailRepository;
     private final RoomUserRepository roomUserRepository;
     private final SocketConnection socketConnection;
 
@@ -74,6 +77,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<RoomUser> getAllRooms(long userId) {
         return roomUserRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<UserDetail> getDetailList(List<Long> userIds) {
+        return userDetailRepository.findByUserId(userIds);
     }
 
     @Override

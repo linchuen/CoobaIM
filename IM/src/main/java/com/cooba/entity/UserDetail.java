@@ -10,32 +10,25 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uk_room_name", columnNames = {"roomId, name"})
-}, indexes = {
-        @Index(name = "idx_customer", columnList = "createdTime, customerUserId"),
-        @Index(name = "idx_agent", columnList = "agentUserId, customerUserId"),
+        @UniqueConstraint(name = "uk_user", columnNames = {"userId"})
 })
-public class Ticket {
-
+public class UserDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
     private Long id;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Long roomId;
-
-    @Column(nullable = false)
-    private Long agentUserId;
-
-    @Column(nullable = false)
-    private Long customerUserId;
-
-    @Column(nullable = false)
-    private boolean isOpen = true;
+    @Column
+    private String tags;
 
     @Column
     private String remark;

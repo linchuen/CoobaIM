@@ -1,11 +1,9 @@
 package com.cooba.component;
 
+import com.cooba.dto.request.CustomerDetailRequest;
 import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.response.CustomerAgentSearchResponse;
-import com.cooba.dto.response.CustomerEnterResponse;
-import com.cooba.dto.response.LoginResponse;
-import com.cooba.dto.response.RegisterResponse;
+import com.cooba.dto.response.*;
 
 public interface CustomerComponent {
 
@@ -18,5 +16,7 @@ public interface CustomerComponent {
     void createGuest(int number);
 
     LoginResponse getGuestToken();
+
+    CustomerDetailResponse getDetails(CustomerDetailRequest request);
 
 }

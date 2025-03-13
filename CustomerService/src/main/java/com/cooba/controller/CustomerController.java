@@ -1,6 +1,7 @@
 package com.cooba.controller;
 
 import com.cooba.component.CustomerComponent;
+import com.cooba.dto.request.CustomerDetailRequest;
 import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
 import com.cooba.dto.response.*;
@@ -49,6 +50,13 @@ public class CustomerController {
     @Operation(summary = "取得遊客token")
     public ResultResponse<?> getGuestToken() {
         LoginResponse response = customerComponent.getGuestToken();
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/detail")
+    @Operation(summary = "取得用戶詳細訊息")
+    public ResultResponse<?> getGuestToken(@Valid @RequestBody CustomerDetailRequest request) {
+        CustomerDetailResponse response = customerComponent.getDetails(request);
         return ResultResponse.builder().data(response).build();
     }
 }

@@ -5,12 +5,10 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.CustomerComponent;
 import com.cooba.constant.RoleEnum;
 import com.cooba.dto.CustomerAgentInfo;
+import com.cooba.dto.request.CustomerDetailRequest;
 import com.cooba.dto.request.CustomerEnterRequest;
 import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.response.CustomerAgentSearchResponse;
-import com.cooba.dto.response.CustomerEnterResponse;
-import com.cooba.dto.response.LoginResponse;
-import com.cooba.dto.response.RegisterResponse;
+import com.cooba.dto.response.*;
 import com.cooba.entity.*;
 import com.cooba.service.*;
 import com.cooba.util.ConnectionManager;
@@ -139,6 +137,15 @@ public class CustomerComponentImpl implements CustomerComponent {
                 .token(session.getToken())
                 .loginTime(session.getLoginTime())
                 .expireTime(session.getExpireTime())
+                .build();
+    }
+
+    @Override
+    public CustomerDetailResponse getDetails(CustomerDetailRequest request) {
+        List<UserDetail> detailList = userService.getDetailList(request.getUserIds());
+
+        return CustomerDetailResponse.builder()
+                .userDetails(detailList)
                 .build();
     }
 }

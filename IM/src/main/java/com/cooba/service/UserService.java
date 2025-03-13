@@ -2,6 +2,7 @@ package com.cooba.service;
 
 import com.cooba.entity.RoomUser;
 import com.cooba.entity.User;
+import com.cooba.entity.UserDetail;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface UserService extends UserDetailsService {
     List<User> getInfoList(List<Long> userIds);
 
     List<RoomUser> getAllRooms(long userId);
+
+    List<UserDetail> getDetailList(List<Long> userIds);
 }
