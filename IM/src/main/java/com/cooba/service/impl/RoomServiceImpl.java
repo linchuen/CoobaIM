@@ -38,12 +38,9 @@ public class RoomServiceImpl implements RoomService {
     public long build(Room room, List<Long> userIds) {
         roomRepository.insert(room);
 
-
         Map<Long, String> userMap = userIds.isEmpty()
                 ? Collections.emptyMap()
-                : userRepository.selectByIds(userIds)
-                .stream()
-                .collect(Collectors.toMap(User::getId, User::getName));
+                : userRepository.selectByIds(userIds).stream().collect(Collectors.toMap(User::getId, User::getName));
 
         RoomUser roomMaster = new RoomUser();
         roomMaster.setUserId(userThreadLocal.getCurrentUserId());

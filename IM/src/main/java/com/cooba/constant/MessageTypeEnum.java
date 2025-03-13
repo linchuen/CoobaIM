@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MessageTypeEnum {
-    TEXT(1),
-    IMAGE(2),
-    VIDEO(3),
-    FILE(4),
+    TEXT(0),
+    IMAGE(1),
+    VIDEO(2),
+    FILE(3),
     ;
 
     @EnumValue
