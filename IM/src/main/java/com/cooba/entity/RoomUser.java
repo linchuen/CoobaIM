@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @IMEntity
+@Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "uk_roomId", columnNames = {"roomId", "userId"})
 }, indexes = {

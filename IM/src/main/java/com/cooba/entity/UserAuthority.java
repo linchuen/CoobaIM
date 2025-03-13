@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 @Data
 @RequiredArgsConstructor
 @IMEntity
+@Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "uk", columnNames = {"userId", "authority"})
 })

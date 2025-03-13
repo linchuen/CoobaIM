@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @IMEntity
+@Entity
 @Table(indexes = {
         @Index(name = "idx_roomId", columnList = "roomId, userId")
 })

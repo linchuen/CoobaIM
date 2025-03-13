@@ -35,11 +35,11 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(Chat.class, serviceRegistry);
+//            generateSql(Chat.class, serviceRegistry);
 
-//            for (Class<?> c : classList) {
-//                generateSql(c, serviceRegistry);
-//            }
+            for (Class<?> c : classList) {
+                generateSql(c, serviceRegistry);
+            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
@@ -55,7 +55,7 @@ public class Hibernate {
         schemaExport.setFormat(true);
         schemaExport.setOverrideOutputFileContent();
         schemaExport.setManageNamespaces(true);
-        schemaExport.setOutputFile(c.getSimpleName() + "-schema.sql");
+        schemaExport.setOutputFile("IM/" + c.getSimpleName() + "-schema.sql");
 
         // 指定目標：控制台輸出和數據庫應用
         schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
@@ -67,7 +67,7 @@ public class Hibernate {
         config.put("hibernate.connection.url", "jdbc:mysql://127.0.0.1:13306/im");
         config.put("hibernate.connection.username", "root");
         config.put("hibernate.connection.password", "example");
-        config.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        config.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         config.put("hibernate.hbm2ddl.auto", "none");
         config.put("hibernate.show_sql", "true");
         config.put("hibernate.format_sql", "true");

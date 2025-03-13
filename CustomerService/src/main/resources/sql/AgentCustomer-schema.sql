@@ -4,6 +4,7 @@
         agent_user_id bigint not null,
         created_time datetime(6) not null,
         customer_user_id bigint not null,
+        room_id bigint,
         show_name varchar(255) not null,
         primary key (id)
     ) engine=InnoDB;

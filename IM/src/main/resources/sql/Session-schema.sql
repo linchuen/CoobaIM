@@ -1,6 +1,6 @@
 
     create table t_session (
-       id bigint not null auto_increment,
+        id bigint not null auto_increment,
         enable bit not null,
         expire_time datetime(6) not null,
         ip varchar(255),

@@ -1,6 +1,6 @@
 
     create table t_user (
-       id bigint not null auto_increment,
+        id bigint not null auto_increment,
         created_time datetime(6),
         email varchar(255) not null,
         name varchar(255) not null,

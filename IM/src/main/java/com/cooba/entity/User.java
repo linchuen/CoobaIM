@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Data
 @IMEntity
+@Entity
 @Table(uniqueConstraints = {
                 @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
                 @UniqueConstraint(name = "uk_name", columnNames = {"name"})

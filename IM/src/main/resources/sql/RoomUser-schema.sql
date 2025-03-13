@@ -3,8 +3,8 @@
         id bigint not null auto_increment,
         created_time datetime(6) not null,
         room_id bigint not null,
-        room_role_enum tinyint not null,
-        show_name varchar(255),
+        room_role_enum tinyint not null check (room_role_enum between 0 and 2),
+        show_name varchar(255) not null,
         user_id bigint not null,
         primary key (id)
     ) engine=InnoDB;

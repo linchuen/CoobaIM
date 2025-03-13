@@ -6,6 +6,7 @@
         customer_user_id bigint not null,
         is_open bit not null,
         name varchar(255) not null,
+        remark varchar(255),
         room_id bigint not null,
         primary key (id)
     ) engine=InnoDB;

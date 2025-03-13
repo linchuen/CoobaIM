@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @IMEntity
+@Entity
 @Table
 public class Room {
     @Id
