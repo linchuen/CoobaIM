@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @DataManipulateLayer
@@ -39,8 +38,8 @@ public class AgentRepositoryImpl implements AgentRepository {
 
     @Override
     public List<Agent> selectByIds(List<Long> ids) {
-        if (ids.isEmpty()) return agentMapper.selectList(new LambdaQueryWrapper<>());
-        return agentMapper.selectByIds(ids);
+        return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
+                .in(!ids.isEmpty(), Agent::getId, ids));
     }
 
     @Override
@@ -67,19 +66,20 @@ public class AgentRepositoryImpl implements AgentRepository {
     @Override
     public List<Agent> findByDefault() {
         return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
-                .eq(Agent::isDisable, false)
-                .eq(Agent::isDefault, true));
+                .eq(Agent::getIsDisable, false)
+                .eq(Agent::getIsDefault, true));
     }
 
     @Override
     public void update(Agent agent) {
         int row = agentMapper.update(new LambdaUpdateWrapper<Agent>()
-                .eq(Agent::getId, agent.getId())
-                .set(Agent::isDisable, agent.isDisable())
+                .eq(agent.getId() != null, Agent::getId, agent.getId())
+                .eq(agent.getUserId() != null, Agent::getUserId, agent.getUserId())
+                .set(Agent::getIsDisable, agent.getIsDisable())
                 .set(Agent::getUpdatedTime, LocalDateTime.now())
         );
         if (row == 0) {
-            throw new BaseException(ErrorEnum.INVALID_REQUEST);
+            throw new BaseException(ErrorEnum.BUSINESS_ERROR);
         }
     }
 }

@@ -47,7 +47,7 @@ public class AgentComponentImpl implements AgentComponent {
         return AgentCreateResponse.builder()
                 .agentId(agentId)
                 .userId(userId)
-                .isDisable(agent.isDisable())
+                .isDisable(agent.getIsDisable())
                 .createdTime(agent.getCreatedTime())
                 .build();
     }
@@ -55,15 +55,15 @@ public class AgentComponentImpl implements AgentComponent {
     @Override
     public void updateAgent(AgentUpdateRequest request) {
         Agent agent = agentService.search(request.getAgentUserId());
-        agent.setDisable(request.getIsDisable());
+        agent.setIsDisable(request.getIsDisable());
 
         agentService.update(agent);
     }
 
     @Override
     public void disableAgent(AgentDisableRequest request) {
-        Agent agent = agentService.search(request.getAgentUserId());
-
+        Agent agent = new Agent();
+        agent.setUserId(request.getAgentUserId());
         agentService.disable(agent);
     }
 

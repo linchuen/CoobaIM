@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AgentService {
 
-    long create(Agent agent);
+    Long create(Agent agent);
 
     void update(Agent agent);
 

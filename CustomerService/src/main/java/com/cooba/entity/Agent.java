@@ -25,10 +25,10 @@ public class Agent {
     private String name;
 
     @Column(nullable = false)
-    private boolean isDisable = false;
+    private Boolean isDisable = false;
 
     @Column(nullable = false)
-    private boolean isDefault = false;
+    private Boolean isDefault = false;
 
     @Column(nullable = false)
     private String department;

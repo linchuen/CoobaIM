@@ -21,8 +21,8 @@ public class AgentInfo {
         this.id = agent.getId();
         this.userId = agent.getUserId();
         this.name = agent.getName();
-        this.isDisable = agent.isDisable();
-        this.isDefault = agent.isDefault();
+        this.isDisable = agent.getIsDisable();
+        this.isDefault = agent.getIsDefault();
         this.department = agent.getDepartment();
         this.createdTime = agent.getCreatedTime();
     }

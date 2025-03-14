@@ -26,7 +26,7 @@ public class AgentServiceImpl implements AgentService {
     private final UserRepository userRepository;
 
     @Override
-    public long create(Agent agent) {
+    public Long create(Agent agent) {
         agentRepository.insert(agent);
         return agent.getId();
     }
@@ -51,7 +51,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public void disable(Agent agent) {
-        agent.setDisable(true);
+        agent.setIsDisable(true);
         agentRepository.update(agent);
     }
 
