@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AvailableAgentRule implements RouteRule {
     private final ConnectionManager connectionManager;
+
     @Override
     public List<Agent> filterAgent(List<Agent> agents, User customer) {
         if (agents.size() <= 1) return agents;

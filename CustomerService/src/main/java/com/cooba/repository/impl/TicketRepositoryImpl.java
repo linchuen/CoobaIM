@@ -64,7 +64,7 @@ public class TicketRepositoryImpl implements TicketRepository {
     public int countOpenTicketByByAgent(long agentUserId) {
         return Math.toIntExact(ticketMapper.selectCount(new LambdaQueryWrapper<Ticket>()
                 .eq(Ticket::getAgentUserId, agentUserId)
-                .eq(Ticket::isOpen, true)
+                .eq(Ticket::getIsOpen, true)
         ));
     }
 

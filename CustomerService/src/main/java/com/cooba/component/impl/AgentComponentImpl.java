@@ -96,7 +96,7 @@ public class AgentComponentImpl implements AgentComponent {
 
         List<Ticket> tickets = ticketService.searchCustomerTicket(agent.getUserId(), request.getCustomerUserId())
                 .stream()
-                .filter(Ticket::isOpen)
+                .filter(Ticket::getIsOpen)
                 .toList();
         return CustomerTicketSearchResponse.builder()
                 .tickets(tickets)

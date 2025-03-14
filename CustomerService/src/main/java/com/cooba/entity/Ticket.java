@@ -35,7 +35,7 @@ public class Ticket {
     private Long customerUserId;
 
     @Column(nullable = false)
-    private boolean isOpen = true;
+    private Boolean isOpen = true;
 
     @Column
     private String remark;
