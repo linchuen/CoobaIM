@@ -19,11 +19,13 @@ import java.util.List;
 public class RouteAgentServiceImpl implements RouteAgentService {
     private final List<RouteRule> routeRules;
     private final AgentRepository agentRepository;
+
     public RouteAgentServiceImpl(List<RouteRule> routeRules, AgentRepository agentRepository) {
         routeRules.sort(Comparator.comparingInt(RouteRule::getOrder));
         this.routeRules = routeRules;
         this.agentRepository = agentRepository;
     }
+
     @Override
     public Agent findSuitableAgent(User customer) {
         List<Agent> agents = agentRepository.selectByIds(Collections.emptyList())
@@ -41,13 +43,14 @@ public class RouteAgentServiceImpl implements RouteAgentService {
 
             filteredAgents = rule.filterAgent(filteredAgents, customer);
         }
+        if (!filteredAgents.isEmpty()) return filteredAgents.get(0);
 
         List<Agent> defaultAgents = agentRepository.findByDefault();
-        if (defaultAgents.isEmpty()){
+        if (defaultAgents.isEmpty()) {
             throw new BaseException(CsErrorEnum.AGENT_NOT_EXIST);
         }
 
         Collections.shuffle(defaultAgents);
-        return filteredAgents.isEmpty() ? defaultAgents.get(0) : filteredAgents.get(0);
+        return defaultAgents.get(0);
     }
 }
