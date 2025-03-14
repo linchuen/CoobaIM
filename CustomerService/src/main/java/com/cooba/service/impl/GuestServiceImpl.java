@@ -28,7 +28,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public long getRandomGuest() {
-        List<Guest> guests = guestRepository.selectByIds(Collections.emptyList()); // 假設此方法可回傳所有 Guests
+        List<Guest> guests = guestRepository.selectByIds(Collections.emptyList());
         if (guests.isEmpty()) {
             log.warn("No guests available");
             throw new NoSuchElementException("No guests found");

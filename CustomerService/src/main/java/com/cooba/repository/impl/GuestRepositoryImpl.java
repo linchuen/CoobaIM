@@ -1,5 +1,6 @@
 package com.cooba.repository.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Guest;
 import com.cooba.mapper.GuestMapper;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+
 @Slf4j
 @DataManipulateLayer
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class GuestRepositoryImpl implements GuestRepository {
 
     @Override
     public List<Guest> selectByIds(List<Long> ids) {
-        return guestMapper.selectByIds(ids);
+        return guestMapper.selectList(new LambdaQueryWrapper<Guest>()
+                .in(!ids.isEmpty(),Guest::getId, ids));
     }
 
     @Override

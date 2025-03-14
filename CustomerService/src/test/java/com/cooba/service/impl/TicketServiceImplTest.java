@@ -35,6 +35,7 @@ class TicketServiceImplTest {
     }
 
     @Test
+    @DisplayName("查詢最後一張工單")
     void findLastTicket() {
         long customerId = 1;
         Ticket ticket1 = Instancio.create(Ticket.class);
@@ -51,10 +52,11 @@ class TicketServiceImplTest {
 
         Optional<Ticket> lastTicket = ticketService.findLastTicket(customerId);
         Assertions.assertTrue(lastTicket.isPresent());
-        Assertions.assertEquals(lastTicket.get().getId(), id2);
+        Assertions.assertEquals(id2, lastTicket.get().getId());
     }
 
     @Test
+    @DisplayName("查詢客服顧客的工單")
     void searchCustomerTicket() {
         long customerId = 1;
         Ticket ticket1 = Instancio.create(Ticket.class);
@@ -71,10 +73,11 @@ class TicketServiceImplTest {
 
 
         List<Ticket> tickets = ticketService.searchCustomerTicket(2L, customerId);
-        Assertions.assertEquals(tickets.get(0).getId(), id2);
+        Assertions.assertEquals(id2, tickets.get(0).getId());
     }
 
     @Test
+    @DisplayName("查詢客服工單")
     void searchAgentTicket() {
         long customerId = 1;
         Ticket ticket1 = Instancio.create(Ticket.class);
@@ -91,7 +94,7 @@ class TicketServiceImplTest {
 
 
         List<Ticket> tickets = ticketService.searchAgentTicket(2L, 1);
-        Assertions.assertEquals(tickets.size(), 1);
-        Assertions.assertEquals(tickets.get(0).getId(), id2);
+        Assertions.assertEquals(1, tickets.size());
+        Assertions.assertEquals(id2, tickets.get(0).getId());
     }
 }
