@@ -28,7 +28,7 @@ public class OfficialChannelServiceImpl implements OfficialChannelService {
 
     @Override
     public void delete(long channelId) {
-        officialChannelRepository.selectById(channelId);
+        officialChannelRepository.deleteById(channelId);
     }
 
     @Override
