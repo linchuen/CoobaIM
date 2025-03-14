@@ -3,7 +3,9 @@ package com.cooba.service.impl;
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.dto.AgentInfo;
 import com.cooba.entity.Agent;
+import com.cooba.entity.AgentCustomer;
 import com.cooba.exception.BaseException;
+import com.cooba.repository.AgentCustomerRepository;
 import com.cooba.repository.AgentRepository;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Assertions;
@@ -18,13 +20,16 @@ import java.util.List;
 
 @MybatisLocalTest
 @ContextConfiguration(classes = {AgentServiceImpl.class})
-@Sql(scripts = {"/sql/Agent-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Agent-schema.sql", "/sql/AgentCustomer-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class AgentServiceImplTest {
     @Autowired
     AgentServiceImpl agentService;
 
     @Autowired
     AgentRepository agentRepository;
+
+    @Autowired
+    AgentCustomerRepository agentCustomerRepository;
 
     @Test
     @DisplayName("建立客服")
@@ -89,17 +94,40 @@ class AgentServiceImplTest {
 
     @Test
     void disable() {
-    }
+        Agent agent = Instancio.create(Agent.class);
+        agent.setIsDisable(false);
+        Long agentId = agentService.create(agent);
 
-    @Test
-    void searchCustomer() {
+        agentService.disable(agent);
+
+        Agent updateAgent = agentRepository.selectById(agentId);
+
+        Assertions.assertEquals(true, updateAgent.getIsDisable());
     }
 
     @Test
     void bindCustomer() {
+        AgentCustomer agentCustomer = Instancio.create(AgentCustomer.class);
+        agentCustomer.setId(null);
+        agentService.bindCustomer(List.of(agentCustomer));
+
+        AgentCustomer select = agentCustomerRepository.selectById(agentCustomer.getId());
+
+        Assertions.assertNotNull(select);
     }
 
     @Test
     void unbindCustomer() {
+        AgentCustomer agentCustomer = Instancio.create(AgentCustomer.class);
+        agentCustomer.setId(null);
+        agentService.bindCustomer(List.of(agentCustomer));
+
+        long agentUserId = agentCustomer.getAgentUserId();
+        List<Long> customerUserIds = List.of(agentCustomer.getCustomerUserId());
+        agentService.unbindCustomer(agentUserId, customerUserIds);
+
+        AgentCustomer select = agentCustomerRepository.selectById(agentCustomer.getId());
+
+        Assertions.assertNull(select);
     }
 }
