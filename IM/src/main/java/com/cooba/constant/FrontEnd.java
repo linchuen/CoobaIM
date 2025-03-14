@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class FrontEnd {
-    private String url = "http://localhost:5173";
+    private String url;
+    private String[] allPermitPaths;
 }

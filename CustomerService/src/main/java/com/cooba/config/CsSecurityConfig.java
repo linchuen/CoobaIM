@@ -27,7 +27,6 @@ public class CsSecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers(JwtFilter.ALL_PERMIT_PATHS).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((sessionManagement) ->

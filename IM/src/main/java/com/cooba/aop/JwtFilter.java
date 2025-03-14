@@ -1,5 +1,6 @@
 package com.cooba.aop;
 
+import com.cooba.constant.FrontEnd;
 import com.cooba.exception.JwtValidException;
 import com.cooba.util.JwtHeaderValidator;
 import jakarta.servlet.FilterChain;
@@ -18,14 +19,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtHeaderValidator jwtHeaderValidator;
-
-    public static final String[] ALL_PERMIT_PATHS = {"/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**","/ws/**"};
+    private final FrontEnd frontEnd;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest servletRequest, @NonNull HttpServletResponse servletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String path = servletRequest.getRequestURI();
-        for (String permitPath : ALL_PERMIT_PATHS) {
+        for (String permitPath : frontEnd.getAllPermitPaths()) {
             if (pathMatcher.match(permitPath, path)) {
                 filterChain.doFilter(servletRequest, servletResponse);
                 return;
