@@ -1,8 +1,10 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.aop.UserThreadLocal;
+import com.cooba.constant.RoleEnum;
 import com.cooba.entity.OfficialChannel;
-import com.cooba.mapper.OfficialChannelMapper;
+import com.cooba.entity.User;
 import com.cooba.repository.OfficialChannelRepository;
 import com.cooba.service.OfficialChannelService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OfficialChannelServiceImpl implements OfficialChannelService {
     private final OfficialChannelRepository officialChannelRepository;
+    private final UserThreadLocal userThreadLocal;
+
     @Override
-    public long create(OfficialChannel officialChannel) {
+    public Long create(OfficialChannel officialChannel) {
         officialChannelRepository.insert(officialChannel);
         return officialChannel.getId();
     }
@@ -29,6 +33,12 @@ public class OfficialChannelServiceImpl implements OfficialChannelService {
 
     @Override
     public List<OfficialChannel> searchAll() {
-        return officialChannelRepository.selectByIds(Collections.emptyList());
+        User currentUser = userThreadLocal.getCurrentUser();
+        boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
+
+        return officialChannelRepository.selectByIds(Collections.emptyList())
+                .stream()
+                .filter(officialChannel -> !isGuest || officialChannel.isPublic())
+                .toList();
     }
 }

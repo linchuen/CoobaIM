@@ -33,10 +33,8 @@ public class OfficialChannelRepositoryImpl implements OfficialChannelRepository 
 
     @Override
     public List<OfficialChannel> selectByIds(List<Long> ids) {
-        if (ids.isEmpty()){
-            return officialChannelMapper.selectList(new LambdaQueryWrapper<>());
-        }
-        return officialChannelMapper.selectByIds(ids);
+        return officialChannelMapper.selectList(new LambdaQueryWrapper<OfficialChannel>()
+                .in(!ids.isEmpty(), OfficialChannel::getId, ids));
     }
 
     @Override
