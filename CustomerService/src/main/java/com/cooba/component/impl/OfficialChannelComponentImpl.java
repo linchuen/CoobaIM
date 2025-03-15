@@ -45,7 +45,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
         officialChannel.setId(request.getChannelId());
         officialChannel.setName(request.getName());
         officialChannel.setIsPublic(request.getIsPublic());
-        officialChannelService.create(officialChannel);
+        officialChannelService.update(officialChannel);
 
         socketConnection.sendAllEvent(CsEventEnum.CHANNEL_UPDATE, officialChannel);
     }
@@ -54,6 +54,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     public ChannelDeleteResponse delete(ChannelDeleteRequest request) {
         officialChannelService.delete(request.getChannelId());
 
+        socketConnection.sendAllEvent(CsEventEnum.CHANNEL_DELETE, request.getChannelId());
         return ChannelDeleteResponse.builder()
                 .channelId(request.getChannelId())
                 .build();

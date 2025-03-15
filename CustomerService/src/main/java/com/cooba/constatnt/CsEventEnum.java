@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CsEventEnum implements IMEvent {
     CHANNEL_UPDATE("channel_update"),
+    CHANNEL_DELETE("channel_delete"),
     ;
 
     private final String type;
