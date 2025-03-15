@@ -3,6 +3,7 @@ package com.cooba.component.impl;
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
+import com.cooba.constant.RoleEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.dto.AgentInfo;
 import com.cooba.dto.CustomerInfo;
@@ -36,6 +37,7 @@ public class AgentComponentImpl implements AgentComponent {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+        user.setRole(RoleEnum.AGENT.getRole());
 
         long userId = userService.register(user);
 
