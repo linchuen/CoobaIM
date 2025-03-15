@@ -16,14 +16,15 @@ import static com.cooba.constant.AuthorityEnum.*;
 @Getter
 @RequiredArgsConstructor
 public enum RoleEnum {
-    USER("ROLE_USER", Set.of(CREATE.auth())),
-    GUEST("ROLE_GUEST", Set.of(READ.auth())),
-    AGENT("ROLE_AGENT", Set.of(CREATE.auth())),
+    USER("ROLE_USER", Set.of(CREATE.auth(), new UserAuthority("ROLE_USER"))),
+    GUEST("ROLE_GUEST", Set.of(READ.auth(), new UserAuthority("ROLE_GUEST"))),
+    AGENT("ROLE_AGENT", Set.of(CREATE.auth(), new UserAuthority("ROLE_AGENT"))),
     ADMIN("ROLE_ADMIN", Set.of(
             CREATE.auth(),
             READ.auth(),
             UPDATE.auth(),
-            DELETE.auth()
+            DELETE.auth(),
+            new UserAuthority("ROLE_ADMIN")
     ));
 
     private final String role;

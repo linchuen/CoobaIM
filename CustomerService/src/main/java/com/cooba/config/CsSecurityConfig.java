@@ -34,6 +34,7 @@ public class CsSecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers(frontEnd.getAllPermitPaths()).permitAll()
+                                .requestMatchers("/agent/create").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.AGENT.name())
                                 .requestMatchers("/agent/**").hasRole(RoleEnum.AGENT.name())
                                 .requestMatchers("/customer/create").hasRole(RoleEnum.AGENT.name())
                                 .requestMatchers("/channel/create", "/channel/delete").hasRole(RoleEnum.AGENT.name())

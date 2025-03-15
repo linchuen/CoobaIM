@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.dto.UserInfo;
 import com.cooba.entity.User;
+import com.cooba.entity.UserAuthority;
 import com.cooba.exception.JwtValidException;
 import com.cooba.repository.UserRepository;
 import com.cooba.service.UserService;
