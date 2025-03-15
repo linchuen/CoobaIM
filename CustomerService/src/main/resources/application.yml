@@ -48,14 +48,6 @@ logging:
   level:
     root: info
 
-webhook:
-  enabled: false
-  url: ""
-  accessKey: ""
-  event:
-    APPLY_FRIEND: ""
-
-
 stomp:
   mq:
     relay-host: ${ARTEMIS_HOST:127.0.0.1}
@@ -73,3 +65,14 @@ livekit:
   url: ${LIVEKIT_URL:http://127.0.0.1:7880}
   key: ${LIVEKIT_API_KEY:livekit_api_key}
   secret: ${LIVEKIT_API_SECRET:this_is_livekit_secret_key_for_test}
+
+front-end:
+  url: "http://localhost:5173"
+  allPermitPaths: ["/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**", "/ws/**"]
+
+webhook:
+  enabled: false
+  url: ""
+  accessKey: ""
+  event:
+    APPLY_FRIEND: ""

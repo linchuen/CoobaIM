@@ -2,7 +2,10 @@ package com.cooba.config;
 
 import com.cooba.aop.GlobalExceptionHandler;
 import com.cooba.aop.JwtFilter;
+import com.cooba.constant.FrontEnd;
+import com.cooba.constant.RoleEnum;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +16,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class CsSecurityConfig {
+    private final FrontEnd frontEnd;
+
     @Bean
-    @ConditionalOnMissingBean(SecurityFilterChain.class)
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -27,6 +33,10 @@ public class CsSecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
+                                .requestMatchers(frontEnd.getAllPermitPaths()).permitAll()
+                                .requestMatchers("/agent/**").hasRole(RoleEnum.AGENT.name())
+                                .requestMatchers("/customer/create").hasRole(RoleEnum.AGENT.name())
+                                .requestMatchers("/channel/create", "/channel/delete").hasRole(RoleEnum.AGENT.name())
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((sessionManagement) ->
@@ -36,12 +46,12 @@ public class CsSecurityConfig {
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
                                 .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                    log.error("{}",request.getRequestURI(), accessDeniedException);
+                                    log.error("{}", request.getRequestURI(), accessDeniedException);
                                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write(GlobalExceptionHandler.response401Json);
                                 })
                                 .authenticationEntryPoint((request, response, authException) -> {
-                                    log.error("{}",request.getRequestURI(), authException);
+                                    log.error("{}", request.getRequestURI(), authException);
                                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write(GlobalExceptionHandler.response401Json);
                                 })
