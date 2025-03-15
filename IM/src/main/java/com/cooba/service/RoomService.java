@@ -16,6 +16,8 @@ public interface RoomService {
 
     void deleteUser(RoomUser roomUser);
 
+    void transferUser(RoomUser masterUser, RoomUser transferUser);
+
     void deleteUsers(long roomId, List<Long> userIds);
 
     List<Room> searchRooms(long userId);

@@ -39,6 +39,13 @@ public class RoomController {
         return ResultResponse.builder().data(true).build();
     }
 
+    @PostMapping("/transfer")
+    @Operation(summary = "用戶邀請", description = "需要管理員權限")
+    public ResultResponse<?> transferPermission(@RequestBody RoomUserRequest request) {
+        roomComponent.transferPermission(request);
+        return ResultResponse.builder().data(true).build();
+    }
+
     @DeleteMapping("/evict")
     @Operation(summary = "用戶驅除", description = "需要管理員權限")
     public ResultResponse<?> evictUser(@RequestBody RoomUserRequest request) {

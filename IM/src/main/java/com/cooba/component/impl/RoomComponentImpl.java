@@ -129,12 +129,31 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
+    public void transferPermission(RoomUserRequest request) {
+        User user = userThreadLocal.getCurrentUser();
+
+        RoomUser roomUser = roomService.getRoomUserInfo(request.getRoomId(), user.getId());
+        RoomRoleEnum roomRole = roomUser.getRoomRoleEnum();
+        if (roomRole != RoomRoleEnum.MASTER && roomRole != RoomRoleEnum.MANAGER) {
+            throw new BaseException(ErrorEnum.INVALID_AUTHORIZATION);
+        }
+
+        User requestUser = userService.getInfo(request.getUserId());
+        if (Objects.equals(requestUser.getId(), user.getId())) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        RoomUser transferUser = new RoomUser();
+        transferUser.setRoomId(request.getRoomId());
+        transferUser.setUserId(request.getUserId());
+        roomService.transferUser(roomUser, transferUser);
+    }
+
+    @Override
     public RoomSearchResponse search(RoomSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
 
         List<Room> rooms = roomService.searchRooms(userId)
                 .stream()
-                .filter(room -> room.getRoomTypeEnum()!= RoomTypeEnum.PERSONAL)
+                .filter(room -> room.getRoomTypeEnum() != RoomTypeEnum.PERSONAL)
                 .toList();
         return RoomSearchResponse.builder()
                 .rooms(rooms)

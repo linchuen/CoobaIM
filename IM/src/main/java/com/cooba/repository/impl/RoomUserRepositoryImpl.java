@@ -1,7 +1,9 @@
 package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.cooba.annotation.DataManipulateLayer;
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.entity.RoomUser;
 import com.cooba.mapper.RoomUserMapper;
 import com.cooba.repository.RoomUserRepository;
@@ -53,6 +55,15 @@ public class RoomUserRepositoryImpl implements RoomUserRepository {
     public void delete(long roomId, long userId) {
         roomUserMapper.delete(new LambdaQueryWrapper<RoomUser>()
                 .eq(RoomUser::getRoomId, roomId));
+    }
+
+    @Override
+    public void update(long roomId, long userId, RoomRoleEnum roleEnum) {
+        roomUserMapper.update(new LambdaUpdateWrapper<RoomUser>()
+                .eq(RoomUser::getRoomId, roomId)
+                .eq(RoomUser::getUserId, userId)
+                .set(RoomUser::getRoomRoleEnum,roleEnum)
+        );
     }
 
     @Override

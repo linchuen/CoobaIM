@@ -19,6 +19,8 @@ public interface RoomComponent {
 
     void evict(RoomUserRequest request);
 
+    void transferPermission(RoomUserRequest request);
+
     RoomSearchResponse search(RoomSearchRequest request);
 
     RoomMemberResponse search(RoomRequest request);

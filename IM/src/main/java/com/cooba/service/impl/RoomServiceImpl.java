@@ -86,6 +86,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public void transferUser(RoomUser masterUser, RoomUser transferUser) {
+        roomUserRepository.update(masterUser.getRoomId(), masterUser.getUserId(), RoomRoleEnum.MEMBER);
+        roomUserRepository.update(transferUser.getRoomId(), transferUser.getUserId(), RoomRoleEnum.MASTER);
+    }
+
+    @Override
     public void deleteUsers(long roomId, List<Long> userIds) {
         roomUserRepository.delete(roomId, userIds);
     }
