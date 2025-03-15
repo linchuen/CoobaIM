@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CsErrorEnum implements IMError {
     AGENT_NOT_EXIST(2001,"agent not exist"),
+    CHANNEL_NOT_EXIST(2002,"channel not exist"),
     ;
     private final int code;
     private final String message;

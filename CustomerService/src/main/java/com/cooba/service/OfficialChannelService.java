@@ -7,6 +7,8 @@ import java.util.List;
 public interface OfficialChannelService {
     Long create(OfficialChannel officialChannel);
 
+    void update(OfficialChannel officialChannel);
+
     void delete(long channelId);
 
     List<OfficialChannel> searchAll();

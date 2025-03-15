@@ -4,8 +4,11 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.OfficialChannelComponent;
 import com.cooba.constant.RoleEnum;
+import com.cooba.constatnt.CsEventEnum;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.request.ChannelCreateRequest;
 import com.cooba.dto.request.ChannelDeleteRequest;
+import com.cooba.dto.request.ChannelUpdateRequest;
 import com.cooba.dto.response.ChannelCreateResponse;
 import com.cooba.dto.response.ChannelDeleteResponse;
 import com.cooba.dto.response.ChannelSearchResponse;
@@ -22,17 +25,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     private final OfficialChannelService officialChannelService;
+    private final SocketConnection socketConnection;
 
     @Override
     public ChannelCreateResponse create(ChannelCreateRequest request) {
         OfficialChannel officialChannel = new OfficialChannel();
         officialChannel.setName(request.getName());
-        officialChannel.setPublic(request.isPublic());
+        officialChannel.setIsPublic(request.isPublic());
         officialChannelService.create(officialChannel);
 
         return ChannelCreateResponse.builder()
                 .channelId(officialChannel.getId())
                 .build();
+    }
+
+    @Override
+    public void update(ChannelUpdateRequest request) {
+        OfficialChannel officialChannel = new OfficialChannel();
+        officialChannel.setId(request.getChannelId());
+        officialChannel.setName(request.getName());
+        officialChannel.setIsPublic(request.getIsPublic());
+        officialChannelService.create(officialChannel);
+
+        socketConnection.sendAllEvent(CsEventEnum.CHANNEL_UPDATE, officialChannel);
     }
 
     @Override

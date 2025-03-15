@@ -22,7 +22,7 @@ public class OfficialChannel {
     private String name;
 
     @Column(nullable = false)
-    private boolean isPublic = false;
+    private Boolean isPublic = false;
 
     @Column(nullable = false)
     private LocalDateTime createdTime = LocalDateTime.now();

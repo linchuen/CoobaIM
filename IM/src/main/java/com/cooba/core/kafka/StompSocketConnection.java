@@ -1,6 +1,6 @@
 package com.cooba.core.kafka;
 
-import com.cooba.constant.EventEnum;
+import com.cooba.constant.IMEvent;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
@@ -28,10 +28,17 @@ public class StompSocketConnection implements SocketConnection {
     }
 
     @Override
-    public <T> void sendUserEvent(String userId, EventEnum event, T t) {
+    public <T> void sendUserEvent(String userId, IMEvent event, T t) {
         String payload = JsonUtil.toJson(t);
         messagingTemplate.convertAndSendToUser(userId, "/queue/" + event.getType(), payload);
         log.info("/queue/{} {} content:{}", event, userId, payload);
+    }
+
+    @Override
+    public <T> void sendAllEvent(IMEvent event, T t) {
+        String payload = JsonUtil.toJson(t);
+        messagingTemplate.convertAndSend("/topic/" + event.getType(), payload);
+        log.info("/topic/{}  content:{}", event, payload);
     }
 
     public MessageListener<String, String> kafkaHandleSendUserEvent() {

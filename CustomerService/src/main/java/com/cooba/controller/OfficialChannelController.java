@@ -3,6 +3,7 @@ package com.cooba.controller;
 import com.cooba.component.OfficialChannelComponent;
 import com.cooba.dto.request.ChannelCreateRequest;
 import com.cooba.dto.request.ChannelDeleteRequest;
+import com.cooba.dto.request.ChannelUpdateRequest;
 import com.cooba.dto.response.ChannelCreateResponse;
 import com.cooba.dto.response.ChannelDeleteResponse;
 import com.cooba.dto.response.ChannelSearchResponse;
@@ -25,6 +26,13 @@ public class OfficialChannelController {
     public ResultResponse<?> createChannel(@Valid @RequestBody ChannelCreateRequest request) {
         ChannelCreateResponse response = officialChannelComponent.create(request);
         return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "頻道建立")
+    public ResultResponse<?> updateChannel(@Valid @RequestBody ChannelUpdateRequest request) {
+        officialChannelComponent.update(request);
+        return ResultResponse.builder().data(true).build();
     }
 
     @DeleteMapping("/delete")

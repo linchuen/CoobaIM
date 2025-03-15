@@ -27,6 +27,11 @@ public class OfficialChannelServiceImpl implements OfficialChannelService {
     }
 
     @Override
+    public void update(OfficialChannel officialChannel) {
+        officialChannelRepository.update(officialChannel);
+    }
+
+    @Override
     public void delete(long channelId) {
         officialChannelRepository.deleteById(channelId);
     }
@@ -38,7 +43,7 @@ public class OfficialChannelServiceImpl implements OfficialChannelService {
 
         return officialChannelRepository.selectByIds(Collections.emptyList())
                 .stream()
-                .filter(officialChannel -> !isGuest || officialChannel.isPublic())
+                .filter(officialChannel -> !isGuest || officialChannel.getIsPublic())
                 .toList();
     }
 }
