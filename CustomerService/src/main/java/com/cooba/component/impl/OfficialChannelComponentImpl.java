@@ -34,6 +34,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
         officialChannel.setIsPublic(request.isPublic());
         officialChannelService.create(officialChannel);
 
+        socketConnection.sendAllEvent(CsEventEnum.CHANNEL_ADD, officialChannel);
         return ChannelCreateResponse.builder()
                 .channelId(officialChannel.getId())
                 .build();

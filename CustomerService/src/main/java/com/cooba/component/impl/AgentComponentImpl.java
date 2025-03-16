@@ -78,9 +78,9 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
-    public CustomerSearchResponse searchCustomer() {
+    public CustomerSearchResponse searchBindCustomer(BindCustomerSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
-        Agent agent = agentService.search(userId);
+        Agent agent = agentService.search(request.getAgentUserId() == null ? userId : request.getAgentUserId());
         List<CustomerInfo> customerInfoList = agentService.searchCustomer(agent.getUserId())
                 .stream()
                 .map(CustomerInfo::new)
@@ -110,7 +110,7 @@ public class AgentComponentImpl implements AgentComponent {
         long userId = userThreadLocal.getCurrentUserId();
         Agent agent = agentService.search(userId);
 
-        List<Ticket> tickets = ticketService.searchAgentTicket(agent.getUserId(),10)
+        List<Ticket> tickets = ticketService.searchAgentTicket(agent.getUserId(), 10)
                 .stream()
                 .toList();
         return TicketSearchResponse.builder()

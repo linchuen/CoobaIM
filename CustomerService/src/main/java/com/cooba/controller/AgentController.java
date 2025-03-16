@@ -58,10 +58,10 @@ public class AgentController {
         return ResultResponse.builder().data(response).build();
     }
 
-    @GetMapping("/customer/search")
+    @PostMapping("/customer/search")
     @Operation(summary = "搜尋客戶")
-    public ResultResponse<?> searchCustomer() {
-        CustomerSearchResponse response = agentComponent.searchCustomer();
+    public ResultResponse<?> searchBindCustomer(@Valid @RequestBody BindCustomerSearchRequest request) {
+        CustomerSearchResponse response = agentComponent.searchBindCustomer(request);
         return ResultResponse.builder().data(response).build();
     }
 
