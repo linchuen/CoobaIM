@@ -45,14 +45,21 @@ public class AgentController {
     }
 
     @GetMapping("/ticket")
-    @Operation(summary = "搜尋近期票務")
+    @Operation(summary = "搜尋近期工單")
     public ResultResponse<?> searchRecentTicket() {
         TicketSearchResponse response = agentComponent.searchRecentTicket();
         return ResultResponse.builder().data(response).build();
     }
 
+    @PostMapping("/ticket/search")
+    @Operation(summary = "搜尋工單")
+    public ResultResponse<?> searchTicket(TicketSearchRequest request) {
+        TicketSearchResponse response = agentComponent.searchTicket(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
     @PostMapping("/ticket/transfer")
-    @Operation(summary = "轉移票務")
+    @Operation(summary = "轉移工單")
     public ResultResponse<?> transferTicket(@Valid @RequestBody TicketTransferRequest request) {
         TicketTransferResponse response = agentComponent.transferTicket(request);
         return ResultResponse.builder().data(response).build();
@@ -66,7 +73,7 @@ public class AgentController {
     }
 
     @PostMapping("/customer/ticket")
-    @Operation(summary = "搜尋客戶票務")
+    @Operation(summary = "搜尋客戶工單")
     public ResultResponse<?> searchCustomerTicket(@Valid @RequestBody CustomerTicketSearchRequest request) {
         CustomerTicketSearchResponse response = agentComponent.searchCustomerTicket(request);
         return ResultResponse.builder().data(response).build();

@@ -4,6 +4,8 @@ import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.CustomerComponent;
 import com.cooba.constant.RoleEnum;
+import com.cooba.constatnt.CsEventEnum;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.CustomerAgentInfo;
 import com.cooba.dto.request.CustomerDetailRequest;
 import com.cooba.dto.request.CustomerEnterRequest;
@@ -33,6 +35,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     private final SessionService sessionService;
     private final RouteAgentService routeAgentService;
     private final GuestService guestService;
+    private final SocketConnection socketConnection;
     private final UserThreadLocal userThreadLocal;
     private final ConnectionManager connectionManager;
 
@@ -99,17 +102,20 @@ public class CustomerComponentImpl implements CustomerComponent {
 
     private CustomerEnterResponse createNewTicket(User currentUser) {
         Agent suitableAgent = routeAgentService.findSuitableAgent(currentUser);
+        Long agentUserId = suitableAgent.getUserId();
 
         Room room = new Room();
         room.setName(UUID.randomUUID().toString());
-        roomService.build(room, suitableAgent.getUserId(), List.of(currentUser.getId()));
+        roomService.build(room, agentUserId, List.of(currentUser.getId()));
 
         Ticket ticket = new Ticket();
         ticket.setName(room.getName());
         ticket.setRoomId(room.getId());
-        ticket.setAgentUserId(suitableAgent.getUserId());
+        ticket.setAgentUserId(agentUserId);
         ticket.setCustomerUserId(currentUser.getId());
         ticketService.create(ticket);
+
+        socketConnection.sendUserEvent(String.valueOf(agentUserId), CsEventEnum.TICKET_ADD, ticket);
 
         return CustomerEnterResponse.builder()
                 .ticket(ticket)

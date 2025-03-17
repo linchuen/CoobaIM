@@ -19,6 +19,8 @@ public interface AgentComponent {
 
     TicketSearchResponse searchRecentTicket();
 
+    TicketSearchResponse searchTicket(TicketSearchRequest request);
+
     TicketTransferResponse transferTicket(TicketTransferRequest request);
 
     CustomerBindResponse bindCustomer(AgentCustomerRequest request);

@@ -2,6 +2,7 @@ package com.cooba.annotation;
 
 
 import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
+import com.cooba.util.CacheUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,7 +15,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Import(value = {})
+@Import(value = {CacheUtil.class})
 @ActiveProfiles(value = "test")
 @MapperScan({"com.cooba.mapper"})
 @ComponentScan({"com.cooba.repository"})
