@@ -43,10 +43,7 @@ public class UserDetailRepositoryImpl implements UserDetailRepository {
 
     @Override
     public List<UserDetail> findByUserId(List<Long> userIds) {
-        if (userIds.isEmpty()) {
-            return userDetailMapper.selectList(new LambdaQueryWrapper<>());
-        }
         return userDetailMapper.selectList(new LambdaQueryWrapper<UserDetail>()
-                .in(UserDetail::getUserId, userIds));
+                .in(!userIds.isEmpty(), UserDetail::getUserId, userIds));
     }
 }
