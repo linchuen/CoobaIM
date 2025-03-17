@@ -86,6 +86,6 @@ public class AgentRepositoryImpl implements AgentRepository {
 
     @Override
     public List<UserDetail> findUserDetail() {
-        return List.of();
+        return agentMapper.findUserDetail();
     }
 }
