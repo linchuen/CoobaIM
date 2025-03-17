@@ -10,6 +10,8 @@ public interface RoomService {
 
     long build(Room room, List<Long> userIds);
 
+    long build(Room room, long masterUserId, List<Long> userIds);
+
     void destroy(long roomId);
 
     void addUser(RoomUser roomUser);

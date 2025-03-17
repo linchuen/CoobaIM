@@ -102,7 +102,7 @@ public class CustomerComponentImpl implements CustomerComponent {
 
         Room room = new Room();
         room.setName(UUID.randomUUID().toString());
-        roomService.build(room, List.of(suitableAgent.getUserId(), currentUser.getId()));
+        roomService.build(room, suitableAgent.getUserId(), List.of(currentUser.getId()));
 
         Ticket ticket = new Ticket();
         ticket.setName(room.getName());

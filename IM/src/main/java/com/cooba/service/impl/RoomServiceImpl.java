@@ -15,6 +15,7 @@ import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,16 +37,21 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public long build(Room room, List<Long> userIds) {
+        return build(room, userThreadLocal.getCurrentUserId(), Collections.emptyList());
+    }
+
+    @Override
+    public long build(Room room, long masterUserId, List<Long> userIds) {
         roomRepository.insert(room);
 
-        Map<Long, String> userMap = userIds.isEmpty()
-                ? Collections.emptyMap()
-                : userRepository.selectByIds(userIds).stream().collect(Collectors.toMap(User::getId, User::getName));
+        ArrayList<Long> userIdList = new ArrayList<>(userIds);
+        userIdList.add(masterUserId);
+        Map<Long, String> userMap = userRepository.selectByIds(userIdList).stream().collect(Collectors.toMap(User::getId, User::getName));
 
         RoomUser roomMaster = new RoomUser();
-        roomMaster.setUserId(userThreadLocal.getCurrentUserId());
+        roomMaster.setUserId(masterUserId);
         roomMaster.setRoomId(room.getId());
-        roomMaster.setShowName(userThreadLocal.getCurrentUserName());
+        roomMaster.setShowName(userMap.getOrDefault(masterUserId, String.valueOf(masterUserId)));
         roomMaster.setRoomRoleEnum(RoomRoleEnum.MASTER);
 
         List<RoomUser> roomUsers = userIds.stream().map(userId -> {
