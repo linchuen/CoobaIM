@@ -3,9 +3,11 @@ package com.cooba.component.impl;
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
+import com.cooba.constant.EventEnum;
 import com.cooba.constant.RoleEnum;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.constant.RoomTypeEnum;
+import com.cooba.core.SocketConnection;
 import com.cooba.dto.AgentInfo;
 import com.cooba.dto.CustomerInfo;
 import com.cooba.dto.FriendBindResult;
@@ -31,6 +33,7 @@ public class AgentComponentImpl implements AgentComponent {
     private final FriendService friendService;
     private final RoomService roomService;
     private final TicketService ticketService;
+    private final SocketConnection socketConnection;
     private final UserThreadLocal userThreadLocal;
 
     @Override
@@ -44,13 +47,15 @@ public class AgentComponentImpl implements AgentComponent {
 
         long userId = userService.register(user);
 
+        List<AgentInfo> currentAgents = agentService.search(Collections.emptyList());
+
         Agent agent = new Agent();
         agent.setUserId(userId);
         agent.setName(request.getName());
         agent.setDepartment(request.getDepartment());
         long agentId = agentService.create(agent);
 
-        agentService.search(Collections.emptyList())
+        currentAgents
                 .stream()
                 .filter(agentInfo -> !agentInfo.getIsDisable())
                 .forEach(agentInfo -> {
@@ -62,7 +67,10 @@ public class AgentComponentImpl implements AgentComponent {
                     room.setName(UUID.randomUUID().toString());
                     room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
                     roomService.build(room, List.of(agentInfo.getUserId()));
-                    friendService.bindDirectly(friendApply, () -> room);
+                    FriendBindResult friendBindResult = friendService.bindDirectly(friendApply, () -> room);
+
+                    socketConnection.sendUserEvent(String.valueOf(friendApply.getApplyUserId()), EventEnum.FRIEND_ADD, friendBindResult.getApplyUser());
+                    socketConnection.sendUserEvent(String.valueOf(friendApply.getPermitUserId()), EventEnum.FRIEND_ADD, friendBindResult.getPermitUser());
                 });
 
         return AgentCreateResponse.builder()
