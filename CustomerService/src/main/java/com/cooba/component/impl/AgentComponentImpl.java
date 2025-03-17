@@ -16,6 +16,7 @@ import com.cooba.service.TicketService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +33,7 @@ public class AgentComponentImpl implements AgentComponent {
     private final UserThreadLocal userThreadLocal;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AgentCreateResponse createAgent(AgentCreateRequest request) {
         User user = new User();
         user.setName(request.getName());
@@ -55,6 +57,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateAgent(AgentUpdateRequest request) {
         Agent agent = agentService.search(request.getAgentUserId());
         agent.setIsDisable(request.getIsDisable());
@@ -63,6 +66,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void disableAgent(AgentDisableRequest request) {
         Agent agent = new Agent();
         agent.setUserId(request.getAgentUserId());
@@ -119,6 +123,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public TicketTransferResponse transferTicket(TicketTransferRequest request) {
         User currentUser = userThreadLocal.getCurrentUser();
         Agent agent = agentService.search(currentUser.getId());
@@ -147,6 +152,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CustomerBindResponse bindCustomer(AgentCustomerRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
         Agent agent = agentService.search(userId);
@@ -177,6 +183,7 @@ public class AgentComponentImpl implements AgentComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void unbindCustomer(AgentCustomerRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
         Agent agent = agentService.search(userId);

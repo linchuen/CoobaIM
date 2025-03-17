@@ -17,6 +17,7 @@ import com.cooba.entity.User;
 import com.cooba.service.OfficialChannelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     private final SocketConnection socketConnection;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ChannelCreateResponse create(ChannelCreateRequest request) {
         OfficialChannel officialChannel = new OfficialChannel();
         officialChannel.setName(request.getName());
@@ -41,6 +43,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(ChannelUpdateRequest request) {
         OfficialChannel officialChannel = new OfficialChannel();
         officialChannel.setId(request.getChannelId());
@@ -52,6 +55,7 @@ public class OfficialChannelComponentImpl implements OfficialChannelComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ChannelDeleteResponse delete(ChannelDeleteRequest request) {
         officialChannelService.delete(request.getChannelId());
 

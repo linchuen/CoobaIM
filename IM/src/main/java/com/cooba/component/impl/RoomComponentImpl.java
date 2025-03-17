@@ -26,6 +26,7 @@ import com.cooba.service.RoomService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +42,7 @@ public class RoomComponentImpl implements RoomComponent {
     private final UserThreadLocal userThreadLocal;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public BuildRoomResponse build(RoomBuildRequest request) {
         Room room = new Room();
         room.setName(request.getName());
@@ -59,6 +61,7 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RoomDestroyResponse destroy(RoomRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
         Long roomId = request.getRoomId();
@@ -74,6 +77,7 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void invite(RoomUserRequest request) {
         User user = userThreadLocal.getCurrentUser();
 
@@ -101,6 +105,7 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void evict(RoomUserRequest request) {
         User user = userThreadLocal.getCurrentUser();
 
@@ -129,6 +134,7 @@ public class RoomComponentImpl implements RoomComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void transferPermission(RoomUserRequest request) {
         User user = userThreadLocal.getCurrentUser();
 

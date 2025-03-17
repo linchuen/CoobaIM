@@ -14,6 +14,7 @@ import com.cooba.service.*;
 import com.cooba.util.ConnectionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     private final ConnectionManager connectionManager;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RegisterResponse create(RegisterRequest request) {
         User user = new User();
         user.setName(request.getName());
@@ -49,6 +51,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CustomerEnterResponse enterRoom(CustomerEnterRequest request) {
         User currentUser = userThreadLocal.getCurrentUser();
 
@@ -114,6 +117,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createGuest(int number) {
         User user = new User();
         user.setName("guest_" + number);

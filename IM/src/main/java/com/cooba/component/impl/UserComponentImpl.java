@@ -19,6 +19,7 @@ import com.cooba.exception.BaseException;
 import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class UserComponentImpl implements UserComponent {
     private final SocketConnection socketConnection;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RegisterResponse register(RegisterRequest request) {
         User user = new User();
         user.setName(request.getName());
@@ -55,6 +57,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public LoginResponse login(LoginRequest request) {
         User user = userService.getInfo(request.getEmail());
 
@@ -76,6 +79,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public LogoutResponse logout(LogoutRequest request) {
         User user = userService.getInfo(request.getUserId());
 
@@ -94,6 +98,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RoomResponse enterRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
         roomUser.setRoomId(request.getRoomId());
@@ -110,6 +115,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public RoomResponse leaveRoom(RoomUserRequest request) {
         RoomUser roomUser = new RoomUser();
         roomUser.setRoomId(request.getRoomId());
@@ -126,6 +132,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @WebhookTrigger(WebhookEnum.APPLY_FRIEND)
     public FriendApplyResponse applyFriend(FriendRequest request) {
         if ((request.getApplyUserId().equals(request.getPermitUserId()))) {
@@ -150,6 +157,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public FriendPermitResponse permitFriendApply(FriendRequest request) {
         Long permitUserId = request.getPermitUserId();
         Long applyUserId = request.getApplyUserId();
@@ -180,6 +188,7 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void removeFriend(FriendRemoveRequest request) {
         Long userId = userThreadLocal.getCurrentUserId();
 
