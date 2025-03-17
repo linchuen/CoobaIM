@@ -14,6 +14,7 @@ import com.cooba.dto.request.SpeakRequest;
 import com.cooba.dto.response.ChatLoadLastAndUnReadResponse;
 import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.entity.Chat;
+import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.exception.BaseException;
 import com.cooba.service.MessageService;
@@ -97,7 +98,11 @@ public class ChatComponentImpl implements ChatComponent {
 
     @Override
     public ChatLoadLastAndUnReadResponse loadLastChatAndUnreadCount(ChatLoadLastAndUnReadRequest request) {
-        List<Long> roomIds = request.getRoomIds();
+        long userId = userThreadLocal.getCurrentUserId();
+
+        List<Long> roomIds = !request.getRoomIds().isEmpty()
+                ? request.getRoomIds()
+                : roomService.searchRooms(userId).stream().map(Room::getId).toList();
         List<LastChatAndUnRead> chatAndUnReads = roomIds.stream().map(roomId -> {
             long roomUnread = messageService.getRoomUnread(roomId);
             Optional<Chat> lastChat = messageService.getLastChat(roomId);
