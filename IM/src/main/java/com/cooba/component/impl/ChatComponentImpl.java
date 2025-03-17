@@ -5,20 +5,24 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.ChatComponent;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.MessageTypeEnum;
+import com.cooba.dto.LastChatAndUnRead;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
+import com.cooba.dto.request.ChatLoadLastAndUnReadRequest;
 import com.cooba.dto.request.ChatLoadRequest;
 import com.cooba.dto.request.SpeakRequest;
+import com.cooba.dto.response.ChatLoadLastAndUnReadResponse;
 import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.entity.Chat;
 import com.cooba.entity.RoomUser;
-import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
-import com.cooba.service.*;
+import com.cooba.service.MessageService;
+import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @ObjectLayer
@@ -41,7 +45,7 @@ public class ChatComponentImpl implements ChatComponent {
         message.setName(roomUserInfo.getShowName());
         message.setRoomId(roomUserInfo.getRoomId());
         message.setUrl(request.getUrl());
-        if (request.getType()!=null){
+        if (request.getType() != null) {
             message.setType(MessageTypeEnum.valueOf(request.getType()));
         }
 
@@ -61,7 +65,7 @@ public class ChatComponentImpl implements ChatComponent {
         message.setName(roomUserInfo.getShowName());
         message.setRoomId(roomUserInfo.getRoomId());
         message.setUrl(request.getUrl());
-        if (request.getType()!=null){
+        if (request.getType() != null) {
             message.setType(MessageTypeEnum.valueOf(request.getType()));
         }
 
@@ -88,6 +92,25 @@ public class ChatComponentImpl implements ChatComponent {
         List<Chat> chats = messageService.getRoomChats(request.getRoomId());
         return ChatLoadResponse.builder()
                 .chats(chats)
+                .build();
+    }
+
+    @Override
+    public ChatLoadLastAndUnReadResponse loadLastChatAndUnreadCount(ChatLoadLastAndUnReadRequest request) {
+        List<Long> roomIds = request.getRoomIds();
+        List<LastChatAndUnRead> chatAndUnReads = roomIds.stream().map(roomId -> {
+            long roomUnread = messageService.getRoomUnread(roomId);
+            Optional<Chat> lastChat = messageService.getLastChat(roomId);
+
+            LastChatAndUnRead lastChatAndUnRead = new LastChatAndUnRead();
+            lastChatAndUnRead.setUnread(roomUnread);
+            lastChatAndUnRead.setChat(lastChat.orElse(null));
+            lastChatAndUnRead.setRoomId(roomId);
+            return lastChatAndUnRead;
+        }).toList();
+
+        return ChatLoadLastAndUnReadResponse.builder()
+                .chatAndUnReads(chatAndUnReads)
                 .build();
     }
 }

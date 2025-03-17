@@ -1,33 +1,39 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.aop.UserThreadLocal;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
+import com.cooba.entity.ChatRead;
 import com.cooba.entity.Notification;
+import com.cooba.repository.ChatReadRepository;
 import com.cooba.repository.ChatRepository;
 import com.cooba.repository.NotificationRepository;
 import com.cooba.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @BehaviorLayer
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final ChatRepository chatRepository;
+    private final ChatReadRepository chatReadRepository;
     private final NotificationRepository notificationRepository;
     private final SocketConnection socketConnection;
+    private final UserThreadLocal userThreadLocal;
 
     @Override
     public void sendToUser(SendMessage message) {
         Chat chat = new Chat(message);
 
         chatRepository.insert(chat);
+        chatRepository.insertLastChat(chat);
 
         socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }
@@ -37,6 +43,7 @@ public class MessageServiceImpl implements MessageService {
         Chat chat = new Chat(message);
 
         chatRepository.insert(chat);
+        chatRepository.insertLastChat(chat);
 
         socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }
@@ -54,7 +61,29 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Chat> getRoomChats(long roomId) {
-        return chatRepository.findChatByRoomId(roomId);
+        long userId = userThreadLocal.getCurrentUserId();
+
+        List<Chat> chats = chatRepository.findChatByRoomId(roomId);
+
+        ChatRead chatRead = new ChatRead();
+        chatRead.setRoomId(roomId);
+        chatRead.setUserId(userId);
+        chatRead.setChatId(chats.isEmpty() ? 0 : chats.get(chats.size() - 1).getId());
+        chatReadRepository.insert(chatRead);
+        return chats;
+    }
+
+    @Override
+    public long getRoomUnread(long roomId) {
+        long userId = userThreadLocal.getCurrentUserId();
+
+        long chatId = chatReadRepository.findTopByOrderByIdDesc(roomId, userId);
+        return chatRepository.countChatByChatId(roomId, chatId);
+    }
+
+    @Override
+    public Optional<Chat> getLastChat(long roomId) {
+        return chatRepository.findLastChatByRoomId(roomId);
     }
 
     @Override

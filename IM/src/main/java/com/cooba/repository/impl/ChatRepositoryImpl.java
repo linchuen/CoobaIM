@@ -7,10 +7,14 @@ import com.cooba.constant.Database;
 import com.cooba.entity.Chat;
 import com.cooba.mapper.ChatMapper;
 import com.cooba.repository.ChatRepository;
+import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @DataManipulateLayer
@@ -18,6 +22,7 @@ import java.util.List;
 @DS(Database.clickhouse)
 public class ChatRepositoryImpl implements ChatRepository {
     private final ChatMapper chatMapper;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     public void insert(Chat chat) {
@@ -49,5 +54,33 @@ public class ChatRepositoryImpl implements ChatRepository {
     public List<Chat> findChatByRoomId(long roomId) {
         return chatMapper.selectList(new LambdaQueryWrapper<Chat>()
                 .eq(Chat::getRoomId, roomId));
+    }
+
+    @Override
+    public long countChatByChatId(long roomId, long chatId) {
+        if (chatId == 0) return 0;
+
+        return chatMapper.selectCount(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getRoomId, roomId)
+                .lt(Chat::getId, chatId));
+    }
+
+    @Override
+    public Optional<Chat> findLastChatByRoomId(long roomId) {
+        String json = redisTemplate.opsForValue().get("chat:" + roomId);
+        if (json != null) return Optional.of(JsonUtil.fromJson(json, Chat.class));
+
+        Chat chat = chatMapper.selectOne(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getRoomId, roomId)
+                .orderByDesc(Chat::getId)
+                .last("limit 1")
+        );
+        if (chat == null) return Optional.empty();
+        return Optional.of(chat);
+    }
+
+    @Override
+    public void insertLastChat(Chat chat) {
+        redisTemplate.opsForValue().set("chat:" + chat.getRoomId(), JsonUtil.toJson(chat), Duration.ofDays(30));
     }
 }
