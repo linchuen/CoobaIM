@@ -127,8 +127,13 @@ public class AgentComponentImpl implements AgentComponent {
 
         List<AgentCustomer> agentCustomers = agentService.searchCustomer(agent.getUserId());
         List<Long> userIds = agentCustomers.stream().map(AgentCustomer::getCustomerUserId).toList();
-        List<UserDetail> detailList = userService.getDetailList(userIds);
+        if (userIds.isEmpty()){
+            return CustomerDetailResponse.builder()
+                    .userDetails(Collections.emptyList())
+                    .build();
+        }
 
+        List<UserDetail> detailList = userService.getDetailList(userIds);
         return CustomerDetailResponse.builder()
                 .userDetails(detailList)
                 .build();
