@@ -4,6 +4,7 @@ import com.cooba.dto.AgentInfo;
 import com.cooba.dto.CustomerAgentInfo;
 import com.cooba.entity.Agent;
 import com.cooba.entity.AgentCustomer;
+import com.cooba.entity.UserDetail;
 
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface AgentService {
     void bindCustomer(List<AgentCustomer> agentCustomers);
 
     void unbindCustomer(long agentUserId, List<Long> customerUserIds);
+
+    List<UserDetail> searchCustomerDetail();
 
 }

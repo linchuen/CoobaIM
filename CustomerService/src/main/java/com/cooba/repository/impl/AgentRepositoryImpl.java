@@ -6,6 +6,7 @@ import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constatnt.CsErrorEnum;
 import com.cooba.entity.Agent;
+import com.cooba.entity.UserDetail;
 import com.cooba.exception.BaseException;
 import com.cooba.mapper.AgentMapper;
 import com.cooba.repository.AgentRepository;
@@ -81,5 +82,10 @@ public class AgentRepositoryImpl implements AgentRepository {
         if (row == 0) {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);
         }
+    }
+
+    @Override
+    public List<UserDetail> findUserDetail() {
+        return List.of();
     }
 }

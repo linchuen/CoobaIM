@@ -15,7 +15,7 @@ public interface AgentComponent {
 
     CustomerSearchResponse searchBindCustomer(BindCustomerSearchRequest request);
 
-    CustomerDetailResponse searchBindCustomerDetail(BindCustomerSearchRequest request);
+    CustomerDetailResponse searchCustomerDetail();
 
     CustomerTicketSearchResponse searchCustomerTicket(CustomerTicketSearchRequest request);
 

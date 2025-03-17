@@ -3,4 +3,11 @@
 <mapper namespace="com.cooba.mapper.AgentMapper">
 
 
+    <select id="findUserDetail" resultType="com.cooba.entity.UserDetail">
+        SELECT tud.*
+        FROM im.t_user_detail AS tud
+        LEFT JOIN t_agent ta
+        ON ta.user_id = tud.user_id
+        WHERE  ISNULL(ta.user_id)
+    </select>
 </mapper>

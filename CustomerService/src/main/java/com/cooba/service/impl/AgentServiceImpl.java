@@ -6,6 +6,7 @@ import com.cooba.dto.CustomerAgentInfo;
 import com.cooba.entity.Agent;
 import com.cooba.entity.AgentCustomer;
 import com.cooba.entity.User;
+import com.cooba.entity.UserDetail;
 import com.cooba.repository.AgentCustomerRepository;
 import com.cooba.repository.AgentRepository;
 import com.cooba.repository.UserRepository;
@@ -78,6 +79,11 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public void unbindCustomer(long agentUserId, List<Long> customerUserIds) {
         agentCustomerRepository.deleteByCustomerUserIds(agentUserId, customerUserIds);
+    }
+
+    @Override
+    public List<UserDetail> searchCustomerDetail() {
+        return agentRepository.findUserDetail();
     }
 }
 

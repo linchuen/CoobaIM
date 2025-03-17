@@ -75,7 +75,7 @@ public class AgentController {
     @PostMapping("/customer/detail/search")
     @Operation(summary = "搜尋客戶")
     public ResultResponse<?> searchBindCustomerDetail(@Valid @RequestBody BindCustomerSearchRequest request) {
-        CustomerDetailResponse response = agentComponent.searchBindCustomerDetail(request);
+        CustomerDetailResponse response = agentComponent.searchCustomerDetail();
         return ResultResponse.builder().data(response).build();
     }
 
