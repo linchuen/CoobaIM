@@ -34,6 +34,13 @@ public class UserServiceImpl implements UserService {
         user.setPassword(PasswordUtil.hash(password));
         userRepository.insert(user);
 
+        UserDetail userDetail = new UserDetail();
+        userDetail.setUserId(user.getId());
+        userDetail.setName(userDetail.getName());
+        userDetail.setEmail(userDetail.getEmail());
+        userDetail.setTags("[]");
+        userDetail.setRemark("");
+        userDetailRepository.insert(userDetail);
         return user.getId();
     }
 
