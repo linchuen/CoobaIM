@@ -104,7 +104,7 @@ public class ChatComponentImpl implements ChatComponent {
 
             LastChatAndUnRead lastChatAndUnRead = new LastChatAndUnRead();
             lastChatAndUnRead.setUnread(roomUnread);
-            lastChatAndUnRead.setChat(lastChat.orElse(null));
+            lastChatAndUnRead.setChat(lastChat.orElse(new Chat()));
             lastChatAndUnRead.setRoomId(roomId);
             return lastChatAndUnRead;
         }).toList();

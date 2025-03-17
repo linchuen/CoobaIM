@@ -31,7 +31,7 @@ public class ChatController {
 
     @PostMapping("/unread")
     @Operation(summary = "取得未讀及最後一句話")
-    public ResultResponse<?> load(@RequestBody ChatLoadLastAndUnReadRequest request) {
+    public ResultResponse<?> loadLastChatAndUnreadCount(@RequestBody ChatLoadLastAndUnReadRequest request) {
         ChatLoadLastAndUnReadResponse response = chatComponent.loadLastChatAndUnreadCount(request);
         return ResultResponse.builder().data(response).build();
     }
