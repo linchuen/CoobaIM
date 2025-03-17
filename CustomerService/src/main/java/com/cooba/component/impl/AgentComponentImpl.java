@@ -66,7 +66,7 @@ public class AgentComponentImpl implements AgentComponent {
                     Room room = new Room();
                     room.setName(UUID.randomUUID().toString());
                     room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
-                    roomService.build(room, List.of(agentInfo.getUserId()));
+                    roomService.build(room, userId, List.of(agentInfo.getUserId()));
                     FriendBindResult friendBindResult = friendService.bindDirectly(friendApply, () -> room);
 
                     socketConnection.sendUserEvent(String.valueOf(friendApply.getApplyUserId()), EventEnum.FRIEND_ADD, friendBindResult.getApplyUser());
