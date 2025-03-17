@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
 
         UserDetail userDetail = new UserDetail();
         userDetail.setUserId(user.getId());
-        userDetail.setName(userDetail.getName());
-        userDetail.setEmail(userDetail.getEmail());
+        userDetail.setName(user.getName());
+        userDetail.setEmail(user.getEmail());
         userDetail.setTags("[]");
         userDetail.setRemark("");
         userDetailRepository.insert(userDetail);

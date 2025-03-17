@@ -7,6 +7,7 @@ import com.cooba.constant.Database;
 import com.cooba.entity.Chat;
 import com.cooba.mapper.ChatMapper;
 import com.cooba.repository.ChatRepository;
+import com.cooba.util.CacheUtil;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @DS(Database.clickhouse)
 public class ChatRepositoryImpl implements ChatRepository {
     private final ChatMapper chatMapper;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final CacheUtil cacheUtil;
 
     @Override
     public void insert(Chat chat) {
@@ -67,7 +68,7 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public Optional<Chat> findLastChatByRoomId(long roomId) {
-        String json = redisTemplate.opsForValue().get("chat:" + roomId);
+        String json = cacheUtil.get("chat:" + roomId);
         if (json != null) return Optional.of(JsonUtil.fromJson(json, Chat.class));
 
         Chat chat = chatMapper.selectOne(new LambdaQueryWrapper<Chat>()
@@ -81,6 +82,6 @@ public class ChatRepositoryImpl implements ChatRepository {
 
     @Override
     public void insertLastChat(Chat chat) {
-        redisTemplate.opsForValue().set("chat:" + chat.getRoomId(), JsonUtil.toJson(chat), Duration.ofDays(30));
+        cacheUtil.set("chat:" + chat.getRoomId(), JsonUtil.toJson(chat), Duration.ofDays(30));
     }
 }
