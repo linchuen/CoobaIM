@@ -17,6 +17,8 @@ public interface FriendService {
 
     void unbind(FriendApply friendApply);
 
+    FriendBindResult bindDirectly(FriendApply friendApply, Supplier<Room> roomSupplier);
+
     List<Friend> search(long userId, List<Long> friendUserIds);
 
     List<FriendApplyInfo> searchApply(long userId);

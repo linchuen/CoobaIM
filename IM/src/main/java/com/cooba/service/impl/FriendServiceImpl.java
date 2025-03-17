@@ -46,31 +46,10 @@ public class FriendServiceImpl implements FriendService {
     @Transactional(rollbackFor = Exception.class)
     public FriendBindResult bind(FriendApply friendApply, Supplier<Room> roomSupplier) {
         if (friendApply.isPermit()) {
-            Long roomId = roomSupplier.get().getId();
-
             friendApply.setPermitTime(LocalDateTime.now());
             friendApplyRepository.updateByApplyIdAndPermitId(friendApply);
 
-            User permitUser = userRepository.selectById(friendApply.getPermitUserId());
-            Friend apply = new Friend();
-            apply.setUserId(friendApply.getApplyUserId());
-            apply.setFriendUserId(friendApply.getPermitUserId());
-            apply.setShowName(permitUser.getName());
-            apply.setRoomId(roomId);
-            friendRepository.insert(apply);
-
-            User applyUser = userRepository.selectById(friendApply.getApplyUserId());
-            Friend permit = new Friend();
-            permit.setUserId(friendApply.getPermitUserId());
-            permit.setFriendUserId(friendApply.getApplyUserId());
-            permit.setShowName(applyUser.getName());
-            permit.setRoomId(roomId);
-            friendRepository.insert(permit);
-
-            return FriendBindResult.builder()
-                    .applyUser(apply)
-                    .permitUser(permit)
-                    .build();
+            return bindDirectly(friendApply,roomSupplier);
         } else {
             friendApplyRepository.deleteByApplyIdAndPermitId(friendApply);
             return FriendBindResult.builder()
@@ -86,6 +65,31 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.delete(friendApply.getApplyUserId(), friendApply.getPermitUserId());
 
         friendRepository.delete(friendApply.getPermitUserId(), friendApply.getApplyUserId());
+    }
+
+    @Override
+    public FriendBindResult bindDirectly(FriendApply friendApply, Supplier<Room> roomSupplier) {
+        Long roomId = roomSupplier.get().getId();
+        User permitUser = userRepository.selectById(friendApply.getPermitUserId());
+        Friend apply = new Friend();
+        apply.setUserId(friendApply.getApplyUserId());
+        apply.setFriendUserId(friendApply.getPermitUserId());
+        apply.setShowName(permitUser.getName());
+        apply.setRoomId(roomId);
+        friendRepository.insert(apply);
+
+        User applyUser = userRepository.selectById(friendApply.getApplyUserId());
+        Friend permit = new Friend();
+        permit.setUserId(friendApply.getPermitUserId());
+        permit.setFriendUserId(friendApply.getApplyUserId());
+        permit.setShowName(applyUser.getName());
+        permit.setRoomId(roomId);
+        friendRepository.insert(permit);
+
+        return FriendBindResult.builder()
+                .applyUser(apply)
+                .permitUser(permit)
+                .build();
     }
 
     @Override

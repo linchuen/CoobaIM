@@ -5,19 +5,19 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.AgentComponent;
 import com.cooba.constant.RoleEnum;
 import com.cooba.constant.RoomRoleEnum;
+import com.cooba.constant.RoomTypeEnum;
 import com.cooba.dto.AgentInfo;
 import com.cooba.dto.CustomerInfo;
+import com.cooba.dto.FriendBindResult;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
-import com.cooba.service.AgentService;
-import com.cooba.service.RoomService;
-import com.cooba.service.TicketService;
-import com.cooba.service.UserService;
+import com.cooba.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +28,7 @@ import java.util.UUID;
 public class AgentComponentImpl implements AgentComponent {
     private final UserService userService;
     private final AgentService agentService;
+    private final FriendService friendService;
     private final RoomService roomService;
     private final TicketService ticketService;
     private final UserThreadLocal userThreadLocal;
@@ -48,6 +49,22 @@ public class AgentComponentImpl implements AgentComponent {
         agent.setName(request.getName());
         agent.setDepartment(request.getDepartment());
         long agentId = agentService.create(agent);
+
+        agentService.search(Collections.emptyList())
+                .stream()
+                .filter(agentInfo -> !agentInfo.getIsDisable())
+                .forEach(agentInfo -> {
+                    FriendApply friendApply = new FriendApply();
+                    friendApply.setApplyUserId(agent.getUserId());
+                    friendApply.setPermitUserId(agentInfo.getUserId());
+
+                    Room room = new Room();
+                    room.setName(UUID.randomUUID().toString());
+                    room.setRoomTypeEnum(RoomTypeEnum.PERSONAL);
+                    roomService.build(room, List.of(agentInfo.getUserId()));
+                    friendService.bindDirectly(friendApply, () -> room);
+                });
+
         return AgentCreateResponse.builder()
                 .agentId(agentId)
                 .userId(userId)
