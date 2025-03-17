@@ -72,6 +72,13 @@ public class AgentController {
         return ResultResponse.builder().data(response).build();
     }
 
+    @PostMapping("/customer/detail/search")
+    @Operation(summary = "搜尋客戶")
+    public ResultResponse<?> searchBindCustomerDetail(@Valid @RequestBody BindCustomerSearchRequest request) {
+        CustomerDetailResponse response = agentComponent.searchBindCustomerDetail(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
     @PostMapping("/customer/ticket")
     @Operation(summary = "搜尋客戶工單")
     public ResultResponse<?> searchCustomerTicket(@Valid @RequestBody CustomerTicketSearchRequest request) {
