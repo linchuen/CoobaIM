@@ -35,11 +35,11 @@ public class Hibernate {
                 .build();
 
         try {
-//            generateSql(Chat.class, serviceRegistry);
+            generateSql(ChatRead.class, serviceRegistry);
 
-            for (Class<?> c : classList) {
-                generateSql(c, serviceRegistry);
-            }
+//            for (Class<?> c : classList) {
+//                generateSql(c, serviceRegistry);
+//            }
         } finally {
             StandardServiceRegistryBuilder.destroy(serviceRegistry);
         }
