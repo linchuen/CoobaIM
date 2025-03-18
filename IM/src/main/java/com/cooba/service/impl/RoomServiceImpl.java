@@ -37,7 +37,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public long build(Room room, List<Long> userIds) {
-        return build(room, userThreadLocal.getCurrentUserId(), Collections.emptyList());
+        return build(room, userThreadLocal.getCurrentUserId(), userIds);
     }
 
     @Override
