@@ -61,16 +61,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Chat> getRoomChats(long roomId) {
-        long userId = userThreadLocal.getCurrentUserId();
-
-        List<Chat> chats = chatRepository.findChatByRoomId(roomId);
-
-        ChatRead chatRead = new ChatRead();
-        chatRead.setRoomId(roomId);
-        chatRead.setUserId(userId);
-        chatRead.setChatId(chats.isEmpty() ? 0 : chats.get(chats.size() - 1).getId());
-        chatReadRepository.insert(chatRead);
-        return chats;
+        return chatRepository.findChatByRoomId(roomId);
     }
 
     @Override
