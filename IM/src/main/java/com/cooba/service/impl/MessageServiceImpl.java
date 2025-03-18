@@ -15,6 +15,7 @@ import com.cooba.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +62,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Chat> getRoomChats(long roomId) {
-        return chatRepository.findChatByRoomId(roomId);
+        //for clickhouse
+        return chatRepository.findChatByRoomId(roomId)
+                .stream()
+                .sorted(Comparator.comparing(Chat::getId))
+                .toList();
     }
 
     @Override
