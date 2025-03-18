@@ -63,7 +63,7 @@ public class ChatRepositoryImpl implements ChatRepository {
 
         return chatMapper.selectCount(new LambdaQueryWrapper<Chat>()
                 .eq(Chat::getRoomId, roomId)
-                .lt(Chat::getId, chatId));
+                .gt(Chat::getId, chatId));
     }
 
     @Override
