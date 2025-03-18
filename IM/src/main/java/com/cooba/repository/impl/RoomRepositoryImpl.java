@@ -1,6 +1,5 @@
 package com.cooba.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.entity.Room;
 import com.cooba.mapper.RoomMapper;
@@ -39,9 +38,6 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public List<Room> selectByIds(List<Long> ids) {
-        if (ids.isEmpty()){
-            return roomMapper.selectList(new LambdaQueryWrapper<>());
-        }
         return roomMapper.selectByIds(ids);
     }
 }

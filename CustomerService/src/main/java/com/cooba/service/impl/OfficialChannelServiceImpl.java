@@ -41,7 +41,7 @@ public class OfficialChannelServiceImpl implements OfficialChannelService {
         User currentUser = userThreadLocal.getCurrentUser();
         boolean isGuest = currentUser.getRole().equals(RoleEnum.GUEST.getRole());
 
-        return officialChannelRepository.selectByIds(Collections.emptyList())
+        return officialChannelRepository.selectByIdsElseAll(Collections.emptyList())
                 .stream()
                 .filter(officialChannel -> !isGuest || officialChannel.getIsPublic())
                 .toList();

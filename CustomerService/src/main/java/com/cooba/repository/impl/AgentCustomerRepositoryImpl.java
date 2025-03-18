@@ -36,6 +36,11 @@ public class AgentCustomerRepositoryImpl implements AgentCustomerRepository {
     }
 
     @Override
+    public List<AgentCustomer> selectAll() {
+        return List.of();
+    }
+
+    @Override
     public void deleteById(long id) {
         agentCustomerMapper.deleteById(id);
     }

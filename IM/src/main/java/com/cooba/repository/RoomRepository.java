@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface RoomRepository extends BaseRepository<Room> {
 
-    List<Room> selectByIds(List<Long> ids);
 }

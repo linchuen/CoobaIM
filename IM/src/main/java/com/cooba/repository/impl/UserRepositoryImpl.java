@@ -35,7 +35,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> selectByIds(List<Long> ids) {
-        if(ids.isEmpty()) return userMapper.selectList(new LambdaQueryWrapper<>());
         return userMapper.selectByIds(ids);
     }
 

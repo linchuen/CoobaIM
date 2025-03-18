@@ -108,7 +108,9 @@ public class RoomServiceImpl implements RoomService {
                 .stream()
                 .map(RoomUser::getRoomId)
                 .toList();
-        return roomRepository.selectByIds(roomIds);
+        return roomIds.isEmpty()
+                ? Collections.emptyList()
+                : roomRepository.selectByIds(roomIds);
     }
 
     @Override

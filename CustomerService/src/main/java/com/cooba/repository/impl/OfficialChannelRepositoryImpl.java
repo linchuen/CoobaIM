@@ -36,6 +36,11 @@ public class OfficialChannelRepositoryImpl implements OfficialChannelRepository 
 
     @Override
     public List<OfficialChannel> selectByIds(List<Long> ids) {
+        return officialChannelMapper.selectByIds(ids);
+    }
+
+    @Override
+    public List<OfficialChannel> selectByIdsElseAll(List<Long> ids) {
         return officialChannelMapper.selectList(new LambdaQueryWrapper<OfficialChannel>()
                 .in(!ids.isEmpty(), OfficialChannel::getId, ids));
     }
@@ -52,6 +57,6 @@ public class OfficialChannelRepositoryImpl implements OfficialChannelRepository 
                 .set(OfficialChannel::getIsPublic, channel.getIsPublic())
                 .eq(OfficialChannel::getId, channel.getId())
         );
-        if (update == 0 )throw  new BaseException(ErrorEnum.BUSINESS_ERROR);
+        if (update == 0) throw new BaseException(ErrorEnum.BUSINESS_ERROR);
     }
 }

@@ -38,9 +38,14 @@ public class AgentRepositoryImpl implements AgentRepository {
     }
 
     @Override
-    public List<Agent> selectByIds(List<Long> ids) {
+    public List<Agent> selectByIdsElseAll(List<Long> ids) {
         return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
                 .in(!ids.isEmpty(), Agent::getId, ids));
+    }
+
+    @Override
+    public List<Agent> selectByIds(List<Long> ids) {
+        return agentMapper.selectByIds(ids);
     }
 
     @Override
@@ -69,6 +74,12 @@ public class AgentRepositoryImpl implements AgentRepository {
         return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
                 .eq(Agent::getIsDisable, false)
                 .eq(Agent::getIsDefault, true));
+    }
+
+    @Override
+    public List<Agent> findByEnable() {
+        return agentMapper.selectList(new LambdaQueryWrapper<Agent>()
+                .eq(Agent::getIsDisable, false));
     }
 
     @Override

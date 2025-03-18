@@ -28,10 +28,7 @@ public class RouteAgentServiceImpl implements RouteAgentService {
 
     @Override
     public Agent findSuitableAgent(User customer) {
-        List<Agent> agents = agentRepository.selectByIds(Collections.emptyList())
-                .stream()
-                .filter(agent -> !agent.getIsDisable())
-                .toList();
+        List<Agent> agents = agentRepository.findByEnable();
         return findSuitableAgent(agents, customer);
     }
 

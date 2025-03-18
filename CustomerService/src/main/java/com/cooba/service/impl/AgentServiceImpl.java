@@ -44,7 +44,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public List<AgentInfo> search(List<Long> agentIds) {
-        List<Agent> agents = agentRepository.selectByIds(agentIds);
+        List<Agent> agents = agentRepository.selectByIdsElseAll(agentIds);
         return agents.stream()
                 .map(AgentInfo::new)
                 .collect(Collectors.toList());

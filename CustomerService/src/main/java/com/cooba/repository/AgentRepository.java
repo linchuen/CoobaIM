@@ -12,6 +12,8 @@ public interface AgentRepository extends BaseRepository<Agent> {
 
     List<Agent> findByDefault();
 
+    List<Agent> findByEnable();
+
     void update(Agent agent);
 
     List<UserDetail> findUserDetail();
