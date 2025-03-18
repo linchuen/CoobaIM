@@ -17,6 +17,8 @@ public interface MessageService {
 
     List<Chat> getRoomChats(long roomId);
 
+    void setRoomIsRead(long roomId, long chatId);
+
     long getRoomUnread(long roomId);
 
     Optional<Chat> getLastChat(long roomId);

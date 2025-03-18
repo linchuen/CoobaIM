@@ -1,9 +1,7 @@
 package com.cooba.controller;
 
 import com.cooba.component.ChatComponent;
-import com.cooba.dto.request.ChatLoadLastAndUnReadRequest;
-import com.cooba.dto.request.ChatLoadRequest;
-import com.cooba.dto.request.SpeakRequest;
+import com.cooba.dto.request.*;
 import com.cooba.dto.response.ChatLoadLastAndUnReadResponse;
 import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.dto.response.ResultResponse;
@@ -34,5 +32,12 @@ public class ChatController {
     public ResultResponse<?> loadLastChatAndUnreadCount(@RequestBody ChatLoadLastAndUnReadRequest request) {
         ChatLoadLastAndUnReadResponse response = chatComponent.loadLastChatAndUnreadCount(request);
         return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/read")
+    @Operation(summary = "已讀")
+    public ResultResponse<?> setIsRead(@RequestBody ChatIsReadRequest request) {
+        chatComponent.setIsRead(request);
+        return ResultResponse.builder().data(true).build();
     }
 }

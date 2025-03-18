@@ -8,9 +8,7 @@ import com.cooba.constant.MessageTypeEnum;
 import com.cooba.dto.LastChatAndUnRead;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
-import com.cooba.dto.request.ChatLoadLastAndUnReadRequest;
-import com.cooba.dto.request.ChatLoadRequest;
-import com.cooba.dto.request.SpeakRequest;
+import com.cooba.dto.request.*;
 import com.cooba.dto.response.ChatLoadLastAndUnReadResponse;
 import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.entity.Chat;
@@ -117,5 +115,10 @@ public class ChatComponentImpl implements ChatComponent {
         return ChatLoadLastAndUnReadResponse.builder()
                 .chatAndUnReads(chatAndUnReads)
                 .build();
+    }
+
+    @Override
+    public void setIsRead(ChatIsReadRequest request) {
+        messageService.setRoomIsRead(request.getRoomId(), request.getChatId());
     }
 }
