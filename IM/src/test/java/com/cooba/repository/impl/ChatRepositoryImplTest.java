@@ -1,6 +1,7 @@
 package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
+import com.cooba.config.MockConfig;
 import com.cooba.entity.Chat;
 import com.cooba.entity.FriendApply;
 import com.cooba.repository.ChatRepository;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Rollback(value = false)
 @ActiveProfiles(value = "ck")
 @MapperScan({"com.cooba.mapper"})
-@ContextConfiguration(classes = {ChatRepositoryImpl.class})
+@ContextConfiguration(classes = {ChatRepositoryImpl.class, MockConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @MybatisPlusTest
 class ChatRepositoryImplTest {
