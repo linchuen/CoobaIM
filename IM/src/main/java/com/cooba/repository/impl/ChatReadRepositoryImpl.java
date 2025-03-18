@@ -48,6 +48,7 @@ public class ChatReadRepositoryImpl implements ChatReadRepository {
                 .eq(ChatRead::getRoomId, roomId)
                 .eq(ChatRead::getUserId, userId)
                 .orderByDesc(ChatRead::getId)
+                .last("limit 1")
         );
         return chatRead == null ? 0L : chatRead.getChatId();
     }
