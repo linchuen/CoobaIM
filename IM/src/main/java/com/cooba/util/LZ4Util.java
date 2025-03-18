@@ -37,7 +37,7 @@ public class LZ4Util {
     }
 
     public static void main(String[] args) {
-        String chat = "Hello, this is a test message for LZ4 compression.";
+        String chat = "Hello";
         System.out.println("Original: " + chat);
 
         byte[] compressed = compress(chat);
