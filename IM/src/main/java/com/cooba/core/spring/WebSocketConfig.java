@@ -5,18 +5,14 @@ import com.cooba.constant.FrontEnd;
 import com.cooba.constant.StompMQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.messaging.converter.ByteArrayMessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.net.URI;
@@ -71,7 +67,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
-        messageConverters.add(new Lz4MessageConverter());
+        messageConverters.add(new ProtoMessageConverter());
         return false;
     }
 }

@@ -1,23 +1,19 @@
 package com.cooba.core.spring;
 
+import com.cooba.dto.request.SpeakRequest;
+import com.cooba.proto.Speak;
 import com.cooba.util.JsonUtil;
-import com.cooba.util.LZ4Util;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.jpountz.lz4.LZ4Factory;
+import com.google.protobuf.InvalidProtocolBufferException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.AbstractMessageConverter;
 import org.springframework.util.MimeType;
 
-import java.nio.charset.StandardCharsets;
+public class ProtoMessageConverter extends AbstractMessageConverter {
 
-public class Lz4MessageConverter extends AbstractMessageConverter {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final LZ4Factory factory = LZ4Factory.fastestInstance();
-
-    public Lz4MessageConverter() {
-        super(new MimeType("application", "lz4-json")); // 自定义 MIME 类型
+    public ProtoMessageConverter() {
+        super(new MimeType("application", "protobuf")); // 自定义 MIME 类型
     }
 
     @Override
@@ -29,10 +25,16 @@ public class Lz4MessageConverter extends AbstractMessageConverter {
     @NotNull
     @Override
     protected Object convertFromInternal(Message<?> message, @NotNull Class<?> targetClass, @NotNull Object conversionHint) {
-        byte[] compressedData = (byte[]) message.getPayload();
-        String json = new String(compressedData);
-//        String json = LZ4Util.decompress(compressedData);
-        return JsonUtil.fromJson(json, targetClass);
+        byte[] binaryData = (byte[]) message.getPayload();
+        if (targetClass.equals(SpeakRequest.class)){
+            try {
+                Speak.SpeakRequest speakRequest = Speak.SpeakRequest.parseFrom(binaryData);
+                return new SpeakRequest(speakRequest);
+            } catch (InvalidProtocolBufferException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new ClassCastException();
     }
 
     @NotNull
