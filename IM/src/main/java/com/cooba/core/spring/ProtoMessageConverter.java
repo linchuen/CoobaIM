@@ -1,10 +1,12 @@
 package com.cooba.core.spring;
 
 import com.cooba.dto.request.SpeakRequest;
-import com.cooba.proto.Speak;
-import com.cooba.util.JsonUtil;
+import com.cooba.entity.Chat;
+import com.cooba.proto.ChatProto;
+import com.cooba.proto.SpeakProto;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.AbstractMessageConverter;
@@ -24,11 +26,11 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
 
     @NotNull
     @Override
-    protected Object convertFromInternal(Message<?> message, @NotNull Class<?> targetClass, @NotNull Object conversionHint) {
+    protected Object convertFromInternal(Message<?> message, @NotNull Class<?> targetClass, @Nullable Object conversionHint) {
         byte[] binaryData = (byte[]) message.getPayload();
-        if (targetClass.equals(SpeakRequest.class)){
+        if (targetClass.equals(SpeakRequest.class)) {
             try {
-                Speak.SpeakRequest speakRequest = Speak.SpeakRequest.parseFrom(binaryData);
+                SpeakProto.SpeakRequest speakRequest = SpeakProto.SpeakRequest.parseFrom(binaryData);
                 return new SpeakRequest(speakRequest);
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException(e);
@@ -39,10 +41,23 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
 
     @NotNull
     @Override
-    protected Object convertToInternal(@NotNull Object payload, @NotNull MessageHeaders headers, @NotNull Object conversionHint) {
-        String json = JsonUtil.toJson(payload);
-//        return LZ4Util.compress(json);
-        return json.getBytes();
+    protected Object convertToInternal(@NotNull Object payload, @Nullable MessageHeaders headers, @Nullable Object conversionHint) {
+        if (payload instanceof Chat chat) {
+            ChatProto.ChatInfo chatInfo = ChatProto.ChatInfo.newBuilder()
+                    .setUuid(chat.getUuid())
+                    .setId(chat.getId())
+                    .setUserId(chat.getUserId())
+                    .setName(chat.getName())
+                    .setRoomId(chat.getRoomId())
+                    .setMessage(chat.getMessage())
+                    .setType(chat.getType().name())
+                    .setUrl(chat.getUrl() == null ? "" : chat.getUrl())
+                    .setSuccess(true)
+                    .setCreatedTime(chat.getMessage())
+                    .build();
+            return chatInfo.toByteArray();
+        }
+        throw new ClassCastException();
     }
 }
 

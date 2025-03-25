@@ -1,6 +1,6 @@
 package com.cooba.dto.request;
 
-import com.cooba.proto.Speak;
+import com.cooba.proto.SpeakProto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +14,7 @@ public class SpeakRequest {
     private String url;
     private String type;
 
-    public SpeakRequest(Speak.SpeakRequest speakRequest) {
+    public SpeakRequest(SpeakProto.SpeakRequest speakRequest) {
         this.uuid = speakRequest.getUuid();
         this.roomId = speakRequest.getRoomId();
         this.userId = speakRequest.getUserId();

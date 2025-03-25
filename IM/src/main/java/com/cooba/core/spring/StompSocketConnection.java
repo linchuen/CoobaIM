@@ -9,11 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class StompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
+    private final Map<String, Object> headers = Map.of("contentType", "application/protobuf");
 
     @Override
     public void bindGroup(String userId, String group) {
@@ -42,14 +45,14 @@ public class StompSocketConnection implements SocketConnection {
     @Override
     public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
-        messagingTemplate.convertAndSendToUser(userId, "/private", payload);
+        messagingTemplate.convertAndSendToUser(userId, "/private", payload, headers);
         log.info("/private/{} content:{}", userId, payload);
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
         String payload = JsonUtil.toJson(chat);
-        messagingTemplate.convertAndSend("/group/" + group, payload);
+        messagingTemplate.convertAndSend("/group/" + group, payload, headers);
         log.info("/group/{} content:{}", group, payload);
     }
 
