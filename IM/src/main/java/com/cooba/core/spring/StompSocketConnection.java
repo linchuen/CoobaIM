@@ -6,6 +6,9 @@ import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
-    private final Map<String, Object> headers = Map.of("contentType", "application/protobuf");
 
     @Override
     public void bindGroup(String userId, String group) {
@@ -44,20 +46,27 @@ public class StompSocketConnection implements SocketConnection {
 
     @Override
     public void sendToUser(String userId, Chat chat) {
+        messagingTemplate.convertAndSendToUser(userId, "/private", chat, buildHeader());
         String payload = JsonUtil.toJson(chat);
-        messagingTemplate.convertAndSendToUser(userId, "/private", payload, headers);
         log.info("/private/{} content:{}", userId, payload);
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
+        messagingTemplate.convertAndSend("/group/" + group, chat, buildHeader());
         String payload = JsonUtil.toJson(chat);
-        messagingTemplate.convertAndSend("/group/" + group, payload, headers);
         log.info("/group/{} content:{}", group, payload);
     }
 
     @Override
     public void sendToAll(String message) {
         messagingTemplate.convertAndSend("/topic/broadcast", message);
+    }
+
+    private MessageHeaders buildHeader(){
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setHeader("contentType","application/protobuf");
+        headerAccessor.setLeaveMutable(true);
+        return headerAccessor.getMessageHeaders();
     }
 }

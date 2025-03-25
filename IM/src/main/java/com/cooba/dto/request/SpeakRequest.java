@@ -20,6 +20,6 @@ public class SpeakRequest {
         this.userId = speakRequest.getUserId();
         this.message = speakRequest.getMessage();
         this.url = speakRequest.getUrl();
-        this.type = speakRequest.getType();
+        this.type = speakRequest.getType().isEmpty() ? null : speakRequest.getType();
     }
 }
