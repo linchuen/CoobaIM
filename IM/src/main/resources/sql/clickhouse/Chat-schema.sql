@@ -1,4 +1,4 @@
-CREATE TABLE t_chat (
+CREATE TABLE im.t_chat (
     id UInt64 NOT NULL,
     uuid String NOT NULL,
     room_id Int64 NOT NULL,
@@ -14,5 +14,5 @@ ENGINE = MergeTree()
 PARTITION BY toYYYYMM(created_time)
 ORDER BY (id);
 
-ALTER TABLE t_chat ADD PROJECTION proj_idx_roomId
+ALTER TABLE im.t_chat ADD PROJECTION proj_idx_roomId
 ( SELECT  *  ORDER BY room_id, user_id, id );
