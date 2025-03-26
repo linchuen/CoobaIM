@@ -45,7 +45,7 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
         if (payload instanceof Chat chat) {
             ChatProto.ChatInfo chatInfo = ChatProto.ChatInfo.newBuilder()
                     .setUuid(chat.getUuid())
-                    .setId(chat.getId())
+                    .setId(String.valueOf(chat.getId()))
                     .setUserId(chat.getUserId())
                     .setName(chat.getName())
                     .setRoomId(chat.getRoomId())
@@ -53,7 +53,7 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
                     .setType(chat.getType().name())
                     .setUrl(chat.getUrl() == null ? "" : chat.getUrl())
                     .setSuccess(true)
-                    .setCreatedTime(chat.getMessage())
+                    .setCreatedTime(chat.getCreatedTime().toString())
                     .build();
             return chatInfo.toByteArray();
         }
