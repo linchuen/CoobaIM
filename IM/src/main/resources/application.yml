@@ -55,6 +55,7 @@ stomp:
     login: ${ARTEMIS_USER:artemis}
     passcode: ${ARTEMIS_PASSWORD:artemis}
     enable: true
+
   kafka:
     enable: false
     bootstrap-servers: ${KAFKA_URL:127.0.0.1:9092}
@@ -69,7 +70,7 @@ stomp:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
     consumer:
-      group-id: ${KAFKA_CONSUMER:kafka_default_group}
+      group-id: kafka_default_group
       auto-offset-reset: earliest
       enable-auto-commit: true
       max-poll-records: 500
