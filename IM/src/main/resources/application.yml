@@ -55,9 +55,32 @@ stomp:
     login: ${ARTEMIS_USER:artemis}
     passcode: ${ARTEMIS_PASSWORD:artemis}
     enable: true
+  kafka:
+    enable: false
+    bootstrap-servers: ${KAFKA_URL:127.0.0.1:9092}
+    properties:
+      enable.idempotence: false
+
+    producer:
+      retries: 5
+      compression-type: lz4
+      acks: 1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    consumer:
+      group-id: ${KAFKA_CONSUMER:kafka_default_group}
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      max-poll-records: 500
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+    admin:
+      auto-create: true
 
 minio:
-  endpoint:  ${MINIO_URL:http://127.0.0.1:9000}
+  endpoint: ${MINIO_URL:http://127.0.0.1:9000}
   accessKey: ${MINIO_ROOT_USER:minioadmin}
   secretKey: ${MINIO_ROOT_PASSWORD:minioadmin}
 
@@ -68,7 +91,7 @@ livekit:
 
 front-end:
   url: "http://localhost:5173"
-  allPermitPaths: ["/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**", "/ws/**"]
+  allPermitPaths: [ "/user/register", "/user/login", "/swagger-ui/**", "/v3/api-docs/**", "/ws/**" ]
 
 webhook:
   enabled: false
