@@ -42,7 +42,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka /queue/{} {} content:{}", event, userId, event.getType() + "//" + payload);
     }
 
-    @KafkaListener(topicPattern = "chat-user-event-*", groupId = "my-group")
+    @KafkaListener(topicPattern = "chat-user-event-*")
     public void listenUserEvent(ConsumerRecord<String, String> record) {
         String userId = record.key();
         String[] records = record.value().split("//");
@@ -60,7 +60,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka /topic/{}  content:{}", event, payload);
     }
 
-    @KafkaListener(topics = "all-event", groupId = "my-group")
+    @KafkaListener(topics = "all-event")
     public void listenAllEvent(ConsumerRecord<String, String> record) {
         String[] records = record.value().split("//");
         String event = records[0];
@@ -78,7 +78,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka /private/{} content:{}", userId, payload);
     }
 
-    @KafkaListener(topicPattern = "chat-user-*", groupId = "my-group")
+    @KafkaListener(topicPattern = "chat-user-*")
     public void listenUser(ConsumerRecord<String, String> record) {
         String userId = record.key();
         Chat chat = JsonUtil.fromJson(record.value(), Chat.class);
@@ -95,7 +95,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka /group/{} content:{}", group, payload);
     }
 
-    @KafkaListener(topicPattern = "chat-room-*", groupId = "my-group")
+    @KafkaListener(topicPattern = "chat-room-*")
     public void listenGroup(ConsumerRecord<String, String> record) {
         String group = record.key();
         Chat chat = JsonUtil.fromJson(record.value(), Chat.class);
@@ -109,7 +109,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         kafkaTemplate.send("all", message);
     }
 
-    @KafkaListener(topics = "all", groupId = "my-group")
+    @KafkaListener(topics = "all")
     public void listenAll(ConsumerRecord<String, String> record) {
         messagingTemplate.convertAndSend("/topic/broadcast", record.value());
     }
