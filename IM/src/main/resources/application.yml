@@ -58,7 +58,7 @@ stomp:
 
   kafka:
     enable: true
-    bootstrap-servers: ${KAFKA_URL:127.0.0.1:9092}
+    bootstrap-servers: ${KAFKA_HOST:127.0.0.1}:${KAFKA_PORT:9094}
     properties:
       enable.idempotence: false
 
