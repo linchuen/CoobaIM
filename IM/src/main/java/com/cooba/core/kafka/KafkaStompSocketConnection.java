@@ -39,7 +39,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, event.getType() + "//" + payload);
     }
 
-    @KafkaListener(topicPattern = "chat-user-event-*")
+    @KafkaListener(topicPattern = "chat-user-event-.*")
     public void listenUserEvent(ConsumerRecord<String, String> record) {
         String userId = record.key();
         String[] records = record.value().split("//");
@@ -76,7 +76,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka topic:{} /private/{} content:{}", topic, userId, payload);
     }
 
-    @KafkaListener(topicPattern = "chat-user-*")
+    @KafkaListener(topicPattern = "chat-user-.*")
     public void listenUser(ConsumerRecord<String, String> record) {
         String userId = record.key();
         Chat chat = JsonUtil.fromJson(record.value(), Chat.class);
@@ -94,7 +94,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         log.info("kafka topic:{} /group/{} content:{}", topic, group, payload);
     }
 
-    @KafkaListener(topicPattern = "chat-room-*")
+    @KafkaListener(topicPattern = "chat-room-.*")
     public void listenGroup(ConsumerRecord<String, String> record) {
         String group = record.key();
         Chat chat = JsonUtil.fromJson(record.value(), Chat.class);

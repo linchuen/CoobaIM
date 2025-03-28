@@ -77,17 +77,4 @@ public class KafkaConfig {
         NewTopic[] topics = groups.toArray(NewTopic[]::new);
         return new KafkaAdmin.NewTopics(topics);
     }
-
-    @Bean
-    public KafkaListenerContainerFactory<?> kafkaContainerFactory(KafkaProperties kafkaProperties, ConsumerFactory<String, String> consumerFactory) {
-        KafkaProperties.Listener listener = kafkaProperties.getListener();
-
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
-        factory.setConcurrency(listener.getConcurrency());
-        ContainerProperties containerProperties = factory.getContainerProperties();
-        containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
-        containerProperties.setPollTimeout(3000);
-        return factory;
-    }
 }
