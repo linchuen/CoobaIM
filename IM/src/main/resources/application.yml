@@ -54,10 +54,10 @@ stomp:
     relay-port: ${ARTEMIS_PORT:61616}
     login: ${ARTEMIS_USER:artemis}
     passcode: ${ARTEMIS_PASSWORD:artemis}
-    enable: true
+    enable: false
 
   kafka:
-    enable: false
+    enable: true
     bootstrap-servers: ${KAFKA_URL:127.0.0.1:9092}
     properties:
       enable.idempotence: false

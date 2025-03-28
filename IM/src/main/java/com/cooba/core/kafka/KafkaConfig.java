@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 
@@ -18,6 +19,7 @@ import java.util.stream.IntStream;
 public class KafkaConfig {
 
     @Bean
+    @Primary
     @ConfigurationProperties(prefix = "stomp.kafka")
     @ConditionalOnProperty(name = "stomp.mq.enable", havingValue = "false")
     public KafkaProperties kafkaProperties() {
