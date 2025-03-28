@@ -10,12 +10,8 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class StompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;

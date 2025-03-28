@@ -17,9 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "stomp.kafka.enable", havingValue = "true")
 public class KafkaStompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
     private final KafkaTemplate<String, String> kafkaTemplate;

@@ -10,6 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaAdmin;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -32,7 +33,7 @@ public class KafkaConfig {
                                 .partitions(10)
                                 .replicas(1)
                                 .build())
-                .toList();
+                .collect(Collectors.toList());
 
         List<NewTopic> users = IntStream.range(0, 10)
                 .boxed()

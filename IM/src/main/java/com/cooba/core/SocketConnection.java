@@ -1,6 +1,5 @@
 package com.cooba.core;
 
-import com.cooba.constant.EventEnum;
 import com.cooba.constant.IMEvent;
 import com.cooba.entity.Chat;
 
