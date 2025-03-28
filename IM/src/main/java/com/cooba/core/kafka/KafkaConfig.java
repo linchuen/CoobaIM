@@ -7,13 +7,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@EnableKafka
 @Configuration
 @ConditionalOnProperty(name = "stomp.kafka.enable", havingValue = "true")
 public class KafkaConfig {
@@ -70,5 +76,18 @@ public class KafkaConfig {
 
         NewTopic[] topics = groups.toArray(NewTopic[]::new);
         return new KafkaAdmin.NewTopics(topics);
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<?> kafkaContainerFactory(KafkaProperties kafkaProperties, ConsumerFactory<String, String> consumerFactory) {
+        KafkaProperties.Listener listener = kafkaProperties.getListener();
+
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.setConcurrency(listener.getConcurrency());
+        ContainerProperties containerProperties = factory.getContainerProperties();
+        containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
+        containerProperties.setPollTimeout(3000);
+        return factory;
     }
 }

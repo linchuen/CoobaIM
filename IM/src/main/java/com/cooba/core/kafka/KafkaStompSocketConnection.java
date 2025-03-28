@@ -7,14 +7,12 @@ import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,9 +33,10 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Override
     public <T> void sendUserEvent(String userId, IMEvent event, T t) {
         String payload = JsonUtil.toJson(t);
-        kafkaTemplate.send(decideTopic(userId, "user-event"), userId, payload);
+        String topic = decideTopic(userId, "user-event");
+        kafkaTemplate.send(topic, userId, payload);
 
-        log.info("kafka /queue/{} {} content:{}", event, userId, event.getType() + "//" + payload);
+        log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, event.getType() + "//" + payload);
     }
 
     @KafkaListener(topicPattern = "chat-user-event-*")
@@ -54,8 +53,8 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Override
     public <T> void sendAllEvent(IMEvent event, T t) {
         String payload = JsonUtil.toJson(t);
-        kafkaTemplate.send("all-event", event.getType()+ "//" +  payload);
-        log.info("kafka /topic/{}  content:{}", event, payload);
+        kafkaTemplate.send("all-event", event.getType() + "//" + payload);
+        log.info("kafka topic:{} /topic/{}  content:{}", "all-event", event, payload);
     }
 
     @KafkaListener(topics = "all-event")
@@ -71,9 +70,10 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Override
     public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
-        kafkaTemplate.send(decideTopic(userId, "user"), userId, payload);
+        String topic = decideTopic(userId, "user");
+        kafkaTemplate.send(topic, userId, payload);
 
-        log.info("kafka /private/{} content:{}", userId, payload);
+        log.info("kafka topic:{} /private/{} content:{}", topic, userId, payload);
     }
 
     @KafkaListener(topicPattern = "chat-user-*")
@@ -88,9 +88,10 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Override
     public void sendToGroup(String group, Chat chat) {
         String payload = JsonUtil.toJson(chat);
-        kafkaTemplate.send(decideTopic(group, "room"), group, payload);
+        String topic = decideTopic(group, "room");
+        kafkaTemplate.send(topic, group, payload);
 
-        log.info("kafka /group/{} content:{}", group, payload);
+        log.info("kafka topic:{} /group/{} content:{}", topic, group, payload);
     }
 
     @KafkaListener(topicPattern = "chat-room-*")
