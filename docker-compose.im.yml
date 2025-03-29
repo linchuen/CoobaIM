@@ -4,8 +4,10 @@ services:
     build:
       context: .
       dockerfile: ./IM.dockerfile
-    restart: always
     container_name: im
+    restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -44,6 +46,8 @@ services:
     image: redis:alpine
     container_name: im_redis
     restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     ports:
@@ -53,6 +57,8 @@ services:
     image: bitnami/mysql:8.3.0
     container_name: im_mysql
     restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -65,8 +71,10 @@ services:
 
   clickhouse:
     image: clickhouse:24.12
-    restart: always
     container_name: im_clickhouse
+    restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -80,6 +88,8 @@ services:
     image: apache/activemq-artemis:2.39.0-alpine
     container_name: im_activemq-artemis
     restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -96,6 +106,8 @@ services:
     image: quay.io/minio/minio
     container_name: im_minio
     restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -110,6 +122,8 @@ services:
     image: livekit/livekit-server:v1.8.4
     container_name: im_livekit-server
     restart: always
+    networks:
+      - im_net
     env_file:
       - .env
     environment:
@@ -122,3 +136,7 @@ services:
       - "7880:7880"  # API 端口
       - "7881:7881"  # WebSocket 端口
       - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
+
+networks:
+  im_net:
+    external: true

@@ -4,6 +4,8 @@ services:
   kafka:
     image: bitnami/kafka:latest
     container_name: im_kafka
+    networks:
+      - im_net
     ports:
       - "9092:9092"
       - "9094:9094"
@@ -25,6 +27,8 @@ services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: im_kafka-ui
+    networks:
+      - im_net
     ports:
       - "9090:8080"
     environment:
@@ -33,3 +37,7 @@ services:
       - DYNAMIC_CONFIG_ENABLED=true
     depends_on:
       - kafka
+
+networks:
+  im_net:
+    external: true
