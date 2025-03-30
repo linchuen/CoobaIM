@@ -2,6 +2,7 @@ package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
+import com.cooba.dto.FriendInfo;
 import com.cooba.entity.Friend;
 import com.cooba.mapper.FriendMapper;
 import com.cooba.repository.FriendRepository;
@@ -62,6 +63,11 @@ public class FriendRepositoryImpl implements FriendRepository {
     public List<Friend> find(long userId) {
         return friendMapper.selectList(new LambdaQueryWrapper<Friend>()
                 .eq(Friend::getUserId, userId));
+    }
+
+    @Override
+    public List<FriendInfo> findWithAvatar(long userId) {
+        return friendMapper.findWithAvatar(userId);
     }
 
     @Override

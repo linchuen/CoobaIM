@@ -11,6 +11,7 @@ import com.cooba.constant.WebhookEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.FriendBindResult;
+import com.cooba.dto.FriendInfo;
 import com.cooba.dto.UserInfo;
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
@@ -23,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ObjectLayer
@@ -73,6 +76,7 @@ public class UserComponentImpl implements UserComponent {
                 .userId(session.getUserId())
                 .platform(session.getPlatform())
                 .token(session.getToken())
+                .avatar(user.getAvatar())
                 .loginTime(session.getLoginTime())
                 .expireTime(session.getExpireTime())
                 .build();
@@ -203,9 +207,9 @@ public class UserComponentImpl implements UserComponent {
     public FriendSearchResponse searchFriend(FriendSearchRequest request) {
         long userId = userThreadLocal.getCurrentUserId();
 
-        List<Friend> friends = friendService.search(userId, request.getFriendUserIds());
+        List<FriendInfo> friendInfoList = friendService.searchInfo(userId, request.getFriendUserIds());
         return FriendSearchResponse.builder()
-                .friends(friends)
+                .friends(friendInfoList)
                 .build();
     }
 

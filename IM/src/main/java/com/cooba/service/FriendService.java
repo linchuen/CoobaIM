@@ -2,6 +2,7 @@ package com.cooba.service;
 
 import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.FriendBindResult;
+import com.cooba.dto.FriendInfo;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
 import com.cooba.entity.Room;
@@ -20,6 +21,8 @@ public interface FriendService {
     FriendBindResult bindDirectly(FriendApply friendApply, Supplier<Room> roomSupplier);
 
     List<Friend> search(long userId, List<Long> friendUserIds);
+
+    List<FriendInfo> searchInfo(long userId, List<Long> friendUserIds);
 
     List<FriendApplyInfo> searchApply(long userId);
 

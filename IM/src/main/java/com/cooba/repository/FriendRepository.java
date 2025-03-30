@@ -1,5 +1,6 @@
 package com.cooba.repository;
 
+import com.cooba.dto.FriendInfo;
 import com.cooba.entity.Friend;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface FriendRepository extends BaseRepository<Friend> {
     void addRoomId(List<Long> userIds, long roomId);
 
     List<Friend> find(long userId);
+
+    List<FriendInfo> findWithAvatar(long userId);
 
     Optional<Friend> find(long userId,long friendId);
 }

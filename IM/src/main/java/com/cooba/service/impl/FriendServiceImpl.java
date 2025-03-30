@@ -4,6 +4,7 @@ import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.dto.FriendApplyInfo;
 import com.cooba.dto.FriendBindResult;
+import com.cooba.dto.FriendInfo;
 import com.cooba.entity.Friend;
 import com.cooba.entity.FriendApply;
 import com.cooba.entity.Room;
@@ -104,6 +105,17 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    public List<FriendInfo> searchInfo(long userId, List<Long> friendUserIds) {
+        if (friendUserIds.isEmpty()) {
+            return friendRepository.findWithAvatar(userId);
+        }
+
+        return friendRepository.findWithAvatar(userId).stream()
+                .filter(friend -> friendUserIds.contains(friend.getUserId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<FriendApplyInfo> searchApply(long userId) {
         return friendApplyRepository.findByPermitId(userId)
                 .stream()
@@ -115,6 +127,7 @@ public class FriendServiceImpl implements FriendService {
                     friendApplyInfo.setId(friendApply.getId());
                     friendApplyInfo.setApplyId(applyUser.getId());
                     friendApplyInfo.setName(applyUser.getName());
+                    friendApplyInfo.setAvatar(applyUser.getAvatar());
                     return friendApplyInfo;
                 })
                 .toList();

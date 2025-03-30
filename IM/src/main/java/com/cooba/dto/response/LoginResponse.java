@@ -13,6 +13,7 @@ public class LoginResponse {
     private String token;
     private String role;
     private String platform;
+    private String avatar;
     private LocalDateTime loginTime;
     private LocalDateTime expireTime;
 }

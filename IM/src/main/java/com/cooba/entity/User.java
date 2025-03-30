@@ -38,6 +38,9 @@ public class User implements UserDetails{
     private String role = RoleEnum.USER.getRole();
 
     @Column
+    private String avatar;
+
+    @Column
     private LocalDateTime createdTime = LocalDateTime.now();
 
     @Transient

@@ -7,4 +7,5 @@ public class FriendApplyInfo {
     private Long id;
     private Long applyId;
     private String name;
+    private String avatar;
 }

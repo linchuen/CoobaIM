@@ -3,4 +3,11 @@
 <mapper namespace="com.cooba.mapper.FriendMapper">
 
 
+    <select id="findWithAvatar" resultType="com.cooba.dto.FriendInfo">
+        SELECT friend.* , user.avatar
+        FROM im.t_friend AS friend
+        INNER JOIN t_user AS user
+        ON friend.friend_user_id = user.id
+        WHERE friend.user_id = #{userId}
+    </select>
 </mapper>

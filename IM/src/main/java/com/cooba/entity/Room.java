@@ -23,6 +23,9 @@ public class Room {
     @Column(nullable = false)
     private String name;
 
+    @Column
+    private String avatar;
+
     @Column(nullable = false)
     private RoomTypeEnum roomTypeEnum = RoomTypeEnum.GROUP;
 
