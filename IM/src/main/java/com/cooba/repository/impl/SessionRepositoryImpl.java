@@ -44,15 +44,17 @@ public class SessionRepositoryImpl implements SessionRepository {
     }
 
     @Override
-    public void updateByUserId(Session session) {
+    public void updateByUserIdAndPlatform(Session session) {
         sessionMapper.update(session, new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, session.getUserId()));
+                .eq(Session::getUserId, session.getUserId())
+                .eq(Session::getPlatform, session.getPlatform()));
     }
 
     @Override
-    public Optional<Session> find(long userId) {
+    public Optional<Session> find(long userId, String platform) {
         Session session = sessionMapper.selectOne(new LambdaQueryWrapper<Session>()
-                .eq(Session::getUserId, userId));
+                .eq(Session::getUserId, userId)
+                .eq(Session::getPlatform, platform));
         return Optional.ofNullable(session);
     }
 }

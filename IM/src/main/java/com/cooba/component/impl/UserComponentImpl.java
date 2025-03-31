@@ -88,7 +88,7 @@ public class UserComponentImpl implements UserComponent {
     public LogoutResponse logout(LogoutRequest request) {
         User user = userService.getInfo(request.getUserId());
 
-        LocalDateTime logoutTime = sessionService.remove(user);
+        LocalDateTime logoutTime = sessionService.remove(user, request.getPlatform());
 
         userService.getAllRooms(user.getId()).forEach(userService::disconnectRoom);
 
@@ -101,7 +101,7 @@ public class UserComponentImpl implements UserComponent {
     public LoginResponse refreshToken(RefreshRequest request) {
         User user = userThreadLocal.getCurrentUser();
         String currentToken = userThreadLocal.getCurrentToken();
-        Session session = sessionService.getInfo(user.getId());
+        Session session = sessionService.getInfo(user.getId(), request.getPlatform());
         if (!currentToken.equals(session.getToken())) {
             throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
         }
@@ -118,11 +118,6 @@ public class UserComponentImpl implements UserComponent {
                 .loginTime(newSession.getLoginTime())
                 .expireTime(newSession.getExpireTime())
                 .build();
-    }
-
-    @Override
-    public boolean isOnline(long userId) {
-        return sessionService.getInfo(userId).getEnable();
     }
 
     @Override

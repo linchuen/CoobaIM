@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface SessionRepository extends BaseRepository<Session> {
 
-    void updateByUserId(Session session);
+    void updateByUserIdAndPlatform(Session session);
 
-    Optional<Session> find(long userId);
+    Optional<Session> find(long userId, String platform);
 }

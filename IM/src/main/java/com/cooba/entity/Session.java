@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @IMEntity
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uk_userId", columnNames = {"userId"})
+        @UniqueConstraint(name = "uk_userId", columnNames = {"userId, platform"})
 })
 public class Session {
     @Id
@@ -26,7 +26,7 @@ public class Session {
     @Column(nullable = false, length = 1000)
     private String token;
 
-    @Column
+    @Column(nullable = false)
     private String platform;
 
     @Column

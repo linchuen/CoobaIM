@@ -25,21 +25,21 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session add(User user, String platform, String ip) {
-        Optional<Session> dbSession = sessionRepository.find(user.getId());
+        Optional<Session> dbSession = sessionRepository.find(user.getId(), platform);
 
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
         session.setUserId(user.getId());
-        session.setPlatform("web");
+        session.setPlatform(platform);
         session.setLoginTime(now);
         session.setExpireTime(now.plusDays(jwtSecret.getTtlDay()));
-        session.setIp("127.0.0.1");
+        session.setIp(ip);
         session.setToken(jwtUtil.createToken(user, now));
         session.setEnable(true);
 
         if (dbSession.isPresent()) {
-            sessionRepository.updateByUserId(session);
+            sessionRepository.updateByUserIdAndPlatform(session);
         } else {
             sessionRepository.insert(session);
         }
@@ -48,21 +48,22 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public LocalDateTime remove(User user) {
+    public LocalDateTime remove(User user, String platform) {
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
         session.setUserId(user.getId());
         session.setLogoutTime(now);
+        session.setPlatform(platform);
         session.setEnable(false);
-        sessionRepository.updateByUserId(session);
+        sessionRepository.updateByUserIdAndPlatform(session);
 
         return now;
     }
 
     @Override
-    public Session getInfo(long userId) {
-        return sessionRepository.find(userId)
+    public Session getInfo(long userId, String platform) {
+        return sessionRepository.find(userId, platform)
                 .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
     }
 }

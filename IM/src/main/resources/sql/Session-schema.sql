@@ -6,11 +6,11 @@
         ip varchar(255),
         login_time datetime(6) not null,
         logout_time datetime(6),
-        platform varchar(255),
+        platform varchar(255) not null,
         token varchar(1000) not null,
         user_id bigint not null,
         primary key (id)
     ) engine=InnoDB;
 
     alter table t_session 
-       add constraint uk_userId unique (user_id);
+       add constraint uk_userId unique (`user_id, platform`);

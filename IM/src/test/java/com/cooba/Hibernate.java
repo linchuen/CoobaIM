@@ -35,7 +35,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(User.class, serviceRegistry);
+            generateSql(Session.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);

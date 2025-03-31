@@ -9,7 +9,7 @@ public interface SessionService {
 
     Session add(User user, String platform, String ip);
 
-    LocalDateTime remove(User user);
+    LocalDateTime remove(User user, String platform);
 
-    Session getInfo(long userId);
+    Session getInfo(long userId, String platform);
 }

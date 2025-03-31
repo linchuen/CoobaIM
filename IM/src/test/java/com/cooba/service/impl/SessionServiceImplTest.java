@@ -28,9 +28,9 @@ class SessionServiceImplTest {
     @Test
     void add() {
         User user = Instancio.create(User.class);
-        sessionService.add(user, , );
+        sessionService.add(user, "", "");
 
-        Session session = sessionService.getInfo(user.getId());
+        Session session = sessionService.getInfo(user.getId(), "");
         Assertions.assertNotNull(session);
         Assertions.assertTrue(session.getEnable());
     }
@@ -38,11 +38,11 @@ class SessionServiceImplTest {
     @Test
     void remove() {
         User user = Instancio.create(User.class);
-        sessionService.add(user, , );
+        sessionService.add(user, "", "");
 
-        sessionService.remove(user);
+        sessionService.remove(user, "");
 
-        Session session = sessionService.getInfo(user.getId());
+        Session session = sessionService.getInfo(user.getId(), "");
         Assertions.assertNotNull(session);
         Assertions.assertFalse(session.getEnable());
     }

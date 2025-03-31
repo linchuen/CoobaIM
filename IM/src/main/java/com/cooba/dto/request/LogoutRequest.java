@@ -1,5 +1,6 @@
 package com.cooba.dto.request;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
@@ -8,4 +9,6 @@ import jakarta.validation.constraints.NotNull;
 public class LogoutRequest {
     @NotNull
     private Long userId;
+    @NotEmpty
+    private String platform;
 }
