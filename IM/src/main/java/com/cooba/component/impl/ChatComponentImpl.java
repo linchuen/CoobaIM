@@ -143,7 +143,15 @@ public class ChatComponentImpl implements ChatComponent {
     }
 
     @Override
-    public void searchWord(ChatSearchRequest request) {
+    public ChatLoadResponse searchWord(ChatSearchRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
 
+        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), userId);
+        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        List<Chat> chats = messageService.searchWord(request.getRoomId(), request.getWord());
+        return ChatLoadResponse.builder()
+                .chats(chats)
+                .build();
     }
 }

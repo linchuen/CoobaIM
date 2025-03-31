@@ -43,16 +43,16 @@ public class ChatController {
     }
 
     @PostMapping("/load/date")
-    @Operation(summary = "已讀")
+    @Operation(summary = "根據時間取得聊天室內容")
     public ResultResponse<?> loadByDate(@RequestBody ChatLoadDateRequest request) {
         ChatLoadResponse response = chatComponent.loadByDate(request);
         return ResultResponse.builder().data(response).build();
     }
 
     @PostMapping("/search")
-    @Operation(summary = "已讀")
+    @Operation(summary = "搜尋關鍵字")
     public ResultResponse<?> search(@RequestBody ChatSearchRequest request) {
-        chatComponent.searchWord(request);
-        return ResultResponse.builder().data(true).build();
+        ChatLoadResponse response = chatComponent.searchWord(request);
+        return ResultResponse.builder().data(response).build();
     }
 }

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -49,9 +51,11 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
 
     @Override
     public List<ChatSearch> findByWord(long roomId, String word) {
+        LocalDateTime oneMonth = LocalDateTime.now().minusMonths(1);
         return chatSearchMapper.selectList(new LambdaQueryWrapper<ChatSearch>()
                 .eq(ChatSearch::getRoomId, roomId)
                 .eq(ChatSearch::getMessageGram, word)
+                .gt(ChatSearch::getCreatedTime, oneMonth)
         );
     }
 

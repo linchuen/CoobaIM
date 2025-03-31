@@ -7,6 +7,7 @@ import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
 import com.cooba.entity.ChatRead;
+import com.cooba.entity.ChatSearch;
 import com.cooba.entity.Notification;
 import com.cooba.repository.ChatReadRepository;
 import com.cooba.repository.ChatRepository;
@@ -18,9 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @BehaviorLayer
@@ -84,6 +86,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Chat> getRoomChats(long roomId, LocalDate date) {
         return chatRepository.findChatByRoomId(roomId, date);
+    }
+
+    @Override
+    public List<Chat> searchWord(long roomId, String word) {
+        List<ChatSearch> byWords = chatSearchRepository.findByWord(roomId, word);
+        List<Long> chatIds = byWords.stream().map(ChatSearch::getChatId).distinct().toList();
+        return chatRepository.selectByIds(chatIds);
     }
 
     @Override

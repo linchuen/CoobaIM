@@ -25,6 +25,8 @@ public interface MessageService {
 
     List<Chat> getRoomChats(long roomId, LocalDate date);
 
+    List<Chat> searchWord(long roomId, String word);
+
     void setRoomIsRead(long roomId, long chatId);
 
     long getRoomUnread(long roomId);

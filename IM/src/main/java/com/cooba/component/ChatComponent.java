@@ -19,6 +19,6 @@ public interface ChatComponent {
 
     ChatLoadResponse loadByDate(ChatLoadDateRequest request);
 
-    void searchWord(ChatSearchRequest request);
+    ChatLoadResponse searchWord(ChatSearchRequest request);
 
 }
