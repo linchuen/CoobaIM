@@ -10,6 +10,7 @@ import com.cooba.entity.ChatRead;
 import com.cooba.entity.Notification;
 import com.cooba.repository.ChatReadRepository;
 import com.cooba.repository.ChatRepository;
+import com.cooba.repository.ChatSearchRepository;
 import com.cooba.repository.NotificationRepository;
 import com.cooba.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class MessageServiceImpl implements MessageService {
     private final ChatRepository chatRepository;
     private final ChatReadRepository chatReadRepository;
+    private final ChatSearchRepository chatSearchRepository;
     private final NotificationRepository notificationRepository;
     private final SocketConnection socketConnection;
     private final UserThreadLocal userThreadLocal;
@@ -35,6 +37,7 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
         chatRepository.insertLastChat(chat);
+        chatSearchRepository.insertMessageGram(chat);
 
         socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }
@@ -45,6 +48,7 @@ public class MessageServiceImpl implements MessageService {
 
         chatRepository.insert(chat);
         chatRepository.insertLastChat(chat);
+        chatSearchRepository.insertMessageGram(chat);
 
         socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
     }

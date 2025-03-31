@@ -4,11 +4,14 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.constant.Database;
+import com.cooba.entity.Chat;
 import com.cooba.entity.ChatSearch;
 import com.cooba.mapper.ChatSearchMapper;
 import com.cooba.repository.ChatSearchRepository;
+import com.cooba.util.NgramUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -48,7 +51,23 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
     public List<ChatSearch> findByWord(long roomId, String word) {
         return chatSearchMapper.selectList(new LambdaQueryWrapper<ChatSearch>()
                 .eq(ChatSearch::getRoomId, roomId)
-                .eq(ChatSearch::getMessageGram,word)
+                .eq(ChatSearch::getMessageGram, word)
         );
+    }
+
+    @Async
+    @Override
+    public void insertMessageGram(Chat chat) {
+        List<ChatSearch> chatSearches = NgramUtil.generate2gramsWord(chat.getMessage())
+                .stream()
+                .map(s -> {
+                    ChatSearch chatSearch = new ChatSearch();
+                    chatSearch.setRoomId(chat.getRoomId());
+                    chatSearch.setMessageGram(s);
+                    chatSearch.setChatId(chat.getId());
+                    return chatSearch;
+                }).toList();
+
+        chatSearchMapper.insert(chatSearches);
     }
 }

@@ -26,7 +26,7 @@ public class NgramUtil {
             System.out.println(twoGramList);
         }
     }
-    private static Set<String> generate2gramsWord(String text){
+    public static Set<String> generate2gramsWord(String text){
         return splitWord(text)
                 .stream()
                 .flatMap(word -> generate2grams(word).stream())
