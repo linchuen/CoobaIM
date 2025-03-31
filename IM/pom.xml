@@ -155,6 +155,16 @@
             <artifactId>livekit-server</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>opencc4j</artifactId>
+        </dependency>
+
         <!-- Spring Boot Test Starter (for testing, optional) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
