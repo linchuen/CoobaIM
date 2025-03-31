@@ -1,6 +1,6 @@
 package com.cooba;
 
-import com.cooba.entity.Chat;
+import com.cooba.entity.ChatSearch;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Field;
@@ -66,6 +66,23 @@ public class ClickHouseSQLGenerator {
                     .append(" ORDER BY ").append(String.join(", ", projectionColumns))
                     .append(" );");
         }
+
+        for (UniqueConstraint uk : tableAnnotation.uniqueConstraints()) {
+            String projectionName = "proj_" + uk.name();
+            String[] columns = uk.columnNames();
+            List<String> projectionColumns = new ArrayList<>();
+            for (String col : columns) {
+                projectionColumns.add(toSnakeCase(col.trim()));
+            }
+            projectionColumns.add(idColumn);
+
+            createTableSQL.append("\nALTER TABLE ").append(tableName)
+                    .append(" ADD PROJECTION ").append(projectionName)
+                    .append(" \n( SELECT ")
+                    .append(" * ")
+                    .append(" ORDER BY ").append(String.join(", ", projectionColumns))
+                    .append(" );");
+        }
         return createTableSQL.toString();
     }
 
@@ -101,7 +118,7 @@ public class ClickHouseSQLGenerator {
     }
 
     public static void main(String[] args) {
-        String sql = generateCreateTableSQL(Chat.class);
+        String sql = generateCreateTableSQL(ChatSearch.class);
         System.out.println("\nGenerated SQL:\n" + sql);
     }
 }

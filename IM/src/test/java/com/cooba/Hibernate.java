@@ -35,7 +35,7 @@ public class Hibernate {
                 .build();
 
         try {
-            generateSql(Session.class, serviceRegistry);
+            generateSql(ChatSearch.class, serviceRegistry);
 
 //            for (Class<?> c : classList) {
 //                generateSql(c, serviceRegistry);
