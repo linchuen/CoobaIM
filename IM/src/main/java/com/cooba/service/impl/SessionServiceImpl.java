@@ -11,9 +11,12 @@ import com.cooba.service.SessionService;
 import com.cooba.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @BehaviorLayer
@@ -22,6 +25,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
     private final JwtUtil jwtUtil;
     private final JwtSecret jwtSecret;
+    private final RedissonClient redissonClient;
 
     @Override
     public Session add(User user, String platform, String ip) {
@@ -45,6 +49,48 @@ public class SessionServiceImpl implements SessionService {
         }
 
         return session;
+    }
+
+    @Override
+    public Session add(User user, String currentToken, String platform, String ip) {
+        RLock lock = redissonClient.getLock("session-lock:" + user.getId() + platform);
+        try {
+            boolean acquired = lock.tryLock(5, 10, TimeUnit.SECONDS);
+            if (acquired) {
+                Session dbSession = sessionRepository.find(user.getId(), platform)
+                        .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
+
+                if (currentToken.equals(dbSession.getPreToken())) {
+                    return dbSession;
+                }
+
+                if (!currentToken.equals(dbSession.getToken())) {
+                    throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
+                }
+                LocalDateTime now = LocalDateTime.now();
+
+                Session session = new Session();
+                session.setUserId(user.getId());
+                session.setPlatform(platform);
+                session.setLoginTime(now);
+                session.setExpireTime(now.plusDays(jwtSecret.getTtlDay()));
+                session.setIp(ip);
+                session.setPreToken(currentToken);
+                session.setToken(jwtUtil.createToken(user, now));
+                session.setEnable(true);
+                sessionRepository.updateByUserIdAndPlatform(session);
+
+                return session;
+            }
+            throw new BaseException(ErrorEnum.NETWORK_ERROR);
+        } catch (InterruptedException e) {
+            throw new BaseException(ErrorEnum.NETWORK_ERROR);
+        } finally {
+            if (lock.isLocked()) {
+                lock.unlock();
+            }
+        }
+
     }
 
     @Override

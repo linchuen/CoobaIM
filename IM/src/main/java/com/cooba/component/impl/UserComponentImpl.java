@@ -23,6 +23,7 @@ import com.cooba.service.SessionService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class UserComponentImpl implements UserComponent {
     private final SessionService sessionService;
     private final UserThreadLocal userThreadLocal;
     private final SocketConnection socketConnection;
+    private final Redisson redisson;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -101,12 +103,8 @@ public class UserComponentImpl implements UserComponent {
     public LoginResponse refreshToken(RefreshRequest request) {
         User user = userThreadLocal.getCurrentUser();
         String currentToken = userThreadLocal.getCurrentToken();
-        Session session = sessionService.getInfo(user.getId(), request.getPlatform());
-        if (!currentToken.equals(session.getToken())) {
-            throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
-        }
 
-        Session newSession = sessionService.add(user, request.getPlatform(), request.getIp());
+        Session newSession = sessionService.add(user, currentToken, request.getPlatform(), request.getIp());
 
         return LoginResponse.builder()
                 .name(user.getName())

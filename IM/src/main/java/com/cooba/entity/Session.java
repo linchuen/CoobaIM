@@ -26,6 +26,9 @@ public class Session {
     @Column(nullable = false, length = 1000)
     private String token;
 
+    @Column(length = 1000)
+    private String preToken;
+
     @Column(nullable = false)
     private String platform;
 
