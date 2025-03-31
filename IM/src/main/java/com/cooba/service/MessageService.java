@@ -5,6 +5,8 @@ import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
 import com.cooba.entity.Notification;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,12 @@ public interface MessageService {
     void sendToAll(NotifyMessage message);
 
     List<Chat> getRoomChats(long roomId);
+
+    List<Chat> getRoomChats(long roomId, Long chatId, boolean searchAfter);
+
+    List<Chat> getRoomChats(long roomId, LocalDateTime startTime, LocalDateTime endTime);
+
+    List<Chat> getRoomChats(long roomId, LocalDate date);
 
     void setRoomIsRead(long roomId, long chatId);
 

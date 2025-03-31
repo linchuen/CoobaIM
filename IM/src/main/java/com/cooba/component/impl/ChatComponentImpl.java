@@ -20,6 +20,7 @@ import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +89,7 @@ public class ChatComponentImpl implements ChatComponent {
         boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), userId);
         if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
 
-        List<Chat> chats = messageService.getRoomChats(request.getRoomId());
+        List<Chat> chats = messageService.getRoomChats(request.getRoomId(), request.getChatId(), request.isSearchAfter());
         return ChatLoadResponse.builder()
                 .chats(chats)
                 .build();
@@ -120,5 +121,29 @@ public class ChatComponentImpl implements ChatComponent {
     @Override
     public void setIsRead(ChatIsReadRequest request) {
         messageService.setRoomIsRead(request.getRoomId(), request.getChatId());
+    }
+
+    @Override
+    public ChatLoadResponse loadByDate(ChatLoadDateRequest request) {
+        long userId = userThreadLocal.getCurrentUserId();
+
+        boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), userId);
+        if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        List<Chat> chats;
+        LocalDate date = request.getDate();
+        if (date != null) {
+            chats = messageService.getRoomChats(request.getRoomId(), date);
+        } else {
+            chats = messageService.getRoomChats(request.getRoomId(), request.getStartTime(), request.getEndTime());
+        }
+        return ChatLoadResponse.builder()
+                .chats(chats)
+                .build();
+    }
+
+    @Override
+    public void searchWord(ChatSearchRequest request) {
+
     }
 }

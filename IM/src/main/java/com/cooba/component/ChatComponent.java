@@ -17,4 +17,8 @@ public interface ChatComponent {
 
     void setIsRead(ChatIsReadRequest request);
 
+    ChatLoadResponse loadByDate(ChatLoadDateRequest request);
+
+    void searchWord(ChatSearchRequest request);
+
 }

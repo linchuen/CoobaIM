@@ -11,9 +11,10 @@ import com.cooba.util.CacheUtil;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,9 +53,33 @@ public class ChatRepositoryImpl implements ChatRepository {
 
 
     @Override
-    public List<Chat> findChatByRoomId(long roomId) {
+    public List<Chat> findChatByRoomId(long roomId, Long chatId, boolean searchAfter) {
+        //for clickhouse
         return chatMapper.selectList(new LambdaQueryWrapper<Chat>()
-                .eq(Chat::getRoomId, roomId));
+                .eq(Chat::getRoomId, roomId)
+                .gt(searchAfter && chatId != null, Chat::getRoomId, chatId)
+                .lt(!searchAfter && chatId != null, Chat::getRoomId, chatId)
+                .orderByDesc(Chat::getId)
+                .last("limit 100")
+        );
+    }
+
+    @Override
+    public List<Chat> findChatByRoomId(long roomId, LocalDate date) {
+        LocalDateTime startTime = date.atStartOfDay();
+        LocalDateTime endTime = startTime.plusDays(1);
+        return findChatByRoomId(roomId, startTime, endTime);
+    }
+
+    @Override
+    public List<Chat> findChatByRoomId(long roomId, LocalDateTime startTime, LocalDateTime endTime) {
+        return chatMapper.selectList(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getRoomId, roomId)
+                .ge(Chat::getCreatedTime, startTime)
+                .le(Chat::getCreatedTime, endTime)
+                .orderByDesc(Chat::getId)
+                .last("limit 100")
+        );
     }
 
     @Override

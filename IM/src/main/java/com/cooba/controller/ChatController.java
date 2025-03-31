@@ -7,6 +7,7 @@ import com.cooba.dto.response.ChatLoadResponse;
 import com.cooba.dto.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ public class ChatController {
 
     @PostMapping("/load")
     @Operation(summary = "取得聊天室內容")
-    public ResultResponse<?> load(@RequestBody ChatLoadRequest request) {
+    public ResultResponse<?> load(@Valid @RequestBody ChatLoadRequest request) {
         ChatLoadResponse response = chatComponent.load(request);
         return ResultResponse.builder().data(response).build();
     }
@@ -38,6 +39,20 @@ public class ChatController {
     @Operation(summary = "已讀")
     public ResultResponse<?> setIsRead(@RequestBody ChatIsReadRequest request) {
         chatComponent.setIsRead(request);
+        return ResultResponse.builder().data(true).build();
+    }
+
+    @PostMapping("/load/date")
+    @Operation(summary = "已讀")
+    public ResultResponse<?> loadByDate(@RequestBody ChatLoadDateRequest request) {
+        ChatLoadResponse response = chatComponent.loadByDate(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/search")
+    @Operation(summary = "已讀")
+    public ResultResponse<?> search(@RequestBody ChatSearchRequest request) {
+        chatComponent.searchWord(request);
         return ResultResponse.builder().data(true).build();
     }
 }

@@ -1,7 +1,6 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
-import com.cooba.constant.MessageTypeEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
