@@ -1,16 +1,12 @@
 package com.cooba.controller;
 
 import com.cooba.component.UserComponent;
-import com.cooba.dto.request.LoginRequest;
-import com.cooba.dto.request.RegisterRequest;
-import com.cooba.dto.request.RoomUserRequest;
-import com.cooba.dto.request.LogoutRequest;
+import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +26,10 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "用戶登入")
-    public ResultResponse<?> login(@Valid @RequestBody LoginRequest request) {
+    public ResultResponse<?> login(@Valid @RequestBody LoginRequest request, HttpServletRequest httpServletRequest) {
+        String ip = httpServletRequest.getHeader("X-Real-IP");
+        request.setIp(ip);
+
         LoginResponse response = userComponent.login(request);
         return ResultResponse.builder().data(response).build();
     }
@@ -39,6 +38,16 @@ public class UserController {
     @Operation(summary = "用戶登出")
     public ResultResponse<?> logout(@Valid @RequestBody LogoutRequest request) {
         LogoutResponse response = userComponent.logout(request);
+        return ResultResponse.builder().data(response).build();
+    }
+
+    @PostMapping("/refresh")
+    @Operation(summary = "token刷新")
+    public ResultResponse<?> refresh(@Valid @RequestBody RefreshRequest request, HttpServletRequest httpServletRequest) {
+        String ip = httpServletRequest.getHeader("X-Real-IP");
+        request.setIp(ip);
+
+        LoginResponse response = userComponent.refreshToken(request);
         return ResultResponse.builder().data(response).build();
     }
 

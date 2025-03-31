@@ -8,16 +8,12 @@ import com.cooba.repository.SessionRepository;
 import com.cooba.service.SessionService;
 import com.cooba.util.JwtUtil;
 import org.instancio.Instancio;
-import org.instancio.junit.InstancioSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Rollback(value = false)
 @MybatisLocalTest
@@ -32,7 +28,7 @@ class SessionServiceImplTest {
     @Test
     void add() {
         User user = Instancio.create(User.class);
-        sessionService.add(user);
+        sessionService.add(user, , );
 
         Session session = sessionService.getInfo(user.getId());
         Assertions.assertNotNull(session);
@@ -42,7 +38,7 @@ class SessionServiceImplTest {
     @Test
     void remove() {
         User user = Instancio.create(User.class);
-        sessionService.add(user);
+        sessionService.add(user, , );
 
         sessionService.remove(user);
 

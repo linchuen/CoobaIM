@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public interface SessionService {
 
-    Session add(User user);
+    Session add(User user, String platform, String ip);
 
     LocalDateTime remove(User user);
 

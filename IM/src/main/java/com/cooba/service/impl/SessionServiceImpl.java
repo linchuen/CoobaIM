@@ -1,6 +1,5 @@
 package com.cooba.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.JwtSecret;
@@ -25,7 +24,7 @@ public class SessionServiceImpl implements SessionService {
     private final JwtSecret jwtSecret;
 
     @Override
-    public Session add(User user) {
+    public Session add(User user, String platform, String ip) {
         Optional<Session> dbSession = sessionRepository.find(user.getId());
 
         LocalDateTime now = LocalDateTime.now();

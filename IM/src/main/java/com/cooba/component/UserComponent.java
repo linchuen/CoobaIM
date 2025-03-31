@@ -14,6 +14,8 @@ public interface UserComponent {
 
     LogoutResponse logout(LogoutRequest request);
 
+    LoginResponse refreshToken(RefreshRequest request);
+
     boolean isOnline(long userId);
 
     RoomResponse enterRoom(RoomUserRequest request);

@@ -138,7 +138,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     public LoginResponse getGuestToken() {
         long guestId = guestService.getRandomGuest();
         User user = userService.getInfo(guestId);
-        Session session = sessionService.add(user);
+        Session session = sessionService.add(user, "web", "");
 
         return LoginResponse.builder()
                 .name(user.getName())

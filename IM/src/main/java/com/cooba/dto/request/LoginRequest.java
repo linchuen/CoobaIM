@@ -12,4 +12,9 @@ public class LoginRequest {
 
     @NotEmpty
     private String password;
+
+    @NotEmpty
+    private String platform;
+
+    private String ip;
 }

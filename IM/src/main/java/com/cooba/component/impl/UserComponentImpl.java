@@ -17,17 +17,18 @@ import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
 import com.cooba.entity.*;
 import com.cooba.exception.BaseException;
-import com.cooba.service.*;
+import com.cooba.service.FriendService;
+import com.cooba.service.RoomService;
+import com.cooba.service.SessionService;
+import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @ObjectLayer
@@ -66,13 +67,13 @@ public class UserComponentImpl implements UserComponent {
 
         userService.verifyPassword(user, request.getPassword());
 
-        Session session = sessionService.add(user);
+        Session session = sessionService.add(user, request.getPlatform(), request.getIp());
 
         userService.getAllRooms(user.getId()).forEach(userService::connectRoom);
 
         return LoginResponse.builder()
                 .name(user.getName())
-                .role(user.getRole().replace("ROLE_",""))
+                .role(user.getRole().replace("ROLE_", ""))
                 .userId(session.getUserId())
                 .platform(session.getPlatform())
                 .token(session.getToken())
@@ -93,6 +94,29 @@ public class UserComponentImpl implements UserComponent {
 
         return LogoutResponse.builder()
                 .logoutTime(logoutTime)
+                .build();
+    }
+
+    @Override
+    public LoginResponse refreshToken(RefreshRequest request) {
+        User user = userThreadLocal.getCurrentUser();
+        String currentToken = userThreadLocal.getCurrentToken();
+        Session session = sessionService.getInfo(user.getId());
+        if (!currentToken.equals(session.getToken())) {
+            throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
+        }
+
+        Session newSession = sessionService.add(user, request.getPlatform(), request.getIp());
+
+        return LoginResponse.builder()
+                .name(user.getName())
+                .role(user.getRole().replace("ROLE_", ""))
+                .userId(newSession.getUserId())
+                .platform(newSession.getPlatform())
+                .token(newSession.getToken())
+                .avatar(user.getAvatar())
+                .loginTime(newSession.getLoginTime())
+                .expireTime(newSession.getExpireTime())
                 .build();
     }
 
