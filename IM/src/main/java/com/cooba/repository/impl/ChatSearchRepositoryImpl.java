@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
 import com.cooba.constant.Database;
+import com.cooba.constant.MessageTypeEnum;
 import com.cooba.entity.Chat;
 import com.cooba.entity.ChatSearch;
 import com.cooba.mapper.ChatSearchMapper;
@@ -62,6 +63,8 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
     @Async
     @Override
     public void insertMessageGram(Chat chat) {
+        if (chat.getType() != MessageTypeEnum.TEXT) return;
+
         List<ChatSearch> chatSearches = NgramUtil.generate2gramsWord(chat.getMessage())
                 .stream()
                 .map(s -> {
