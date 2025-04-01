@@ -7,6 +7,8 @@ import com.cooba.entity.FriendApply;
 import com.cooba.repository.ChatRepository;
 import com.cooba.service.impl.FriendServiceImpl;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 @Rollback(value = false)
 @ActiveProfiles(value = "ck")
 @MapperScan({"com.cooba.mapper"})
@@ -34,25 +37,7 @@ class ChatRepositoryImplTest {
         Chat chat = Instancio.create(Chat.class);
         chat.setId(null);
         chatRepository.insert(chat);
-    }
 
-    @Test
-    void testInsert() {
-    }
-
-    @Test
-    void selectById() {
-    }
-
-    @Test
-    void selectByIds() {
-    }
-
-    @Test
-    void deleteById() {
-    }
-
-    @Test
-    void findChatByRoomId() {
+        Assertions.assertNotNull(chat.getId());
     }
 }

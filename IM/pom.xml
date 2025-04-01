@@ -179,6 +179,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.codemonstur</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter-test</artifactId>
             <scope>test</scope>
@@ -201,7 +207,6 @@
             <artifactId>hibernate-ant</artifactId>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
