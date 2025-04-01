@@ -165,6 +165,11 @@
             <artifactId>opencc4j</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
         <!-- Spring Boot Test Starter (for testing, optional) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -175,12 +180,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.codemonstur</groupId>
-            <artifactId>embedded-redis</artifactId>
             <scope>test</scope>
         </dependency>
 

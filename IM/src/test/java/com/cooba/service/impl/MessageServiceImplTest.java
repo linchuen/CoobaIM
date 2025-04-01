@@ -2,6 +2,7 @@ package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.aop.UserThreadLocal;
+import com.cooba.constant.MessageTypeEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
@@ -32,14 +33,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {MessageServiceImpl.class})
-@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql", "/sql/ChatSearch-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class MessageServiceImplTest {
     @Autowired
     MessageService messageService;
-    @Autowired
-    ChatRepository chatRepository;
-    @Autowired
-    NotificationRepository notificationRepository;
     @MockitoBean
     SocketConnection socketConnection;
     @MockitoBean
@@ -52,8 +49,8 @@ class MessageServiceImplTest {
         Mockito.doNothing().when(cacheUtil).set(anyString(), anyString(), any(Duration.class));
 
         SendMessage sendMessage = Instancio.create(SendMessage.class);
+        sendMessage.setType(MessageTypeEnum.TEXT);
         messageService.sendToUser(sendMessage);
-
 
         List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
                 .stream()
@@ -66,7 +63,10 @@ class MessageServiceImplTest {
 
     @Test
     void sendToRoom() {
+        Mockito.doNothing().when(cacheUtil).set(anyString(), anyString(), any(Duration.class));
+
         SendMessage sendMessage = Instancio.create(SendMessage.class);
+        sendMessage.setType(MessageTypeEnum.TEXT);
         messageService.sendToRoom(sendMessage);
 
         List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
