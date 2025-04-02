@@ -9,5 +9,5 @@ public interface ChatSearchRepository extends BaseRepository<ChatSearch> {
 
     List<ChatSearch> findByWord(long roomId, String word);
 
-    void insertMessageGram(Chat chat);
+    List<ChatSearch>  insertMessageGram(Chat chat);
 }

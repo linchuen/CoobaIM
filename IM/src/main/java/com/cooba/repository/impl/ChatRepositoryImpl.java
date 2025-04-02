@@ -57,8 +57,8 @@ public class ChatRepositoryImpl implements ChatRepository {
         //for clickhouse
         return chatMapper.selectList(new LambdaQueryWrapper<Chat>()
                 .eq(Chat::getRoomId, roomId)
-                .gt(searchAfter && chatId != null, Chat::getRoomId, chatId)
-                .lt(!searchAfter && chatId != null, Chat::getRoomId, chatId)
+                .gt(searchAfter && chatId != null, Chat::getId, chatId)
+                .lt(!searchAfter && chatId != null, Chat::getId, chatId)
                 .orderByDesc(Chat::getId)
                 .last("limit 100")
         );

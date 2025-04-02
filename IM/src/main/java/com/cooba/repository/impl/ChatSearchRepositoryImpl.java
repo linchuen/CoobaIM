@@ -10,12 +10,13 @@ import com.cooba.entity.ChatSearch;
 import com.cooba.mapper.ChatSearchMapper;
 import com.cooba.repository.ChatSearchRepository;
 import com.cooba.util.NgramUtil;
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -55,15 +56,15 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
         LocalDateTime oneMonth = LocalDateTime.now().minusMonths(1);
         return chatSearchMapper.selectList(new LambdaQueryWrapper<ChatSearch>()
                 .eq(ChatSearch::getRoomId, roomId)
-                .eq(ChatSearch::getMessageGram, word)
+                .eq(ChatSearch::getMessageGram, ZhConverterUtil.toSimple(word))
                 .gt(ChatSearch::getCreatedTime, oneMonth)
         );
     }
 
     @Async
     @Override
-    public void insertMessageGram(Chat chat) {
-        if (chat.getType() != MessageTypeEnum.TEXT) return;
+    public List<ChatSearch> insertMessageGram(Chat chat) {
+        if (chat.getType() != MessageTypeEnum.TEXT) return Collections.emptyList();
 
         List<ChatSearch> chatSearches = NgramUtil.generate2gramsWord(chat.getMessage())
                 .stream()
@@ -76,5 +77,6 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
                 }).toList();
 
         chatSearchMapper.insert(chatSearches);
+        return chatSearches;
     }
 }

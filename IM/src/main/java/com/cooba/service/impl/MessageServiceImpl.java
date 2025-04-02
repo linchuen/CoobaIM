@@ -19,10 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @BehaviorLayer
@@ -89,10 +88,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<ChatSearch> insertMessageGram(Chat chat) {
+        return chatSearchRepository.insertMessageGram(chat);
+    }
+
+    @Override
     public List<Chat> searchWord(long roomId, String word) {
         List<ChatSearch> byWords = chatSearchRepository.findByWord(roomId, word);
         List<Long> chatIds = byWords.stream().map(ChatSearch::getChatId).distinct().toList();
-        return chatRepository.selectByIds(chatIds);
+        return chatIds.isEmpty() ? Collections.emptyList() : chatRepository.selectByIds(chatIds);
     }
 
     @Override

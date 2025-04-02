@@ -3,6 +3,7 @@ package com.cooba.service;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
+import com.cooba.entity.ChatSearch;
 import com.cooba.entity.Notification;
 
 import java.time.LocalDate;
@@ -24,6 +25,8 @@ public interface MessageService {
     List<Chat> getRoomChats(long roomId, LocalDateTime startTime, LocalDateTime endTime);
 
     List<Chat> getRoomChats(long roomId, LocalDate date);
+
+    List<ChatSearch> insertMessageGram(Chat chat);
 
     List<Chat> searchWord(long roomId, String word);
 
