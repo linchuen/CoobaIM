@@ -1,12 +1,11 @@
 package com.cooba.service;
 
-import com.cooba.entity.Chat;
+import com.cooba.dto.SendMessage;
 
 public interface OfflineMessageService {
 
-    void sendToUser(String userId, Chat chat);
+    void sendOffline(SendMessage message);
 
-    void sendToGroup(String group, Chat chat);
 
     void sendToAll(String message);
 }

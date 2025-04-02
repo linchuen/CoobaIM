@@ -16,6 +16,7 @@ import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
 import com.cooba.exception.BaseException;
 import com.cooba.service.MessageService;
+import com.cooba.service.OfflineMessageService;
 import com.cooba.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import java.util.Optional;
 public class ChatComponentImpl implements ChatComponent {
     private final RoomService roomService;
     private final MessageService messageService;
+    private final OfflineMessageService offlineMessageService;
     private final UserThreadLocal userThreadLocal;
 
     @Override
@@ -50,6 +52,7 @@ public class ChatComponentImpl implements ChatComponent {
         }
 
         messageService.sendToUser(message);
+        offlineMessageService.sendOffline(message);
     }
 
     @Override
@@ -70,6 +73,7 @@ public class ChatComponentImpl implements ChatComponent {
         }
 
         messageService.sendToRoom(message);
+        offlineMessageService.sendOffline(message);
     }
 
     @Override
@@ -80,6 +84,7 @@ public class ChatComponentImpl implements ChatComponent {
         message.setMessage(request.getMessage());
 
         messageService.sendToAll(message);
+        offlineMessageService.sendToAll(request.getMessage());
     }
 
     @Override
