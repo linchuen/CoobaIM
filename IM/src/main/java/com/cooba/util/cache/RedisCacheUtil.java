@@ -1,4 +1,4 @@
-package com.cooba.util;
+package com.cooba.util.cache;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @Component
 @RequiredArgsConstructor
-public class RedisCacheUtil implements CacheUtil{
+public class RedisCacheUtil implements CacheUtil {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String get(String key) {

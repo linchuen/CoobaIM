@@ -9,6 +9,7 @@ import com.cooba.exception.BaseException;
 import com.cooba.repository.SessionRepository;
 import com.cooba.service.SessionService;
 import com.cooba.util.JwtUtil;
+import com.cooba.util.lock.LockUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -25,7 +26,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
     private final JwtUtil jwtUtil;
     private final JwtSecret jwtSecret;
-    private final RedissonClient redissonClient;
+    private final LockUtil lockUtil;
 
     @Override
     public Session add(User user, String platform, String ip) {
@@ -53,7 +54,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session add(User user, String currentToken, String platform, String ip) {
-        RLock lock = redissonClient.getLock("session-lock:" + user.getId() + platform);
+        RLock lock = (RLock) lockUtil.getLock("session-lock:" + user.getId() + platform);
         try {
             boolean acquired = lock.tryLock(5, 10, TimeUnit.SECONDS);
             if (acquired) {

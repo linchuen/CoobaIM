@@ -1,4 +1,4 @@
-package com.cooba.util;
+package com.cooba.util.cache;
 
 import com.github.benmanes.caffeine.cache.*;
 

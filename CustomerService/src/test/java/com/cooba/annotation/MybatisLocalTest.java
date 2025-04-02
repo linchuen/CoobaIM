@@ -2,7 +2,7 @@ package com.cooba.annotation;
 
 
 import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
-import com.cooba.util.CacheUtil;
+import com.cooba.util.cache.CacheUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

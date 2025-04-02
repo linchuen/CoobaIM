@@ -7,7 +7,7 @@ import com.cooba.constant.Database;
 import com.cooba.entity.Chat;
 import com.cooba.mapper.ChatMapper;
 import com.cooba.repository.ChatRepository;
-import com.cooba.util.CacheUtil;
+import com.cooba.util.cache.CacheUtil;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
