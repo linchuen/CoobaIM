@@ -64,7 +64,6 @@ class MessageServiceImplTest {
         Mockito.doNothing().when(cacheUtil).set(anyString(), anyString(), any(Duration.class));
 
         SendMessage sendMessage = Instancio.create(SendMessage.class);
-        sendMessage.setType(MessageTypeEnum.TEXT);
         messageService.sendToUser(sendMessage);
 
         List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
@@ -82,7 +81,6 @@ class MessageServiceImplTest {
         Mockito.doNothing().when(cacheUtil).set(anyString(), anyString(), any(Duration.class));
 
         SendMessage sendMessage = Instancio.create(SendMessage.class);
-        sendMessage.setType(MessageTypeEnum.TEXT);
         messageService.sendToRoom(sendMessage);
 
         List<String> chats = messageService.getRoomChats(sendMessage.getRoomId())
@@ -174,7 +172,6 @@ class MessageServiceImplTest {
     @DisplayName("添加聊天關鍵字")
     void insertMessageGram() {
         Chat chat = Instancio.create(Chat.class);
-        chat.setType(MessageTypeEnum.TEXT);
         chat.setMessage("良好的 Java 開發不僅在於寫出可運行的程式，更在於編寫可讀、可維護、可擴展的代碼。");
         List<ChatSearch> chatSearches = messageService.insertMessageGram(chat);
 
@@ -189,19 +186,16 @@ class MessageServiceImplTest {
 
         Chat chat1 = Instancio.create(Chat.class);
         chat1.setRoomId(roomId);
-        chat1.setType(MessageTypeEnum.TEXT);
         chat1.setMessage("結構化設計：在 Java 開發中，良好的架構設計能讓程式更具可維護性與可擴展性。例如，遵循 SOLID 原則可以確保類別之間的責任單一、依賴關係清晰，從而減少未來修改時的影響範圍。");
         messageService.insertMessageGram(chat1);
 
         Chat chat2 = Instancio.create(Chat.class);
         chat2.setRoomId(roomId);
-        chat2.setType(MessageTypeEnum.TEXT);
         chat2.setMessage("異常處理與日誌：一個穩健的 Java 應用應該有完善的異常處理機制，避免應用崩潰。同時，整合如 Logback 或 SLF4J 的日誌系統，能幫助開發者迅速定位錯誤並分析系統行為，提升維護效率。");
         messageService.insertMessageGram(chat2);
 
         Chat chat3 = Instancio.create(Chat.class);
         chat3.setRoomId(roomId);
-        chat3.setType(MessageTypeEnum.TEXT);
         chat3.setMessage("效能與優化：在開發過程中，適當使用 Java 的併發工具（如 CompletableFuture、ForkJoinPool）提升執行效率，並定期進行性能分析（Profiling），找出潛在的效能瓶頸，如不必要的物件創建或 SQL 查詢過多，確保應用高效運行。");
         messageService.insertMessageGram(chat3);
 

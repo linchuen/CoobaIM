@@ -104,7 +104,7 @@ public class UserComponentImpl implements UserComponent {
         User user = userThreadLocal.getCurrentUser();
         String currentToken = userThreadLocal.getCurrentToken();
 
-        Session newSession = sessionService.add(user, currentToken, request.getPlatform(), request.getIp());
+        Session newSession = sessionService.refresh(user, currentToken, request.getPlatform(), request.getIp());
 
         return LoginResponse.builder()
                 .name(user.getName())

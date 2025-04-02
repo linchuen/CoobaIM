@@ -2,6 +2,7 @@ package com.cooba.config;
 
 import com.cooba.util.cache.CacheUtil;
 import com.cooba.util.lock.LockUtil;
+import com.cooba.util.lock.ReentrantLockUtil;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,6 @@ public class MockConfig {
     }
     @Bean
     public LockUtil lockUtil() {
-        return Mockito.mock(LockUtil.class);
+        return new ReentrantLockUtil();
     }
 }

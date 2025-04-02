@@ -53,45 +53,33 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session add(User user, String currentToken, String platform, String ip) {
-        RLock lock = (RLock) lockUtil.getLock("session-lock:" + user.getId() + platform);
-        try {
-            boolean acquired = lock.tryLock(5, 10, TimeUnit.SECONDS);
-            if (acquired) {
-                Session dbSession = sessionRepository.find(user.getId(), platform)
-                        .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
+    public Session refresh(User user, String currentToken, String platform, String ip) {
+       return lockUtil.tryLock("session-lock:" + user.getId() + platform, () -> {
+            Session dbSession = sessionRepository.find(user.getId(), platform)
+                    .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
 
-                if (currentToken.equals(dbSession.getPreToken())) {
-                    return dbSession;
-                }
-
-                if (!currentToken.equals(dbSession.getToken())) {
-                    throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
-                }
-                LocalDateTime now = LocalDateTime.now();
-
-                Session session = new Session();
-                session.setUserId(user.getId());
-                session.setPlatform(platform);
-                session.setLoginTime(now);
-                session.setExpireTime(now.plusDays(jwtSecret.getTtlDay()));
-                session.setIp(ip);
-                session.setPreToken(currentToken);
-                session.setToken(jwtUtil.createToken(user, now));
-                session.setEnable(true);
-                sessionRepository.updateByUserIdAndPlatform(session);
-
-                return session;
+            if (currentToken.equals(dbSession.getPreToken())) {
+                return dbSession;
             }
-            throw new BaseException(ErrorEnum.NETWORK_ERROR);
-        } catch (InterruptedException e) {
-            throw new BaseException(ErrorEnum.NETWORK_ERROR);
-        } finally {
-            if (lock.isLocked()) {
-                lock.unlock();
-            }
-        }
 
+            if (!currentToken.equals(dbSession.getToken())) {
+                throw new BaseException(ErrorEnum.JWT_TOKEN_INVALID);
+            }
+            LocalDateTime now = LocalDateTime.now();
+
+            Session session = new Session();
+            session.setUserId(user.getId());
+            session.setPlatform(platform);
+            session.setLoginTime(now);
+            session.setExpireTime(now.plusDays(jwtSecret.getTtlDay()));
+            session.setIp(ip);
+            session.setPreToken(currentToken);
+            session.setToken(jwtUtil.createToken(user, now));
+            session.setEnable(true);
+            sessionRepository.updateByUserIdAndPlatform(session);
+
+            return session;
+        });
     }
 
     @Override

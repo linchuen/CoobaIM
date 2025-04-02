@@ -64,8 +64,6 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
     @Async
     @Override
     public List<ChatSearch> insertMessageGram(Chat chat) {
-        if (chat.getType() != MessageTypeEnum.TEXT) return Collections.emptyList();
-
         List<ChatSearch> chatSearches = NgramUtil.generate2gramsWord(chat.getMessage())
                 .stream()
                 .map(s -> {
