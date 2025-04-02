@@ -9,11 +9,13 @@ import com.cooba.dto.SendMessage;
 import com.cooba.entity.Chat;
 import com.cooba.entity.ChatSearch;
 import com.cooba.entity.Notification;
+import com.cooba.mapper.ChatMapper;
 import com.cooba.repository.ChatRepository;
 import com.cooba.service.MessageService;
 import com.cooba.util.CacheUtil;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,12 +47,19 @@ class MessageServiceImplTest {
     MessageService messageService;
     @Autowired
     ChatRepository chatRepository;
+    @Autowired
+    ChatMapper chatMapper;
     @MockitoBean
     SocketConnection socketConnection;
     @MockitoBean
     UserThreadLocal userThreadLocal;
     @Autowired
     CacheUtil cacheUtil;
+
+    @AfterEach
+    void deleteAll() {
+        chatMapper.delete(null);
+    }
 
     @Test
     @DisplayName("發送訊息給用戶")
@@ -107,8 +116,7 @@ class MessageServiceImplTest {
     @DisplayName("根據id取得聊天記錄")
     void getRoomChatsById() {
         long roomId = 1;
-        int begin = (int) roomId * 10;
-        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
+        List<Chat> chats = IntStream.rangeClosed(1, 10)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -127,9 +135,8 @@ class MessageServiceImplTest {
     @DisplayName("根據時間取得聊天記錄")
     void getRoomChatsByTime() {
         long roomId = 2;
-        int begin = (int) roomId * 10;
         LocalDateTime now = LocalDateTime.now();
-        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
+        List<Chat> chats = IntStream.rangeClosed(1, 10)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -149,9 +156,8 @@ class MessageServiceImplTest {
     @DisplayName("根據日期取得聊天記錄")
     void getRoomChatsByDate() {
         long roomId = 3;
-        int begin = (int) roomId * 10;
         LocalDateTime now = LocalDateTime.now();
-        List<Chat> chats = IntStream.rangeClosed(begin, begin + 3)
+        List<Chat> chats = IntStream.rangeClosed(1, 3)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -218,9 +224,8 @@ class MessageServiceImplTest {
     @DisplayName("驗證已讀數量")
     void getRoomUnread() {
         long roomId = 5;
-        int begin = (int) roomId * 10;
-        LocalDateTime now = LocalDateTime.now();
-        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
+
+        List<Chat> chats = IntStream.range(1, 10)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -231,9 +236,9 @@ class MessageServiceImplTest {
                 .toList();
         chatRepository.insert(chats);
 
-        messageService.setRoomIsRead(roomId, begin + 3);
+        messageService.setRoomIsRead(roomId, 3);
 
         long unread = messageService.getRoomUnread(roomId);
-        Assertions.assertEquals(7, unread);
+        Assertions.assertEquals(6, unread);
     }
 }
