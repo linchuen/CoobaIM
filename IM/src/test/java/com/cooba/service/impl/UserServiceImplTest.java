@@ -19,10 +19,10 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-@Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {UserServiceImpl.class})
 @Sql(scripts = {"/sql/User-schema.sql", "/sql/UserDetail-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/User-delete.sql", "/sql/UserDetail-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class UserServiceImplTest {
     @Autowired
     UserService userService;

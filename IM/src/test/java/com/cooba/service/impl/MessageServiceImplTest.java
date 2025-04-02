@@ -34,14 +34,12 @@ import java.util.stream.IntStream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {MessageServiceImpl.class})
-@Sql(scripts = {"/sql/Chat-schema.sql",
-        "/sql/Notification-schema.sql",
-        "/sql/ChatSearch-schema.sql",
-        "/sql/ChatRead-schema.sql",
+@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql", "/sql/ChatSearch-schema.sql", "/sql/ChatRead-schema.sql",
 }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Chat-delete.sql", "/sql/Notification-delete.sql", "/sql/ChatSearch-delete.sql", "/sql/ChatRead-delete.sql",
+}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class MessageServiceImplTest {
     @Autowired
     MessageService messageService;

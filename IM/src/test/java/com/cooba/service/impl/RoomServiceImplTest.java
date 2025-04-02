@@ -21,10 +21,10 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-@Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {RoomServiceImpl.class})
 @Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql", "/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Room-delete.sql", "/sql/RoomUser-delete.sql", "/sql/User-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class RoomServiceImplTest {
     @Autowired
     RoomService roomService;

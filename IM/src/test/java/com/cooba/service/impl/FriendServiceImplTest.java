@@ -23,6 +23,7 @@ import org.springframework.test.context.jdbc.Sql;
 @MybatisLocalTest
 @ContextConfiguration(classes = {FriendServiceImpl.class})
 @Sql(scripts = {"/sql/Friend-schema.sql", "/sql/FriendApply-schema.sql", "/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Friend-delete.sql", "/sql/FriendApply-delete.sql", "/sql/User-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class FriendServiceImplTest {
     @Autowired
     FriendService friendService;

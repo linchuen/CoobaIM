@@ -58,7 +58,10 @@ public class Hibernate {
         schemaExport.setOutputFile("IM/" + c.getSimpleName() + "-schema.sql");
 
         // 指定目標：控制台輸出和數據庫應用
-        schemaExport.createOnly(EnumSet.of(TargetType.SCRIPT), metadata);
+        schemaExport.create(EnumSet.of(TargetType.SCRIPT), metadata);
+
+        schemaExport.setOutputFile("IM/" + c.getSimpleName() + "-delete.sql");
+        schemaExport.drop(EnumSet.of(TargetType.SCRIPT), metadata);
     }
 
     private static Map<String, Object> getConfig() {
