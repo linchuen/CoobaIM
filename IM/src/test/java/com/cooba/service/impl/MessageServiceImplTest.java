@@ -27,6 +27,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -143,7 +144,7 @@ class MessageServiceImplTest {
                 .toList();
         chatRepository.insert(chats);
 
-        List<Chat> roomChats = messageService.getRoomChats(roomId, now.minusDays(5), now);
+        List<Chat> roomChats = messageService.getRoomChats(roomId, now.minusDays(5).with(LocalTime.MIN), now);
         Assertions.assertEquals(5, roomChats.size());
     }
 
