@@ -35,7 +35,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 @Rollback(value = false)
 @MybatisLocalTest
 @ContextConfiguration(classes = {MessageServiceImpl.class})
-@Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql", "/sql/ChatSearch-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = {"/sql/Chat-schema.sql",
+        "/sql/Notification-schema.sql",
+        "/sql/ChatSearch-schema.sql",
+        "/sql/ChatRead-schema.sql",
+}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 class MessageServiceImplTest {
     @Autowired
     MessageService messageService;
@@ -103,7 +107,8 @@ class MessageServiceImplTest {
     @DisplayName("根據id取得聊天記錄")
     void getRoomChatsById() {
         long roomId = 1;
-        List<Chat> chats = IntStream.rangeClosed(1, 10)
+        int begin = (int) roomId * 10;
+        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -122,8 +127,9 @@ class MessageServiceImplTest {
     @DisplayName("根據時間取得聊天記錄")
     void getRoomChatsByTime() {
         long roomId = 2;
+        int begin = (int) roomId * 10;
         LocalDateTime now = LocalDateTime.now();
-        List<Chat> chats = IntStream.rangeClosed(1, 10)
+        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -143,8 +149,9 @@ class MessageServiceImplTest {
     @DisplayName("根據日期取得聊天記錄")
     void getRoomChatsByDate() {
         long roomId = 3;
+        int begin = (int) roomId * 10;
         LocalDateTime now = LocalDateTime.now();
-        List<Chat> chats = IntStream.rangeClosed(1, 3)
+        List<Chat> chats = IntStream.rangeClosed(begin, begin + 3)
                 .boxed()
                 .map(i -> {
                     Chat chat = Instancio.create(Chat.class);
@@ -208,14 +215,25 @@ class MessageServiceImplTest {
     }
 
     @Test
-    @DisplayName("根據日期取得聊天記錄")
-    void setRoomIsRead() {
-
-    }
-
-    @Test
-    @DisplayName("根據日期取得聊天記錄")
+    @DisplayName("驗證已讀數量")
     void getRoomUnread() {
+        long roomId = 5;
+        int begin = (int) roomId * 10;
+        LocalDateTime now = LocalDateTime.now();
+        List<Chat> chats = IntStream.rangeClosed(begin, begin + 10)
+                .boxed()
+                .map(i -> {
+                    Chat chat = Instancio.create(Chat.class);
+                    chat.setId(Long.valueOf(i));
+                    chat.setRoomId(roomId);
+                    return chat;
+                })
+                .toList();
+        chatRepository.insert(chats);
 
+        messageService.setRoomIsRead(roomId, begin + 3);
+
+        long unread = messageService.getRoomUnread(roomId);
+        Assertions.assertEquals(7, unread);
     }
 }

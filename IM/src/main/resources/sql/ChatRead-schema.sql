@@ -8,5 +8,5 @@
         primary key (id)
     ) engine=InnoDB;
 
-    create index idx_roomId 
+    create index idx_read_roomId
        on t_chat_read (room_id, user_id);
