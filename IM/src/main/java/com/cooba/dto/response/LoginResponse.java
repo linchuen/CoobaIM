@@ -1,5 +1,6 @@
 package com.cooba.dto.response;
 
+import com.cooba.constant.PlatformEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class LoginResponse {
     private String name;
     private String token;
     private String role;
-    private String platform;
+    private PlatformEnum platform;
     private String avatar;
     private LocalDateTime loginTime;
     private LocalDateTime expireTime;

@@ -2,6 +2,7 @@ package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.constant.JwtSecret;
+import com.cooba.constant.PlatformEnum;
 import com.cooba.entity.Session;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
@@ -30,9 +31,9 @@ class SessionServiceImplTest {
     @DisplayName("建立session")
     void add() {
         User user = Instancio.create(User.class);
-        sessionService.add(user, "web", "");
+        sessionService.add(user, PlatformEnum.web, "");
 
-        Session session = sessionService.getInfo(user.getId(), "");
+        Session session = sessionService.getInfo(user.getId(), PlatformEnum.web);
         Assertions.assertNotNull(session);
         Assertions.assertTrue(session.getEnable());
     }
@@ -43,16 +44,16 @@ class SessionServiceImplTest {
         String token = "invalid token";
         User user = Instancio.create(User.class);
 
-        Assertions.assertThrows(BaseException.class, () -> sessionService.refresh(user, token, "web", ""));
+        Assertions.assertThrows(BaseException.class, () -> sessionService.refresh(user, token, PlatformEnum.web, ""));
     }
 
     @Test
     @DisplayName("刷新session")
     void addWithRefreshToken() {
         User user = Instancio.create(User.class);
-        Session session = sessionService.add(user, "web", "");
+        Session session = sessionService.add(user, PlatformEnum.web, "");
 
-        Session added = sessionService.refresh(user, session.getToken(), "web", "");
+        Session added = sessionService.refresh(user, session.getToken(), PlatformEnum.web, "");
 
         Assertions.assertNotEquals(added.getToken(), session.getToken());
     }
@@ -61,10 +62,10 @@ class SessionServiceImplTest {
     @DisplayName("重複刷新session")
     void addWithRefreshTokenTwice() {
         User user = Instancio.create(User.class);
-        Session session = sessionService.add(user, "web", "");
+        Session session = sessionService.add(user, PlatformEnum.web, "");
 
-        Session added1 = sessionService.refresh(user, session.getToken(), "web", "");
-        Session added2 = sessionService.refresh(user, session.getToken(), "web", "");
+        Session added1 = sessionService.refresh(user, session.getToken(), PlatformEnum.web, "");
+        Session added2 = sessionService.refresh(user, session.getToken(), PlatformEnum.web, "");
 
         Assertions.assertNotEquals(added1.getToken(), session.getToken());
         Assertions.assertEquals(added1.getToken(), added2.getToken());
@@ -74,11 +75,11 @@ class SessionServiceImplTest {
     @DisplayName("移除session")
     void remove() {
         User user = Instancio.create(User.class);
-        sessionService.add(user, "web", "");
+        sessionService.add(user, PlatformEnum.web, "");
 
-        sessionService.remove(user, "web");
+        sessionService.remove(user, PlatformEnum.web);
 
-        Session session = sessionService.getInfo(user.getId(), "");
+        Session session = sessionService.getInfo(user.getId(), PlatformEnum.web);
         Assertions.assertNotNull(session);
         Assertions.assertFalse(session.getEnable());
     }

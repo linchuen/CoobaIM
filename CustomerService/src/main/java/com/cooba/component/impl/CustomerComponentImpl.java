@@ -3,6 +3,7 @@ package com.cooba.component.impl;
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.CustomerComponent;
+import com.cooba.constant.PlatformEnum;
 import com.cooba.constant.RoleEnum;
 import com.cooba.constatnt.CsEventEnum;
 import com.cooba.core.SocketConnection;
@@ -138,7 +139,7 @@ public class CustomerComponentImpl implements CustomerComponent {
     public LoginResponse getGuestToken() {
         long guestId = guestService.getRandomGuest();
         User user = userService.getInfo(guestId);
-        Session session = sessionService.add(user, "web", "");
+        Session session = sessionService.add(user, PlatformEnum.web, "");
 
         return LoginResponse.builder()
                 .name(user.getName())

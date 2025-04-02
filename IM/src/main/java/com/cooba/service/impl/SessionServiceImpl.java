@@ -3,6 +3,7 @@ package com.cooba.service.impl;
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.JwtSecret;
+import com.cooba.constant.PlatformEnum;
 import com.cooba.entity.Session;
 import com.cooba.entity.User;
 import com.cooba.exception.BaseException;
@@ -12,12 +13,9 @@ import com.cooba.util.JwtUtil;
 import com.cooba.util.lock.LockUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @BehaviorLayer
@@ -29,14 +27,14 @@ public class SessionServiceImpl implements SessionService {
     private final LockUtil lockUtil;
 
     @Override
-    public Session add(User user, String platform, String ip) {
+    public Session add(User user, PlatformEnum platform, String ip) {
         Optional<Session> dbSession = sessionRepository.find(user.getId(), platform);
 
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
         session.setUserId(user.getId());
-        session.setPlatform(platform);
+        session.setPlatform(PlatformEnum.web);
         session.setLoginTime(now);
         session.setExpireTime(now.plusDays(jwtSecret.getTtlDay()));
         session.setIp(ip);
@@ -53,7 +51,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session refresh(User user, String currentToken, String platform, String ip) {
+    public Session refresh(User user, String currentToken, PlatformEnum platform, String ip) {
        return lockUtil.tryLock("session-lock:" + user.getId() + platform, () -> {
             Session dbSession = sessionRepository.find(user.getId(), platform)
                     .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
@@ -83,7 +81,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public LocalDateTime remove(User user, String platform) {
+    public LocalDateTime remove(User user, PlatformEnum platform) {
         LocalDateTime now = LocalDateTime.now();
 
         Session session = new Session();
@@ -97,7 +95,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session getInfo(long userId, String platform) {
+    public Session getInfo(long userId, PlatformEnum platform) {
         return sessionRepository.find(userId, platform)
                 .orElseThrow(() -> new BaseException(ErrorEnum.SESSION_NOT_EXIST));
     }

@@ -1,5 +1,6 @@
 package com.cooba.dto.request;
 
+import com.cooba.constant.PlatformEnum;
 import lombok.Data;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -13,8 +14,8 @@ public class LoginRequest {
     @NotEmpty
     private String password;
 
-    @NotEmpty
-    private String platform;
+    @NotNull
+    private PlatformEnum platform;
 
     private String ip;
 }

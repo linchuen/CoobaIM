@@ -1,5 +1,6 @@
 package com.cooba.dto.request;
 
+import com.cooba.constant.PlatformEnum;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -10,5 +11,5 @@ public class LogoutRequest {
     @NotNull
     private Long userId;
     @NotEmpty
-    private String platform;
+    private PlatformEnum platform;
 }

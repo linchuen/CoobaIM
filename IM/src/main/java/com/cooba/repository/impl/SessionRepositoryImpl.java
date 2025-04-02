@@ -2,6 +2,7 @@ package com.cooba.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cooba.annotation.DataManipulateLayer;
+import com.cooba.constant.PlatformEnum;
 import com.cooba.entity.Session;
 import com.cooba.mapper.SessionMapper;
 import com.cooba.repository.SessionRepository;
@@ -51,7 +52,7 @@ public class SessionRepositoryImpl implements SessionRepository {
     }
 
     @Override
-    public Optional<Session> find(long userId, String platform) {
+    public Optional<Session> find(long userId, PlatformEnum platform) {
         Session session = sessionMapper.selectOne(new LambdaQueryWrapper<Session>()
                 .eq(Session::getUserId, userId)
                 .eq(Session::getPlatform, platform));

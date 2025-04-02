@@ -3,6 +3,7 @@ package com.cooba.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.cooba.annotation.IMEntity;
+import com.cooba.constant.PlatformEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class Session {
     private String preToken;
 
     @Column(nullable = false)
-    private String platform;
+    private PlatformEnum platform;
 
     @Column
     private String ip;

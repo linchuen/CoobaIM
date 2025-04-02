@@ -6,7 +6,7 @@
         ip varchar(255),
         login_time datetime(6) not null,
         logout_time datetime(6),
-        platform varchar(255) not null,
+        platform tinyint not null check (platform between 0 and 3),
         pre_token varchar(1000),
         token varchar(1000) not null,
         user_id bigint not null,
