@@ -128,4 +128,22 @@ class RoomServiceImplTest {
         RoomUser select = roomUserRepository.selectById(roomUser.getId());
         Assertions.assertNull(select);
     }
+
+    @Test
+    @DisplayName("轉移用戶權限")
+    void transferUser() {
+        long masterId = 1L;
+        long memberId = 2L;
+        Mockito.when(userThreadLocal.getCurrentUserId()).thenReturn(masterId);
+        Mockito.when(userThreadLocal.getCurrentUserName()).thenReturn("test name");
+
+        Room room = Instancio.create(Room.class);
+        roomService.build(room, List.of(memberId));
+
+        roomService.transferUser(room.getId(), masterId, memberId);
+
+        RoomUser member = roomUserRepository.find(room.getId(),memberId).orElseThrow();
+        Assertions.assertSame(RoomRoleEnum.MASTER,member.getRoomRoleEnum() );
+    }
+
 }

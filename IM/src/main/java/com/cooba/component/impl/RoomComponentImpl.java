@@ -147,10 +147,7 @@ public class RoomComponentImpl implements RoomComponent {
         User requestUser = userService.getInfo(request.getUserId());
         if (Objects.equals(requestUser.getId(), user.getId())) throw new BaseException(ErrorEnum.FORBIDDEN);
 
-        RoomUser transferUser = new RoomUser();
-        transferUser.setRoomId(request.getRoomId());
-        transferUser.setUserId(request.getUserId());
-        roomService.transferUser(roomUser, transferUser);
+        roomService.transferUser(request.getRoomId(), user.getId(), request.getUserId());
     }
 
     @Override
