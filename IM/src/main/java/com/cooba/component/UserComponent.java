@@ -2,13 +2,12 @@ package com.cooba.component;
 
 import com.cooba.dto.request.*;
 import com.cooba.dto.response.*;
-import com.cooba.entity.User;
 
 public interface UserComponent {
 
     RegisterResponse register(RegisterRequest request);
 
-    User getInfo(long userId);
+    UserDetailResponse getDetail();
 
     LoginResponse login(LoginRequest request);
 

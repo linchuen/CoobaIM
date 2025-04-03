@@ -23,7 +23,6 @@ import com.cooba.service.SessionService;
 import com.cooba.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -41,7 +40,6 @@ public class UserComponentImpl implements UserComponent {
     private final SessionService sessionService;
     private final UserThreadLocal userThreadLocal;
     private final SocketConnection socketConnection;
-    private final Redisson redisson;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -58,8 +56,12 @@ public class UserComponentImpl implements UserComponent {
     }
 
     @Override
-    public User getInfo(long userId) {
-        return userService.getInfo(userId);
+    public UserDetailResponse getDetail() {
+        long currentUserId = userThreadLocal.getCurrentUserId();
+        UserDetail userDetail = userService.getDetail(currentUserId);
+        return UserDetailResponse.builder()
+                .userDetail(userDetail)
+                .build();
     }
 
     @Override

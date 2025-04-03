@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @DataManipulateLayer
@@ -39,6 +40,13 @@ public class UserDetailRepositoryImpl implements UserDetailRepository {
     @Override
     public void deleteById(long id) {
         userDetailMapper.deleteById(id);
+    }
+
+    @Override
+    public Optional<UserDetail> findByUserId(long userId) {
+        UserDetail userDetail = userDetailMapper.selectOne(new LambdaQueryWrapper<UserDetail>()
+                .eq(UserDetail::getUserId, userId));
+        return Optional.ofNullable(userDetail);
     }
 
     @Override

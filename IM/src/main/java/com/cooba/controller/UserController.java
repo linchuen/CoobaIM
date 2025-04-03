@@ -64,4 +64,11 @@ public class UserController {
         RoomResponse response = userComponent.leaveRoom(request);
         return ResultResponse.builder().data(response).build();
     }
+
+    @GetMapping("/detail")
+    @Operation(summary = "用戶詳情")
+    public ResultResponse<?> getDetail() {
+        UserDetailResponse response = userComponent.getDetail();
+        return ResultResponse.builder().data(response).build();
+    }
 }

@@ -77,6 +77,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDetail getDetail(long userId) {
+        return userDetailRepository.findByUserId(userId)
+                .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
+    }
+
+    @Override
     public List<User> getInfoList(List<Long> userIds) {
         return userRepository.selectByIds(userIds);
     }
