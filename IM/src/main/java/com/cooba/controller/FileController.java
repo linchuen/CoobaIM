@@ -20,6 +20,13 @@ import java.io.InputStream;
 public class FileController {
     private final FileComponent fileComponent;
 
+    @PostMapping("/upload/avatar")
+    @ResponseBody
+    public ResultResponse<?> uploadAvatar(@RequestParam MultipartFile file) {
+        UploadFileResponse response = fileComponent.uploadFile(file);
+        return ResultResponse.builder().data(response).build();
+    }
+
     @PostMapping("/upload/{roomId}")
     @ResponseBody
     public ResultResponse<?> uploadFile(@PathVariable Long roomId, @RequestParam MultipartFile file) {
