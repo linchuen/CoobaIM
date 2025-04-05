@@ -1,6 +1,7 @@
 
     create table t_room_user (
         id bigint not null auto_increment,
+        avatar varchar(255),
         created_time datetime(6) not null,
         room_id bigint not null,
         room_role_enum tinyint not null check (room_role_enum between 0 and 2),
