@@ -31,6 +31,7 @@ public class Session {
     private String preToken;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private PlatformEnum platform;
 
     @Column
