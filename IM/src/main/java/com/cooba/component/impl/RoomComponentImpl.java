@@ -92,6 +92,8 @@ public class RoomComponentImpl implements RoomComponent {
         RoomUser newRoomUser = new RoomUser();
         newRoomUser.setRoomId(request.getRoomId());
         newRoomUser.setUserId(request.getUserId());
+        newRoomUser.setShowName(newUser.getName());
+        newRoomUser.setAvatar(newUser.getAvatar());
         roomService.addUser(newRoomUser);
 
         userService.connectRoom(newRoomUser);

@@ -123,10 +123,13 @@ public class UserComponentImpl implements UserComponent {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RoomResponse enterRoom(RoomUserRequest request) {
+        User user = userService.getInfo(request.getUserId());
+
         RoomUser roomUser = new RoomUser();
         roomUser.setRoomId(request.getRoomId());
         roomUser.setUserId(request.getUserId());
-
+        roomUser.setShowName(user.getName());
+        roomUser.setAvatar(user.getAvatar());
         roomService.addUser(roomUser);
 
         userService.connectRoom(roomUser);

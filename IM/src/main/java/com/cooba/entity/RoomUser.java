@@ -34,6 +34,9 @@ public class RoomUser {
     @Column(nullable = false)
     private String showName;
 
+    @Column
+    private String avatar;
+
     @Column(nullable = false)
     private RoomRoleEnum roomRoleEnum = RoomRoleEnum.MEMBER;
 

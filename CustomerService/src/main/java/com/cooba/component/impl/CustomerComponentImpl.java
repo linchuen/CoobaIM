@@ -5,6 +5,7 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.CustomerComponent;
 import com.cooba.constant.PlatformEnum;
 import com.cooba.constant.RoleEnum;
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.constatnt.CsEventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.CustomerAgentInfo;
@@ -75,11 +76,7 @@ public class CustomerComponentImpl implements CustomerComponent {
                 Agent suitableAgent = routeAgentService.findSuitableAgent(currentUser);
                 User redirectAgentInfo = userService.getInfo(suitableAgent.getUserId());
 
-                RoomUser roomUser = new RoomUser();
-                roomUser.setRoomId(ticket.getRoomId());
-                roomUser.setUserId(redirectAgentInfo.getId());
-                roomUser.setShowName(redirectAgentInfo.getName());
-                roomService.addUser(roomUser);
+                roomService.addUser(ticket.getRoomId(), redirectAgentInfo, RoomRoleEnum.MEMBER);
             }
             return CustomerEnterResponse.builder()
                     .ticket(ticket)

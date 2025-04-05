@@ -1,7 +1,9 @@
 package com.cooba.service;
 
+import com.cooba.constant.RoomRoleEnum;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
+import com.cooba.entity.User;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ public interface RoomService {
     long build(Room room, long masterUserId, List<Long> userIds);
 
     void destroy(long roomId);
+
+    void addUser(long roomId, User user, RoomRoleEnum roleEnum);
 
     void addUser(RoomUser roomUser);
 

@@ -176,15 +176,11 @@ public class AgentComponentImpl implements AgentComponent {
     public TicketTransferResponse transferTicket(TicketTransferRequest request) {
         User currentUser = userThreadLocal.getCurrentUser();
         Agent agent = agentService.search(currentUser.getId());
+
         Agent transferAgent = agentService.search(request.getTransferUserId());
         User transferUser = userService.getInfo(transferAgent.getUserId());
 
-        RoomUser roomUser = new RoomUser();
-        roomUser.setRoomId(request.getRoomId());
-        roomUser.setUserId(transferAgent.getId());
-        roomUser.setShowName(transferUser.getName());
-        roomUser.setRoomRoleEnum(RoomRoleEnum.MASTER);
-        roomService.addUser(roomUser);
+        roomService.addUser(request.getRoomId(), transferUser, RoomRoleEnum.MASTER);
 
         RoomUser removeRoomUser = new RoomUser();
         removeRoomUser.setRoomId(request.getRoomId());

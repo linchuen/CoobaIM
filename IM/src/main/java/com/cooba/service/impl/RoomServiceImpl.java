@@ -46,13 +46,16 @@ public class RoomServiceImpl implements RoomService {
 
         ArrayList<Long> userIdList = new ArrayList<>(userIds);
         userIdList.add(masterUserId);
-        Map<Long, String> userMap = userRepository.selectByIds(userIdList).stream().collect(Collectors.toMap(User::getId, User::getName));
+        List<User> users = userRepository.selectByIds(userIdList);
+        Map<Long, String> userMap = users.stream().collect(Collectors.toMap(User::getId, User::getName));
+        Map<Long, String> avatarrMap = users.stream().collect(Collectors.toMap(User::getId, User::getAvatar));
 
         RoomUser roomMaster = new RoomUser();
         roomMaster.setUserId(masterUserId);
         roomMaster.setRoomId(room.getId());
         roomMaster.setShowName(userMap.getOrDefault(masterUserId, String.valueOf(masterUserId)));
         roomMaster.setRoomRoleEnum(RoomRoleEnum.MASTER);
+        roomMaster.setAvatar(avatarrMap.get(masterUserId));
 
         List<RoomUser> roomUsers = userIds.stream().map(userId -> {
             RoomUser roomUser = new RoomUser();
@@ -60,6 +63,7 @@ public class RoomServiceImpl implements RoomService {
             roomUser.setRoomId(room.getId());
             roomUser.setShowName(userMap.getOrDefault(userId, String.valueOf(userId)));
             roomUser.setRoomRoleEnum(RoomRoleEnum.MEMBER);
+            roomUser.setAvatar(avatarrMap.get(userId));
             return roomUser;
         }).collect(Collectors.toList());
 
@@ -73,6 +77,17 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.deleteById(roomId);
 
         roomUserRepository.delete(roomId);
+    }
+
+    @Override
+    public void addUser(long roomId, User user, RoomRoleEnum roleEnum) {
+        RoomUser roomUser = new RoomUser();
+        roomUser.setRoomId(roomId);
+        roomUser.setUserId(user.getId());
+        roomUser.setShowName(user.getName());
+        roomUser.setAvatar(user.getAvatar());
+        roomUser.setRoomRoleEnum(roleEnum);
+        this.addUser(roomUser);
     }
 
     @Override
