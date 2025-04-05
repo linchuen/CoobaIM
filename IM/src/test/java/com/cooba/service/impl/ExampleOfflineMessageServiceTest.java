@@ -17,13 +17,12 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @MybatisLocalTest
 @ContextConfiguration(classes = {ExampleOfflineMessageService.class})
 @Sql(scripts = {"/sql/RoomUser-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {"/sql/RoomUser-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(scripts = {"/delete/RoomUser-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class ExampleOfflineMessageServiceTest {
     @Autowired
     ExampleOfflineMessageService offlineMessageService;

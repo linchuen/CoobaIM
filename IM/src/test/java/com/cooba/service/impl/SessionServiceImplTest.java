@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 @MybatisLocalTest
 @ContextConfiguration(classes = {SessionServiceImpl.class, JwtUtil.class, JwtSecret.class})
 @Sql(scripts = {"/sql/Session-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {"/sql/Session-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(scripts = {"/delete/Session-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class SessionServiceImplTest {
     @Autowired
     SessionService sessionService;

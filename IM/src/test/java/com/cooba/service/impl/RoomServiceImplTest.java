@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,7 +23,7 @@ import java.util.List;
 @MybatisLocalTest
 @ContextConfiguration(classes = {RoomServiceImpl.class})
 @Sql(scripts = {"/sql/Room-schema.sql", "/sql/RoomUser-schema.sql", "/sql/User-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {"/sql/Room-delete.sql", "/sql/RoomUser-delete.sql", "/sql/User-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(scripts = {"/delete/Room-delete.sql", "/delete/RoomUser-delete.sql", "/delete/User-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class RoomServiceImplTest {
     @Autowired
     RoomService roomService;

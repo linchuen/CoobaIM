@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
@@ -22,7 +21,7 @@ import java.util.List;
 @MybatisLocalTest
 @ContextConfiguration(classes = {UserServiceImpl.class})
 @Sql(scripts = {"/sql/User-schema.sql", "/sql/UserDetail-schema.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {"/sql/User-delete.sql", "/sql/UserDetail-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
+@Sql(scripts = {"/delete/User-delete.sql", "/delete/UserDetail-delete.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class UserServiceImplTest {
     @Autowired
     UserService userService;

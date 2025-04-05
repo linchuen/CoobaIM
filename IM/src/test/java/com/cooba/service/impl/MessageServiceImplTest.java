@@ -2,7 +2,6 @@ package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
 import com.cooba.aop.UserThreadLocal;
-import com.cooba.constant.MessageTypeEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
@@ -38,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @ContextConfiguration(classes = {MessageServiceImpl.class})
 @Sql(scripts = {"/sql/Chat-schema.sql", "/sql/Notification-schema.sql", "/sql/ChatSearch-schema.sql", "/sql/ChatRead-schema.sql",
 }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {"/sql/Chat-delete.sql", "/sql/Notification-delete.sql", "/sql/ChatSearch-delete.sql", "/sql/ChatRead-delete.sql",
+@Sql(scripts = {"/delete/Chat-delete.sql", "/delete/Notification-delete.sql", "/delete/ChatSearch-delete.sql", "/delete/ChatRead-delete.sql",
 }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
 class MessageServiceImplTest {
     @Autowired

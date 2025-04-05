@@ -55,12 +55,12 @@ public class Hibernate {
         schemaExport.setFormat(true);
         schemaExport.setOverrideOutputFileContent();
         schemaExport.setManageNamespaces(true);
-        schemaExport.setOutputFile("IM/" + c.getSimpleName() + "-schema.sql");
+        schemaExport.setOutputFile("IM/src/main/resources/sql/" + c.getSimpleName() + "-schema.sql");
 
         // 指定目標：控制台輸出和數據庫應用
         schemaExport.create(EnumSet.of(TargetType.SCRIPT), metadata);
 
-        schemaExport.setOutputFile("IM/" + c.getSimpleName() + "-delete.sql");
+        schemaExport.setOutputFile("IM/src/main/resources/delete/" + c.getSimpleName() + "-delete.sql");
         schemaExport.drop(EnumSet.of(TargetType.SCRIPT), metadata);
     }
 
