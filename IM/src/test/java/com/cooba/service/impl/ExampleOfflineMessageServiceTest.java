@@ -46,7 +46,7 @@ class ExampleOfflineMessageServiceTest {
 
         SendMessage sendMessage = Instancio.create(SendMessage.class);
         sendMessage.setRoomId(roomId);
-        offlineMessageService.sendOffline(sendMessage);
+        offlineMessageService.sendOffline(, sendMessage);
 
         Mockito.verify(connectionManager, Mockito.times(roomUsers.size())).isUserOnline(anyString());
     }
