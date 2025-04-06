@@ -8,7 +8,7 @@ CREATE TABLE im.t_chat (
     url String NULL,
     type Int8 NOT NULL,
     version Int32 NULL,
-    created_time DateTime DEFAULT now() NOT NULL
+    created_time DateTime64 DEFAULT now() NOT NULL
 )
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(created_time)

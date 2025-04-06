@@ -3,7 +3,7 @@ CREATE TABLE im.t_chat_search (
     room_id Int64 NOT NULL,
     message_gram String NOT NULL,
     chat_id Int64 NOT NULL,
-    created_time DateTime DEFAULT now() NOT NULL
+    created_time DateTime64 DEFAULT now() NOT NULL
 )
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(created_time)

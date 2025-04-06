@@ -112,7 +112,7 @@ public class ClickHouseSQLGenerator {
         } else if (javaType == java.time.LocalDate.class) {
             return "Date";
         } else if (javaType == java.time.LocalDateTime.class) {
-            return "DateTime DEFAULT now()";
+            return "DateTime64 DEFAULT now()";
         }
         return "String";
     }

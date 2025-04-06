@@ -17,6 +17,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
 @Disabled
 @Rollback(value = false)
 @ActiveProfiles(value = "ck")
@@ -34,5 +36,19 @@ class ChatSearchRepositoryImplTest {
         chatSearch.setId(null);
         chatSearchRepository.insert(chatSearch);
         Assertions.assertNotNull(chatSearch.getId());
+    }
+
+    @Test
+    void findByWord() {
+        ChatSearch chatSearch = Instancio.create(ChatSearch.class);
+        chatSearch.setId(null);
+        chatSearchRepository.insert(chatSearch);
+
+        List<ChatSearch> byWord = chatSearchRepository.findByWord(chatSearch.getRoomId(), chatSearch.getMessageGram());
+        Assertions.assertFalse(byWord.isEmpty());
+    }
+
+    @Test
+    void insertMessageGram() {
     }
 }
