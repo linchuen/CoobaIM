@@ -59,7 +59,7 @@ public class ChatRepositoryImpl implements ChatRepository {
                 .eq(Chat::getRoomId, roomId)
                 .gt(searchAfter && chatId != null, Chat::getId, chatId)
                 .lt(!searchAfter && chatId != null, Chat::getId, chatId)
-                .orderByDesc(Chat::getId)
+                .orderByAsc(Chat::getId)
                 .last("limit 100")
         );
     }
@@ -77,7 +77,7 @@ public class ChatRepositoryImpl implements ChatRepository {
                 .eq(Chat::getRoomId, roomId)
                 .ge(Chat::getCreatedTime, startTime)
                 .le(Chat::getCreatedTime, endTime)
-                .orderByDesc(Chat::getId)
+                .orderByAsc(Chat::getId)
                 .last("limit 100")
         );
     }
