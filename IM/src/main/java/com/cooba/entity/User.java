@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -16,10 +17,10 @@ import java.util.Set;
 @IMEntity
 @Entity
 @Table(uniqueConstraints = {
-                @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
-                @UniqueConstraint(name = "uk_name", columnNames = {"name"})
-        })
-public class User implements UserDetails{
+        @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "uk_name", columnNames = {"name"})
+})
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @TableId(type = IdType.AUTO)
@@ -37,8 +38,8 @@ public class User implements UserDetails{
     @Column(nullable = false)
     private String role = RoleEnum.USER.getRole();
 
-    @Column
-    private String avatar;
+    @Column(nullable = false)
+    private String avatar = "";
 
     @Column
     private LocalDateTime createdTime = LocalDateTime.now();

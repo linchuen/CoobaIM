@@ -5,13 +5,13 @@ import com.cooba.aop.UserThreadLocal;
 import com.cooba.constant.RoomRoleEnum;
 import com.cooba.entity.Room;
 import com.cooba.entity.RoomUser;
+import com.cooba.entity.User;
 import com.cooba.repository.RoomRepository;
 import com.cooba.repository.RoomUserRepository;
+import com.cooba.repository.UserRepository;
 import com.cooba.service.RoomService;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,8 +31,27 @@ class RoomServiceImplTest {
     RoomRepository roomRepository;
     @Autowired
     RoomUserRepository roomUserRepository;
+    @Autowired
+    UserRepository userRepository;
     @MockitoBean
     UserThreadLocal userThreadLocal;
+
+    @BeforeEach
+    public void insertUsers() {
+        User user1 = Instancio.create(User.class);
+        user1.setId(1L);
+        user1.setAvatar("");
+        User user2 = Instancio.create(User.class);
+        user2.setId(2L);
+        user2.setAvatar("");
+        userRepository.insert(List.of(user1, user2));
+    }
+
+    @AfterEach
+    public void deleteUsers() {
+        userRepository.selectByIds(List.of(1L, 2L));
+    }
+
 
     @Test
     @DisplayName("建立聊天室")
@@ -141,8 +160,8 @@ class RoomServiceImplTest {
 
         roomService.transferUser(room.getId(), masterId, memberId);
 
-        RoomUser member = roomUserRepository.find(room.getId(),memberId).orElseThrow();
-        Assertions.assertSame(RoomRoleEnum.MASTER,member.getRoomRoleEnum() );
+        RoomUser member = roomUserRepository.find(room.getId(), memberId).orElseThrow();
+        Assertions.assertSame(RoomRoleEnum.MASTER, member.getRoomRoleEnum());
     }
 
 }

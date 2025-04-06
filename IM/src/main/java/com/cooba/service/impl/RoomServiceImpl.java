@@ -47,6 +47,9 @@ public class RoomServiceImpl implements RoomService {
         ArrayList<Long> userIdList = new ArrayList<>(userIds);
         userIdList.add(masterUserId);
         List<User> users = userRepository.selectByIds(userIdList);
+        if (users.size() != userIdList.size()) {
+            throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+        }
         Map<Long, String> userMap = users.stream().collect(Collectors.toMap(User::getId, User::getName));
         Map<Long, String> avatarrMap = users.stream().collect(Collectors.toMap(User::getId, User::getAvatar));
 
