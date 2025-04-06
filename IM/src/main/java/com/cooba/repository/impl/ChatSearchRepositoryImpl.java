@@ -56,7 +56,7 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
         LocalDateTime oneMonth = LocalDateTime.now().minusMonths(1);
         return chatSearchMapper.selectList(new LambdaQueryWrapper<ChatSearch>()
                 .eq(ChatSearch::getRoomId, roomId)
-                .eq(ChatSearch::getMessageGram, ZhConverterUtil.toSimple(word))
+                .eq(ChatSearch::getMessageGram, ZhConverterUtil.toSimple(word.toLowerCase()))
                 .gt(ChatSearch::getCreatedTime, oneMonth)
         );
     }
@@ -69,7 +69,7 @@ public class ChatSearchRepositoryImpl implements ChatSearchRepository {
                 .map(s -> {
                     ChatSearch chatSearch = new ChatSearch();
                     chatSearch.setRoomId(chat.getRoomId());
-                    chatSearch.setMessageGram(s);
+                    chatSearch.setMessageGram(s.toLowerCase());
                     chatSearch.setChatId(chat.getId());
                     return chatSearch;
                 }).toList();
