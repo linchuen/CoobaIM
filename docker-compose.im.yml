@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   im:
+    image: cooba-im:${VERSION}
     build:
       context: .
       dockerfile: ./IM.dockerfile
