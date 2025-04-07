@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.cooba.annotation.IMEntity;
 import com.cooba.constant.RoleEnum;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
@@ -39,6 +40,7 @@ public class User implements UserDetails {
     private String role = RoleEnum.USER.getRole();
 
     @Column(nullable = false)
+    @ColumnDefault("")
     private String avatar = "";
 
     @Column

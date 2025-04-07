@@ -5,6 +5,7 @@ import com.cooba.constant.EventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.request.SpeakRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class WebSocketMsgController {
@@ -37,6 +39,7 @@ public class WebSocketMsgController {
 
     @MessageExceptionHandler(Exception.class)
     public void handleException(Exception e, Principal principal) {
+        log.error("WebSocketMsg error", e);
         socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, e.getMessage());
     }
 }

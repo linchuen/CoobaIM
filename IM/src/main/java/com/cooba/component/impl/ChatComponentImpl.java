@@ -52,7 +52,7 @@ public class ChatComponentImpl implements ChatComponent {
         }
 
         messageService.sendToUser(message);
-        offlineMessageService.sendOffline(userThreadLocal.getCurrentUserId(), message);
+        offlineMessageService.sendOffline(userId, message);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ChatComponentImpl implements ChatComponent {
         }
 
         messageService.sendToRoom(message);
-        offlineMessageService.sendOffline(userThreadLocal.getCurrentUserId(), message);
+        offlineMessageService.sendOffline(userId, message);
     }
 
     @Override

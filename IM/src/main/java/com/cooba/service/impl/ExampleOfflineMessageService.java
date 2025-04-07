@@ -21,10 +21,10 @@ public class ExampleOfflineMessageService implements OfflineMessageService {
 
     @Async
     @Override
-    public void sendOffline(long currentUserId, SendMessage message) {
+    public void sendOffline(long speakerUserId, SendMessage message) {
         List<RoomUser> roomUsers = roomUserRepository.find(message.getRoomId());
         roomUsers.stream()
-                .filter(roomUser -> roomUser.getUserId() != currentUserId)
+                .filter(roomUser -> roomUser.getUserId() != speakerUserId)
                 .filter(roomUser -> !connectionManager.isUserOnline(String.valueOf(roomUser.getUserId())))
                 .forEach(roomUser -> log.info("send offline message to {}: {}", roomUser.getUserId(), message.getMessage()));
     }
