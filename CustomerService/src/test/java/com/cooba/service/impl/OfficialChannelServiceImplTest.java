@@ -62,11 +62,11 @@ class OfficialChannelServiceImplTest {
         Mockito.when(userThreadLocal.getCurrentUser()).thenReturn(user);
 
         OfficialChannel officialChannel1 = Instancio.create(OfficialChannel.class);
-        officialChannel1.setPublic(true);
+        officialChannel1.setIsPublic(true);
         officialChannelService.create(officialChannel1);
 
         OfficialChannel officialChannel2 = Instancio.create(OfficialChannel.class);
-        officialChannel2.setPublic(false);
+        officialChannel2.setIsPublic(false);
         officialChannelService.create(officialChannel2);
 
         List<OfficialChannel> officialChannels = officialChannelService.searchAll();
@@ -83,11 +83,11 @@ class OfficialChannelServiceImplTest {
         Mockito.when(userThreadLocal.getCurrentUser()).thenReturn(user);
 
         OfficialChannel officialChannel1 = Instancio.create(OfficialChannel.class);
-        officialChannel1.setPublic(true);
+        officialChannel1.setIsPublic(true);
         officialChannelService.create(officialChannel1);
 
         OfficialChannel officialChannel2 = Instancio.create(OfficialChannel.class);
-        officialChannel2.setPublic(false);
+        officialChannel2.setIsPublic(false);
         officialChannelService.create(officialChannel2);
 
         List<OfficialChannel> officialChannels = officialChannelService.searchAll();
