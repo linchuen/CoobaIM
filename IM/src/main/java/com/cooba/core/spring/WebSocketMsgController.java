@@ -1,9 +1,12 @@
 package com.cooba.core.spring;
 
 import com.cooba.component.ChatComponent;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.EventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.request.SpeakRequest;
+import com.cooba.exception.ChatMessageException;
+import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
@@ -37,9 +40,15 @@ public class WebSocketMsgController {
         chatComponent.speakToAll(message);
     }
 
+    @MessageExceptionHandler(ChatMessageException.class)
+    public void handleChatMessageException(ChatMessageException e, Principal principal) {
+        log.error("message error", e);
+        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, JsonUtil.toJson(e.getChat()));
+    }
+
     @MessageExceptionHandler(Exception.class)
     public void handleException(Exception e, Principal principal) {
         log.error("WebSocketMsg error", e);
-        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, e.getMessage());
+        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, ErrorEnum.UNKNOWN_ERROR.getMessage());
     }
 }
