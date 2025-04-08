@@ -5,7 +5,9 @@ import com.cooba.constant.ErrorEnum;
 import com.cooba.constant.EventEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.request.SpeakRequest;
-import com.cooba.exception.ChatMessageException;
+import com.cooba.dto.response.ResultResponse;
+import com.cooba.exception.BaseException;
+import com.cooba.exception.IMError;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -40,15 +43,30 @@ public class WebSocketMsgController {
         chatComponent.speakToAll(message);
     }
 
-    @MessageExceptionHandler(ChatMessageException.class)
-    public void handleChatMessageException(ChatMessageException e, Principal principal) {
-        log.error("message error", e);
-        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, JsonUtil.toJson(e.getChat()));
+    @MessageExceptionHandler(BaseException.class)
+    public void handleException(BaseException ex, Principal principal) {
+        String uuid = UUID.randomUUID().toString();
+        IMError imError = ex.getError() == null ? ErrorEnum.BUSINESS_ERROR : ex.getError();
+        log.error("WebSocket BaseException {}", uuid, ex);
+        ResultResponse<Object> result = ResultResponse.builder()
+                .traceId(uuid)
+                .errorMessage(imError.getMessage())
+                .code(imError.getCode())
+                .logMessage(ex.getMessage())
+                .build();
+        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, JsonUtil.toJson(result));
     }
 
     @MessageExceptionHandler(Exception.class)
-    public void handleException(Exception e, Principal principal) {
-        log.error("WebSocketMsg error", e);
-        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, ErrorEnum.UNKNOWN_ERROR.getMessage());
+    public void handleException(Exception ex, Principal principal) {
+        String uuid = UUID.randomUUID().toString();
+        log.error("WebSocket Exception", ex);
+        ResultResponse<Object> result = ResultResponse.builder()
+                .traceId(uuid)
+                .errorMessage(ErrorEnum.UNKNOWN_ERROR.getMessage())
+                .code(ErrorEnum.UNKNOWN_ERROR.getCode())
+                .logMessage(ex.getMessage())
+                .build();
+        socketConnection.sendUserEvent(principal.getName(), EventEnum.ERROR, JsonUtil.toJson(result));
     }
 }
