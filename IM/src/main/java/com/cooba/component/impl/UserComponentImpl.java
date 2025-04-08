@@ -161,13 +161,21 @@ public class UserComponentImpl implements UserComponent {
     @Transactional(rollbackFor = Exception.class)
     @WebhookTrigger(WebhookEnum.APPLY_FRIEND)
     public FriendApplyResponse applyFriend(FriendRequest request) {
+        String permitUserName = request.getPermitUserName();
+        if (permitUserName == null && request.getPermitUserId() == null) {
+            throw new BaseException(ErrorEnum.INVALID_REQUEST);
+        }
+
         if ((request.getApplyUserId().equals(request.getPermitUserId()))) {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);
         }
 
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(request.getApplyUserId());
-        friendApply.setPermitUserId(request.getPermitUserId());
+        friendApply.setPermitUserId(permitUserName == null
+                ? request.getPermitUserId()
+                : userService.getInfoByName(permitUserName).getId()
+        );
 
         long applyId = friendService.apply(friendApply);
 
