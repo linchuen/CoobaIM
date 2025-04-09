@@ -140,7 +140,7 @@ services:
 
   web:
     build:
-      context: ./app
+      context: ./web
       dockerfile: ./app.dockerfile
     container_name: im_web
     ports:
