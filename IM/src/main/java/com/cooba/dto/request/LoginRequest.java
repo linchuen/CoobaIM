@@ -17,5 +17,7 @@ public class LoginRequest {
     @NotNull
     private PlatformEnum platform;
 
+    private String partner;
+
     private String ip;
 }

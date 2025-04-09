@@ -139,6 +139,7 @@ services:
       - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
 
   web:
+    image: cooba-web:${VERSION}
     build:
       context: ./web
       dockerfile: ./app.dockerfile

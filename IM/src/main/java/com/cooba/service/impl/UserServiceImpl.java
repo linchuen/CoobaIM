@@ -84,14 +84,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getInfo(String email) {
-        return userRepository.findByEmail(email, userThreadLocal.getPartner())
+    public User getInfo(String email, String partner) {
+        return userRepository.findByEmail(email, partner)
                 .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
     }
 
     @Override
-    public User getInfoByName(String name) {
-        return userRepository.findByName(name, userThreadLocal.getPartner())
+    public User getInfoByName(String name, String partner) {
+        return userRepository.findByName(name, partner)
                 .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
     }
 

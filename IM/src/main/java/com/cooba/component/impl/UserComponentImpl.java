@@ -70,7 +70,8 @@ public class UserComponentImpl implements UserComponent {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LoginResponse login(LoginRequest request) {
-        User user = userService.getInfo(request.getEmail());
+        String partner = request.getPartner();
+        User user = userService.getInfo(request.getEmail(), partner == null ? "cooba" : partner);
 
         userService.verifyPassword(user, request.getPassword());
 
@@ -176,7 +177,7 @@ public class UserComponentImpl implements UserComponent {
 
         User permitUser = permitUserName == null
                 ? userService.getInfo(request.getPermitUserId())
-                : userService.getInfoByName(permitUserName);
+                : userService.getInfoByName(permitUserName, partner);
 
         if (!partner.equals(permitUser.getPartner())) {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);
