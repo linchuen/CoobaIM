@@ -40,4 +40,4 @@ services:
 
 networks:
   im_net:
-    external: true
+    driver: bridge

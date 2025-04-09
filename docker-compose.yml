@@ -1,11 +1,56 @@
 version: '3.8'
 services:
+  im:
+    image: cooba-im:${VERSION}
+    build:
+      context: .
+      dockerfile: ./IM.dockerfile
+    container_name: im
+    restart: always
+    networks:
+      - im_net
+    env_file:
+      - .env
+    environment:
+      REDIS_DB_HOST: ${REDIS_DB_HOST}
+      REDIS_DB_PORT: ${REDIS_DB_PORT}
+      CLICKHOUSE_DB_HOST: ${CLICKHOUSE_DB_HOST}
+      CLICKHOUSE_DB_USERNAME: ${CLICKHOUSE_DB_USERNAME}
+      CLICKHOUSE_DB_PASSWORD: ${CLICKHOUSE_DB_PASSWORD}
+      MYSQL_DB_HOST: ${MYSQL_DB_HOST}
+      MYSQL_DB_USERNAME: ${MYSQL_DB_USERNAME}
+      MYSQL_DB_PASSWORD: ${MYSQL_DB_PASSWORD}
+      ARTEMIS_HOST: ${ARTEMIS_HOST}
+      ARTEMIS_PORT: ${ARTEMIS_PORT}
+      ARTEMIS_USER: ${ARTEMIS_USER}
+      ARTEMIS_PASSWORD: ${ARTEMIS_PASSWORD}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      KAFKA_GROUP: ${KAFKA_GROUP}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - mysql
+      - clickhouse
+      - artemis
+      - livekit
+      - minio
+
   redis:
     image: redis:alpine
     container_name: im_redis
     restart: always
     networks:
       - im_net
+    env_file:
+      - .env
     ports:
       - "16379:6379"
 
@@ -64,13 +109,15 @@ services:
     restart: always
     networks:
       - im_net
-    ports:
-      - "9000:9000"  # API 端口
-      - "9001:9001"  # 控制台端口
+    env_file:
+      - .env
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"  # API 端口
+      - "9001:9001"  # 控制台端口
 
   livekit:
     image: livekit/livekit-server:v1.8.4
@@ -78,17 +125,36 @@ services:
     restart: always
     networks:
       - im_net
-    ports:
-      - "7880:7880"  # API 端口
-      - "7881:7881"  # WebSocket 端口
-      - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
+    env_file:
+      - .env
     environment:
       LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
       LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
       LIVEKIT_KEYS: ${LIVEKIT_KEYS}
       LIVEKIT_LOG_LEVEL: debug
       LIVEKIT_UDP_PORTS: 50000,60000
+    ports:
+      - "7880:7880"  # API 端口
+      - "7881:7881"  # WebSocket 端口
+      - "7882:7882/udp"  # UDP 端口 (用於 WebRTC)
+
+  web:
+    build:
+      context: ./app
+      dockerfile: ./app.dockerfile
+    container_name: im_web
+    ports:
+      - "5173:80"
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - im_net
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_WEBSOCKET: ${VITE_WEBSOCKET}
+      VITE_LIVEKIT: ${LIVEKIT_URL}
 
 networks:
   im_net:
-    external: true
+    driver: bridge
