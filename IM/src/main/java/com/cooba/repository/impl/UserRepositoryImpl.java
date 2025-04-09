@@ -44,16 +44,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email, String partner) {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getEmail, email));
+                .eq(User::getEmail, email)
+                .eq(User::getPartner, partner)
+        );
         return Optional.ofNullable(user);
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByName(String name, String partner) {
         User user =  userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getName, name));
+                .eq(User::getName, name)
+                .eq(User::getPartner, partner)
+        );
         return Optional.ofNullable(user);
     }
 }

@@ -12,7 +12,7 @@
     ) engine=InnoDB;
 
     alter table t_user 
-       add constraint uk_email unique (email);
+       add constraint uk_email unique (email, partner);
 
     alter table t_user 
-       add constraint uk_name unique (name);
+       add constraint uk_name unique (name, partner);

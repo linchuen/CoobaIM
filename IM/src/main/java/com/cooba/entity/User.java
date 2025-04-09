@@ -18,8 +18,8 @@ import java.util.Set;
 @IMEntity
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "uk_email", columnNames = {"email"}),
-        @UniqueConstraint(name = "uk_name", columnNames = {"name"})
+        @UniqueConstraint(name = "uk_email", columnNames = {"email", "partner"}),
+        @UniqueConstraint(name = "uk_name", columnNames = {"name", "partner"})
 })
 public class User implements UserDetails {
     @Id
