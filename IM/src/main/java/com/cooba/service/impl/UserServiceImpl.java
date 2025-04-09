@@ -30,14 +30,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long register(User user) {
+        String email = user.getEmail();
         String password = user.getPassword();
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new BaseException(ErrorEnum.INVALID_EMAIL_FORMAT);
+        }
+
+        // 密碼格式驗證：至少一個大寫、一個小寫、一個數字，長度至少6位
+        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$")) {
+            throw new BaseException(ErrorEnum.INVALID_PASSWORD_FORMAT);
+        }
+
         user.setPassword(PasswordUtil.hash(password));
         userRepository.insert(user);
 
         UserDetail userDetail = new UserDetail();
         userDetail.setUserId(user.getId());
         userDetail.setName(user.getName());
-        userDetail.setEmail(user.getEmail());
+        userDetail.setEmail(email);
         userDetail.setTags("[]");
         userDetail.setRemark("");
         userDetailRepository.insert(userDetail);

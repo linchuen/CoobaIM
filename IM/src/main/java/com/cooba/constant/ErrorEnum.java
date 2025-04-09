@@ -21,6 +21,8 @@ public enum ErrorEnum implements IMError {
     ROOM_USER_EMPTY(1009,"room user is empty"),
     NETWORK_ERROR(1010,"network error"),
     CHAT_ERROR(1011,"chat message error"),
+    INVALID_EMAIL_FORMAT(1012,"invalid email format"),
+    INVALID_PASSWORD_FORMAT(1013,"invalid password format"),
     UNKNOWN_ERROR(9999,"unknown error"),
     ;
 
