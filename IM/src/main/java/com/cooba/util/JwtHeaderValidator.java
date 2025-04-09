@@ -44,6 +44,7 @@ public class JwtHeaderValidator {
             userInfo.setName(name);
             userInfo.setToken(jwtToken);
             userInfo.setOrigin(user);
+            userInfo.setPartner(user.getPartner());
             userThreadLocal.set(userInfo);
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

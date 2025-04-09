@@ -48,6 +48,9 @@ public class UserComponentImpl implements UserComponent {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+        if (request.getPartner() != null) {
+            user.setPartner(request.getPartner());
+        }
 
         long userId = userService.register(user);
         return RegisterResponse.builder()
@@ -161,6 +164,7 @@ public class UserComponentImpl implements UserComponent {
     @Transactional(rollbackFor = Exception.class)
     @WebhookTrigger(WebhookEnum.APPLY_FRIEND)
     public FriendApplyResponse applyFriend(FriendRequest request) {
+        String partner = userThreadLocal.getPartner();
         String permitUserName = request.getPermitUserName();
         if (permitUserName == null && request.getPermitUserId() == null) {
             throw new BaseException(ErrorEnum.INVALID_REQUEST);
@@ -170,12 +174,17 @@ public class UserComponentImpl implements UserComponent {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);
         }
 
+        User permitUser = permitUserName == null
+                ? userService.getInfo(request.getPermitUserId())
+                : userService.getInfoByName(permitUserName);
+
+        if (!partner.equals(permitUser.getPartner())) {
+            throw new BaseException(ErrorEnum.BUSINESS_ERROR);
+        }
+
         FriendApply friendApply = new FriendApply();
         friendApply.setApplyUserId(request.getApplyUserId());
-        friendApply.setPermitUserId(permitUserName == null
-                ? request.getPermitUserId()
-                : userService.getInfoByName(permitUserName).getId()
-        );
+        friendApply.setPermitUserId(permitUser.getId());
 
         long applyId = friendService.apply(friendApply);
 

@@ -9,4 +9,5 @@ public class UserInfo {
     private String name;
     private String token;
     private User origin;
+    private String partner;
 }

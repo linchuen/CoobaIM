@@ -89,6 +89,10 @@ public class RoomComponentImpl implements RoomComponent {
 
         User newUser = userService.getInfo(request.getUserId());
 
+        if (!user.getPartner().equals(newUser.getPartner())){
+            throw new BaseException(ErrorEnum.BUSINESS_ERROR);
+        }
+
         RoomUser newRoomUser = new RoomUser();
         newRoomUser.setRoomId(request.getRoomId());
         newRoomUser.setUserId(request.getUserId());
@@ -148,6 +152,10 @@ public class RoomComponentImpl implements RoomComponent {
 
         User requestUser = userService.getInfo(request.getUserId());
         if (Objects.equals(requestUser.getId(), user.getId())) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        if (!user.getPartner().equals(requestUser.getPartner())){
+            throw new BaseException(ErrorEnum.BUSINESS_ERROR);
+        }
 
         roomService.transferUser(request.getRoomId(), user.getId(), request.getUserId());
     }

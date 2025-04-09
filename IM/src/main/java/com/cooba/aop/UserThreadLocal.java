@@ -36,4 +36,9 @@ public class UserThreadLocal {
     public String getCurrentToken(){
         return get().getToken();
     }
+
+    public String getPartner(){
+        return get().getPartner();
+    }
+
 }

@@ -50,6 +50,12 @@ public class RoomServiceImpl implements RoomService {
         if (users.size() != userIdList.size()) {
             throw new BaseException(ErrorEnum.USER_NOT_EXIST);
         }
+
+        boolean isSamePartner = users.stream().map(User::getPartner).collect(Collectors.toSet()).size() == 1;
+        if (!isSamePartner) {
+            throw new BaseException(ErrorEnum.BUSINESS_ERROR);
+        }
+
         Map<Long, String> userMap = users.stream().collect(Collectors.toMap(User::getId, User::getName));
         Map<Long, String> avatarrMap = users.stream().collect(Collectors.toMap(User::getId, User::getAvatar));
 

@@ -14,4 +14,6 @@ public class RegisterRequest {
 
     @NotEmpty
     private String email;
+
+    private String partner;
 }
