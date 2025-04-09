@@ -43,6 +43,10 @@ public class User implements UserDetails {
     @ColumnDefault("")
     private String avatar = "";
 
+    @Column(nullable = false)
+    @ColumnDefault("cooba")
+    private String partner = "";
+
     @Column
     private LocalDateTime createdTime = LocalDateTime.now();
 
