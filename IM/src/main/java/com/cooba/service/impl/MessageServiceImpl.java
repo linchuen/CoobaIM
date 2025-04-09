@@ -2,6 +2,7 @@ package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
 import com.cooba.aop.UserThreadLocal;
+import com.cooba.constant.ErrorEnum;
 import com.cooba.core.SocketConnection;
 import com.cooba.dto.NotifyMessage;
 import com.cooba.dto.SendMessage;
@@ -9,6 +10,7 @@ import com.cooba.entity.Chat;
 import com.cooba.entity.ChatRead;
 import com.cooba.entity.ChatSearch;
 import com.cooba.entity.Notification;
+import com.cooba.exception.BaseException;
 import com.cooba.repository.ChatReadRepository;
 import com.cooba.repository.ChatRepository;
 import com.cooba.repository.ChatSearchRepository;
@@ -36,24 +38,32 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void sendToUser(SendMessage message) {
-        Chat chat = new Chat(message);
+        try {
+            Chat chat = new Chat(message);
 
-        chatRepository.insert(chat);
-        chatRepository.insertLastChat(chat);
-        chatSearchRepository.insertMessageGram(chat);
+            chatRepository.insert(chat);
+            chatRepository.insertLastChat(chat);
+            chatSearchRepository.insertMessageGram(chat);
 
-        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
+            socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
+        } catch (Exception e) {
+            throw new BaseException(ErrorEnum.CHAT_ERROR);
+        }
     }
 
     @Override
     public void sendToRoom(SendMessage message) {
-        Chat chat = new Chat(message);
+        try {
+            Chat chat = new Chat(message);
 
-        chatRepository.insert(chat);
-        chatRepository.insertLastChat(chat);
-        chatSearchRepository.insertMessageGram(chat);
+            chatRepository.insert(chat);
+            chatRepository.insertLastChat(chat);
+            chatSearchRepository.insertMessageGram(chat);
 
-        socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
+            socketConnection.sendToGroup(String.valueOf(chat.getRoomId()), chat);
+        } catch (Exception e) {
+            throw new BaseException(ErrorEnum.CHAT_ERROR);
+        }
     }
 
     @Override

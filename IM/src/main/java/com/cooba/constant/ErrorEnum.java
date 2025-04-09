@@ -20,6 +20,7 @@ public enum ErrorEnum implements IMError {
     USER_NOT_EXIST(1008,"user not exist"),
     ROOM_USER_EMPTY(1009,"room user is empty"),
     NETWORK_ERROR(1010,"network error"),
+    CHAT_ERROR(1011,"chat message error"),
     UNKNOWN_ERROR(9999,"unknown error"),
     ;
 
