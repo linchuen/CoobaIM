@@ -27,7 +27,7 @@ public class SocketConnectionAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "stomp.kafka.enable", havingValue = "true")
-    public SocketConnection kafkaSocketConnection(SimpMessagingTemplate messagingTemplate, KafkaTemplate<String, String> kafkaTemplate) {
+    public SocketConnection kafkaSocketConnection(SimpMessagingTemplate messagingTemplate, KafkaTemplate<String, byte[]> kafkaTemplate) {
         if (stompMQ.getEnable()) {
             log.error("stomp.mq.enable should set to false");
             throw new UnsupportedOperationException();

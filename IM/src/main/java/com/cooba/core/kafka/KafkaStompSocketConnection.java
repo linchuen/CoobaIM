@@ -18,7 +18,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @RequiredArgsConstructor
 public class KafkaStompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, byte[]> kafkaTemplate;
 
     @Override
     public void bindGroup(String userId, String group) {
@@ -34,15 +34,15 @@ public class KafkaStompSocketConnection implements SocketConnection {
     public <T> void sendUserEvent(String userId, IMEvent event, T t) {
         String payload = JsonUtil.toJson(t);
         String topic = decideTopic(userId, "user-event");
-        kafkaTemplate.send(topic, userId, payload);
+        kafkaTemplate.send(topic, userId, payload.getBytes());
 
         log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, event.getType() + "//" + payload);
     }
 
     @KafkaListener(topicPattern = "chat-user-event-.*")
-    public void listenUserEvent(ConsumerRecord<String, String> record) {
+    public void listenUserEvent(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-        String[] records = record.value().split("//");
+        String[] records = new String(record.value()).split("//");
         String event = records[0];
         String payload = records[1];
 
@@ -53,13 +53,13 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Override
     public <T> void sendAllEvent(IMEvent event, T t) {
         String payload = JsonUtil.toJson(t);
-        kafkaTemplate.send("all-event", event.getType() + "//" + payload);
+        kafkaTemplate.send("all-event", (event.getType() + "//" + payload).getBytes());
         log.info("kafka topic:{} /topic/{}  content:{}", "all-event", event, payload);
     }
 
     @KafkaListener(topics = "all-event")
-    public void listenAllEvent(ConsumerRecord<String, String> record) {
-        String[] records = record.value().split("//");
+    public void listenAllEvent(ConsumerRecord<String, byte[]> record) {
+        String[] records = new String(record.value()).split("//");
         String event = records[0];
         String payload = records[1];
 
@@ -71,7 +71,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
     public void sendToUser(String userId, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         String topic = decideTopic(userId, "user");
-        kafkaTemplate.send(topic, userId, payload);
+        kafkaTemplate.send(topic, userId, payload.getBytes());
 
         log.info("kafka topic:{} /private/{} content:{}", topic, userId, payload);
     }
@@ -89,15 +89,15 @@ public class KafkaStompSocketConnection implements SocketConnection {
     public void sendToGroup(String group, Chat chat) {
         String payload = JsonUtil.toJson(chat);
         String topic = decideTopic(group, "room");
-        kafkaTemplate.send(topic, group, payload);
+        kafkaTemplate.send(topic, group, payload.getBytes());
 
         log.info("kafka topic:{} /group/{} content:{}", topic, group, payload);
     }
 
     @KafkaListener(topicPattern = "chat-room-.*")
-    public void listenGroup(ConsumerRecord<String, String> record) {
+    public void listenGroup(ConsumerRecord<String, byte[]> record) {
         String group = record.key();
-        Chat chat = JsonUtil.fromJson(record.value(), Chat.class);
+        Chat chat = JsonUtil.fromJson(new String(record.value()), Chat.class);
 
         messagingTemplate.convertAndSend("/group/" + group, chat, buildHeader());
         log.info("/group/{} content:{}", group, record.value());
@@ -105,12 +105,12 @@ public class KafkaStompSocketConnection implements SocketConnection {
 
     @Override
     public void sendToAll(String message) {
-        kafkaTemplate.send("all", message);
+        kafkaTemplate.send("all", message.getBytes());
     }
 
     @KafkaListener(topics = "all")
-    public void listenAll(ConsumerRecord<String, String> record) {
-        messagingTemplate.convertAndSend("/topic/broadcast", record.value());
+    public void listenAll(ConsumerRecord<String, byte[]> record) {
+        messagingTemplate.convertAndSend("/topic/broadcast", new String(record.value()));
     }
 
     private MessageHeaders buildHeader() {
