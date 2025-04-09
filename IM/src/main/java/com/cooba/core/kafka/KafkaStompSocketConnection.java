@@ -2,6 +2,7 @@ package com.cooba.core.kafka;
 
 import com.cooba.constant.IMEvent;
 import com.cooba.core.SocketConnection;
+import com.cooba.core.spring.ProtoMessageConverter;
 import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
@@ -69,37 +70,35 @@ public class KafkaStompSocketConnection implements SocketConnection {
 
     @Override
     public void sendToUser(String userId, Chat chat) {
-        String payload = JsonUtil.toJson(chat);
         String topic = decideTopic(userId, "user");
-        kafkaTemplate.send(topic, userId, payload.getBytes());
+        kafkaTemplate.send(topic, userId, ProtoMessageConverter.buildChatProto(chat));
 
+        String payload = JsonUtil.toJson(chat);
         log.info("kafka topic:{} /private/{} content:{}", topic, userId, payload);
     }
 
     @KafkaListener(topicPattern = "chat-user-.*")
-    public void listenUser(ConsumerRecord<String, String> record) {
+    public void listenUser(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-        Chat chat = JsonUtil.fromJson(record.value(), Chat.class);
 
-        messagingTemplate.convertAndSendToUser(userId, "/private", chat, buildHeader());
+        messagingTemplate.convertAndSendToUser(userId, "/private", record.value(), buildHeader());
         log.info("/private/{} content:{}", userId, record.value());
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
-        String payload = JsonUtil.toJson(chat);
         String topic = decideTopic(group, "room");
-        kafkaTemplate.send(topic, group, payload.getBytes());
+        kafkaTemplate.send(topic, group, ProtoMessageConverter.buildChatProto(chat));
 
+        String payload = JsonUtil.toJson(chat);
         log.info("kafka topic:{} /group/{} content:{}", topic, group, payload);
     }
 
     @KafkaListener(topicPattern = "chat-room-.*")
     public void listenGroup(ConsumerRecord<String, byte[]> record) {
         String group = record.key();
-        Chat chat = JsonUtil.fromJson(new String(record.value()), Chat.class);
 
-        messagingTemplate.convertAndSend("/group/" + group, chat, buildHeader());
+        messagingTemplate.convertAndSend("/group/" + group, record.value(), buildHeader());
         log.info("/group/{} content:{}", group, record.value());
     }
 

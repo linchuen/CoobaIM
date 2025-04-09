@@ -43,21 +43,28 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
     @Override
     protected Object convertToInternal(@NotNull Object payload, @Nullable MessageHeaders headers, @Nullable Object conversionHint) {
         if (payload instanceof Chat chat) {
-            ChatProto.ChatInfo chatInfo = ChatProto.ChatInfo.newBuilder()
-                    .setUuid(chat.getUuid())
-                    .setId(String.valueOf(chat.getId()))
-                    .setUserId(chat.getUserId())
-                    .setName(chat.getName())
-                    .setRoomId(chat.getRoomId())
-                    .setMessage(chat.getMessage())
-                    .setType(chat.getType().name())
-                    .setUrl(chat.getUrl() == null ? "" : chat.getUrl())
-                    .setSuccess(true)
-                    .setCreatedTime(chat.getCreatedTime().toString())
-                    .build();
-            return chatInfo.toByteArray();
+            return buildChatProto(chat);
+        }
+        if (payload instanceof byte[] chatProto) {
+            return chatProto;
         }
         throw new ClassCastException();
+    }
+
+    public static byte[] buildChatProto(Chat chat){
+        ChatProto.ChatInfo chatInfo = ChatProto.ChatInfo.newBuilder()
+                .setUuid(chat.getUuid())
+                .setId(String.valueOf(chat.getId()))
+                .setUserId(chat.getUserId())
+                .setName(chat.getName())
+                .setRoomId(chat.getRoomId())
+                .setMessage(chat.getMessage())
+                .setType(chat.getType().name())
+                .setUrl(chat.getUrl() == null ? "" : chat.getUrl())
+                .setSuccess(true)
+                .setCreatedTime(chat.getCreatedTime().toString())
+                .build();
+        return chatInfo.toByteArray();
     }
 }
 
