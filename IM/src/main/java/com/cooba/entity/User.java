@@ -40,11 +40,11 @@ public class User implements UserDetails {
     private String role = RoleEnum.USER.getRole();
 
     @Column(nullable = false)
-    @ColumnDefault("")
+    @ColumnDefault("''")
     private String avatar = "";
 
     @Column(nullable = false)
-    @ColumnDefault("cooba")
+    @ColumnDefault("'cooba'")
     private String partner = "";
 
     @Column
