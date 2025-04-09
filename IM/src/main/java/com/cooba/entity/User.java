@@ -45,7 +45,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @ColumnDefault("'cooba'")
-    private String partner = "";
+    private String partner = "cooba";
 
     @Column
     private LocalDateTime createdTime = LocalDateTime.now();

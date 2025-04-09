@@ -41,9 +41,11 @@ class RoomServiceImplTest {
         User user1 = Instancio.create(User.class);
         user1.setId(1L);
         user1.setAvatar("");
+        user1.setPartner("cooba");
         User user2 = Instancio.create(User.class);
         user2.setId(2L);
         user2.setAvatar("");
+        user2.setPartner("cooba");
         userRepository.insert(List.of(user1, user2));
     }
 

@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
+import com.cooba.aop.UserThreadLocal;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.User;
 import com.cooba.entity.UserDetail;
@@ -33,10 +34,14 @@ class UserServiceImplTest {
     SocketConnection socketConnection;
     @MockitoBean
     RedisTemplate redisTemplate;
+    @MockitoBean
+    UserThreadLocal userThreadLocal;
 
     @Test
     void register() {
         User user = Instancio.create(User.class);
+        user.setEmail("cooba@gmail.com");
+        user.setPassword("Qq123456");
         userService.register(user);
 
         User select = userRepository.selectById(user.getId());
