@@ -152,9 +152,9 @@ services:
     networks:
       - im_net
     environment:
-      VITE_API_URL: ${VITE_API_URL}
-      VITE_WEBSOCKET: ${VITE_WEBSOCKET}
       VITE_LIVEKIT: ${LIVEKIT_URL}
+    depends_on:
+      - im
 
 networks:
   im_net:
