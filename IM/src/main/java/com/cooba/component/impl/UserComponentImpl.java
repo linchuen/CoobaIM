@@ -193,7 +193,7 @@ public class UserComponentImpl implements UserComponent {
         applyInfo.setId(applyId);
         applyInfo.setApplyId(userInfo.getId());
         applyInfo.setName(userInfo.getName());
-        socketConnection.sendUserEvent(String.valueOf(request.getPermitUserId()), EventEnum.FRIEND_APPLY, applyInfo);
+        socketConnection.sendUserEvent(String.valueOf(permitUser.getId()), EventEnum.FRIEND_APPLY, applyInfo);
         return FriendApplyResponse.builder()
                 .applyId(applyId)
                 .build();
