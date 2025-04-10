@@ -68,7 +68,8 @@ services:
       MYSQL_DATABASE: im
     ports:
       - "13306:3306"
-
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   clickhouse:
     image: clickhouse:24.12
@@ -102,6 +103,8 @@ services:
       - "61616:61616" # AMQP
       - "61613:61613" # STOMP
       - "5672:5672"   # MQTT
+    volumes:
+      - ./docker/artemis/broker.xml:/var/lib/artemis-instance/etc/broker.xml
 
   minio:
     image: quay.io/minio/minio
@@ -159,3 +162,6 @@ services:
 networks:
   im_net:
     driver: bridge
+
+volumes:
+  mysql_data:
