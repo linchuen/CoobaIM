@@ -37,8 +37,8 @@ mybatis-plus:
   global-config:
     db-config:
       table-prefix: t_
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
 logging:
