@@ -5,6 +5,9 @@ import com.cooba.core.SocketConnection;
 import com.cooba.core.spring.ProtoMessageConverter;
 import com.cooba.entity.Chat;
 import com.cooba.util.JsonUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -33,19 +36,20 @@ public class KafkaStompSocketConnection implements SocketConnection {
 
     @Override
     public <T> void sendUserEvent(String userId, IMEvent event, T t) {
-        String payload = JsonUtil.toJson(t);
+        EventData eventData = new EventData(event.getType(), JsonUtil.toJson(t));
+        String payload = JsonUtil.toJson(eventData);
         String topic = decideTopic(userId, "user-event");
         kafkaTemplate.send(topic, userId, payload.getBytes());
 
-        log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, event.getType() + "//" + payload);
+        log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, payload);
     }
 
     @KafkaListener(topicPattern = "chat-user-event-.*")
     public void listenUserEvent(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-        String[] records = new String(record.value()).split("//");
-        String event = records[0];
-        String payload = records[1];
+        EventData eventData = JsonUtil.fromJson(new String(record.value()), EventData.class);
+        String event = eventData.event;
+        String payload = eventData.payload;
 
         messagingTemplate.convertAndSendToUser(userId, "/queue/" + event, payload);
         log.info("/queue/{} {} content:{}", event, userId, payload);
@@ -53,16 +57,18 @@ public class KafkaStompSocketConnection implements SocketConnection {
 
     @Override
     public <T> void sendAllEvent(IMEvent event, T t) {
-        String payload = JsonUtil.toJson(t);
-        kafkaTemplate.send("all-event", (event.getType() + "//" + payload).getBytes());
+        EventData eventData = new EventData(event.getType(), JsonUtil.toJson(t));
+        String payload = JsonUtil.toJson(eventData);
+        kafkaTemplate.send("all-event", payload.getBytes());
+
         log.info("kafka topic:{} /topic/{}  content:{}", "all-event", event, payload);
     }
 
     @KafkaListener(topics = "all-event")
     public void listenAllEvent(ConsumerRecord<String, byte[]> record) {
-        String[] records = new String(record.value()).split("//");
-        String event = records[0];
-        String payload = records[1];
+        EventData eventData = JsonUtil.fromJson(new String(record.value()), EventData.class);
+        String event = eventData.event;
+        String payload = eventData.payload;
 
         messagingTemplate.convertAndSend("/topic/" + event, payload);
         log.info("/topic/{}  content:{}", event, payload);
@@ -122,4 +128,13 @@ public class KafkaStompSocketConnection implements SocketConnection {
     private String decideTopic(String key, String type) {
         return "chat-" + type + "-" + key.hashCode() % 10;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    private static class EventData {
+        private String event;
+        private String payload;
+    }
+
 }
