@@ -104,7 +104,7 @@ services:
       - "61613:61613" # STOMP
       - "5672:5672"   # MQTT
     volumes:
-      - ./docker/artemis/broker.xml:/var/lib/artemis-instance/etc/broker.xml
+      - ./docker/artemis:/var/lib/artemis/etc-override
 
   minio:
     image: quay.io/minio/minio
