@@ -21,9 +21,13 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtHeaderValidator jwtHeaderValidator;
     private final FrontEnd frontEnd;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final PartnerThreadLocal partnerThreadLocal;
 
     @Override
     protected void doFilterInternal(HttpServletRequest servletRequest, @NonNull HttpServletResponse servletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String partner = servletRequest.getHeader("partner");
+        partnerThreadLocal.set(partner);
+
         String path = servletRequest.getRequestURI();
         for (String permitPath : frontEnd.getAllPermitPaths()) {
             if (pathMatcher.match(permitPath, path)) {

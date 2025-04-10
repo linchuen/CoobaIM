@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.BehaviorLayer;
+import com.cooba.aop.PartnerThreadLocal;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.constant.ErrorEnum;
 import com.cooba.core.SocketConnection;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserDetailRepository userDetailRepository;
     private final RoomUserRepository roomUserRepository;
     private final SocketConnection socketConnection;
-    private final UserThreadLocal userThreadLocal;
+    private final PartnerThreadLocal partnerThreadLocal;
 
     @Override
     public long register(User user) {
@@ -84,14 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getInfo(String email, String partner) {
-        return userRepository.findByEmail(email, partner)
+    public User getInfo(String email) {
+        return userRepository.findByEmail(email, partnerThreadLocal.get())
                 .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
     }
 
     @Override
-    public User getInfoByName(String name, String partner) {
-        return userRepository.findByName(name, partner)
+    public User getInfoByName(String name) {
+        return userRepository.findByName(name, partnerThreadLocal.get())
                 .orElseThrow(() -> new BaseException(ErrorEnum.USER_NOT_EXIST));
     }
 
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByName(username, userThreadLocal.getPartner())
+        return userRepository.findByName(username, partnerThreadLocal.get())
                 .orElseThrow(() -> new UsernameNotFoundException(ErrorEnum.USER_NOT_EXIST.getMessage()));
     }
 }

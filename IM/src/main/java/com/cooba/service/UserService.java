@@ -18,9 +18,9 @@ public interface UserService extends UserDetailsService {
 
     User getInfo(long userId);
 
-    User getInfo(String email, String partner);
+    User getInfo(String email);
 
-    User getInfoByName(String name,String partner);
+    User getInfoByName(String name);
 
     UserDetail getDetail(long userId);
 

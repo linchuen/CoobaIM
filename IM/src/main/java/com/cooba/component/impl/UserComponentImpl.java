@@ -2,6 +2,7 @@ package com.cooba.component.impl;
 
 import com.cooba.annotation.ObjectLayer;
 import com.cooba.annotation.WebhookTrigger;
+import com.cooba.aop.PartnerThreadLocal;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.component.UserComponent;
 import com.cooba.constant.ErrorEnum;
@@ -39,6 +40,7 @@ public class UserComponentImpl implements UserComponent {
     private final FriendService friendService;
     private final SessionService sessionService;
     private final UserThreadLocal userThreadLocal;
+    private final PartnerThreadLocal partnerThreadLocal;
     private final SocketConnection socketConnection;
 
     @Override
@@ -48,9 +50,7 @@ public class UserComponentImpl implements UserComponent {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        if (request.getPartner() != null) {
-            user.setPartner(request.getPartner());
-        }
+        user.setPartner(partnerThreadLocal.get());
 
         long userId = userService.register(user);
         return RegisterResponse.builder()
@@ -70,8 +70,7 @@ public class UserComponentImpl implements UserComponent {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LoginResponse login(LoginRequest request) {
-        String partner = request.getPartner();
-        User user = userService.getInfo(request.getEmail(), partner == null ? "cooba" : partner);
+        User user = userService.getInfo(request.getEmail());
 
         userService.verifyPassword(user, request.getPassword());
 
@@ -177,7 +176,7 @@ public class UserComponentImpl implements UserComponent {
 
         User permitUser = permitUserName == null
                 ? userService.getInfo(request.getPermitUserId())
-                : userService.getInfoByName(permitUserName, partner);
+                : userService.getInfoByName(permitUserName);
 
         if (!partner.equals(permitUser.getPartner())) {
             throw new BaseException(ErrorEnum.BUSINESS_ERROR);

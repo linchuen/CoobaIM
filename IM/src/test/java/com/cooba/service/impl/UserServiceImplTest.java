@@ -1,6 +1,7 @@
 package com.cooba.service.impl;
 
 import com.cooba.annotation.MybatisLocalTest;
+import com.cooba.aop.PartnerThreadLocal;
 import com.cooba.aop.UserThreadLocal;
 import com.cooba.core.SocketConnection;
 import com.cooba.entity.User;
@@ -35,7 +36,7 @@ class UserServiceImplTest {
     @MockitoBean
     RedisTemplate redisTemplate;
     @MockitoBean
-    UserThreadLocal userThreadLocal;
+    PartnerThreadLocal partnerThreadLocal;
 
     @Test
     void register() {
