@@ -40,7 +40,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
                 connectionManager.addUser(user, sessionId);
             }
             case DISCONNECT -> {
-                connectionManager.removeUser(user, sessionId);
+                connectionManager.removeUser(user);
             }
             default -> {
                 log.info("Command: {} destination: {}", accessor.getCommand(), destination);

@@ -18,6 +18,7 @@ import com.cooba.exception.BaseException;
 import com.cooba.service.MessageService;
 import com.cooba.service.OfflineMessageService;
 import com.cooba.service.RoomService;
+import com.cooba.util.ConnectionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +34,7 @@ public class ChatComponentImpl implements ChatComponent {
     private final MessageService messageService;
     private final OfflineMessageService offlineMessageService;
     private final UserThreadLocal userThreadLocal;
+    private final ConnectionManager connectionManager;
 
     @Override
     public void speakToUser(SpeakRequest request) {
@@ -93,6 +95,8 @@ public class ChatComponentImpl implements ChatComponent {
 
         boolean isRoomMember = roomService.isRoomMember(request.getRoomId(), userId);
         if (!isRoomMember) throw new BaseException(ErrorEnum.FORBIDDEN);
+
+        connectionManager.addUser(String.valueOf(userId), "");
 
         List<Chat> chats = messageService.getRoomChats(request.getRoomId(), request.getChatId(), request.isSearchAfter());
         return ChatLoadResponse.builder()

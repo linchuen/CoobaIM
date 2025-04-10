@@ -4,27 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
 public class ConnectionManager {
     private final RedisTemplate<String, String> redisTemplate;
-    private final Map<String, String> userMap = new ConcurrentHashMap<>();
 
     public void addUser(String userId, String sessionId) {
-        userMap.put(userId, sessionId);
-        redisTemplate.opsForSet().add("socket-connection:" + userId, sessionId);
+        redisTemplate.opsForValue().set("socket-connection:" + userId, sessionId,10, TimeUnit.MINUTES);
     }
 
-    public void removeUser(String userId, String sessionId) {
-        userMap.remove(userId);
-        redisTemplate.opsForSet().remove("socket-connection:" + userId, sessionId);
-    }
-
-    public boolean isUserOnLocal(String userId) {
-        return userMap.containsKey(userId);
+    public void removeUser(String userId) {
+        redisTemplate.delete("socket-connection:" + userId);
     }
 
     public boolean isUserOnline(String userId) {
