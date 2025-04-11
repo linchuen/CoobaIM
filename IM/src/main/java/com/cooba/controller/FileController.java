@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Controller
 @RequestMapping("/file")
@@ -46,6 +48,25 @@ public class FileController {
                     .body(bytes);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/images/{roomId}/{fileName}")
+    @ResponseBody
+    public ResponseEntity<byte[]> serveImage(@PathVariable Long roomId, @PathVariable String fileName) {
+        try (InputStream stream = fileComponent.downloadFile(roomId, fileName)) {
+            byte[] bytes = stream.readAllBytes();
+
+            String contentType = Files.probeContentType(Paths.get(fileName));
+            if (contentType == null) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(bytes);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
