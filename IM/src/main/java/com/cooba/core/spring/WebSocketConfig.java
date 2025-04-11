@@ -9,6 +9,9 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -19,6 +22,8 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -46,7 +51,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         if (!stompMQ.getEnable()) {
+            ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+            taskScheduler.setPoolSize(1);
+            taskScheduler.setThreadNamePrefix("wss-heartbeat-thread-");
+            taskScheduler.initialize();
+
             registry.enableSimpleBroker("/topic", "/queue", "/group")
+                    .setTaskScheduler(taskScheduler)
                     .setHeartbeatValue(new long[]{10000, 10000});
         } else {
             registry.enableStompBrokerRelay("/topic", "/queue", "/group")
