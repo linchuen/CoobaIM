@@ -46,7 +46,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         if (!stompMQ.getEnable()) {
-            registry.enableSimpleBroker("/topic", "/queue", "/group");
+            registry.enableSimpleBroker("/topic", "/queue", "/group")
+                    .setHeartbeatValue(new long[]{10000, 10000});
         } else {
             registry.enableStompBrokerRelay("/topic", "/queue", "/group")
                     .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
