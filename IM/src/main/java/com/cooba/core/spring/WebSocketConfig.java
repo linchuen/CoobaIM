@@ -52,7 +52,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
                     .setRelayPort(stompMQ.getRelayPort())
                     .setClientLogin(stompMQ.getLogin())
-                    .setClientPasscode(stompMQ.getPasscode());
+                    .setClientPasscode(stompMQ.getPasscode())
+                    .setSystemHeartbeatSendInterval(10000)
+                    .setSystemHeartbeatReceiveInterval(10000);
         }
 
 
