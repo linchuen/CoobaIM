@@ -8,6 +8,7 @@ import lombok.Data;
 public class ChatSearchRequest {
     @NotNull
     private Long roomId;
+
     @NotEmpty
     private String word;
 

@@ -31,7 +31,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
         if (accessor.isHeartbeat()) return message;
         switch (accessor.getCommand()) {
             case CONNECT -> {
-                log.info("SessionId: {} userId: {} CONNECT: {}", sessionId, user, destination);
+                log.info("SessionId: {} userId: {} CONNECT", sessionId, user);
                 String authToken = accessor.getFirstNativeHeader("Authorization");
 
                 Long userId = jwtHeaderValidator.validHeader(authToken);
@@ -41,7 +41,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
                 connectionManager.addUser(user, sessionId);
             }
             case DISCONNECT -> {
-                log.info("SessionId: {} userId: {} DISCONNECT: {}", sessionId, user, destination);
+                log.info("SessionId: {} userId: {} DISCONNECT", sessionId, user);
                 connectionManager.removeUser(user);
             }
             default -> {
