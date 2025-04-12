@@ -133,7 +133,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    private static class EventData {
+    public static class EventData {
         private String destination;
         private String payload;
     }

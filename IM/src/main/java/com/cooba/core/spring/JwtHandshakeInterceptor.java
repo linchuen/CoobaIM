@@ -28,6 +28,7 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
         String user = Objects.requireNonNull(accessor.getUser()).getName();
         String destination = accessor.getDestination();
 
+        if (accessor.isHeartbeat()) return message;
         switch (accessor.getCommand()) {
             case CONNECT -> {
                 log.info("SessionId: {} userId: {} CONNECT: {}", sessionId, user, destination);
