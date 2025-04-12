@@ -59,15 +59,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
             registry.enableSimpleBroker("/topic", "/queue", "/group")
                     .setTaskScheduler(taskScheduler)
-                    .setHeartbeatValue(new long[]{10000, 10000});
+                    .setHeartbeatValue(new long[]{60000, 60000});
         } else {
             registry.enableStompBrokerRelay("/topic", "/queue", "/group")
                     .setRelayHost(stompMQ.getRelayHost()) // ActiveMQ 服務
                     .setRelayPort(stompMQ.getRelayPort())
                     .setClientLogin(stompMQ.getLogin())
                     .setClientPasscode(stompMQ.getPasscode())
-                    .setSystemHeartbeatSendInterval(10000)
-                    .setSystemHeartbeatReceiveInterval(10000);
+                    .setSystemHeartbeatSendInterval(60000)
+                    .setSystemHeartbeatReceiveInterval(60000);
         }
 
 
