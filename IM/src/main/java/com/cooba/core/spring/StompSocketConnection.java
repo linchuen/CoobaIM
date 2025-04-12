@@ -28,41 +28,63 @@ public class StompSocketConnection implements SocketConnection {
 
     @Override
     public <T> void sendUserEvent(String userId, IMEvent event, T t) {
+        String destination = "/queue/" + event.getType();
         String payload = JsonUtil.toJson(t);
-        messagingTemplate.convertAndSendToUser(userId, "/queue/" + event.getType(), payload);
-        log.info("/queue/{} {} content:{}", event, userId, payload);
+
+        messagingTemplate.convertAndSendToUser(userId, destination, payload);
+        logEvent(destination, payload);
     }
 
     @Override
     public <T> void sendAllEvent(IMEvent event, T t) {
+        String destination = "/topic/" + event.getType();
         String payload = JsonUtil.toJson(t);
-        messagingTemplate.convertAndSend("/topic/" + event.getType(), payload);
-        log.info("/topic/{}  content:{}", event, payload);
+
+        messagingTemplate.convertAndSend(destination, payload);
+        logEvent(destination, payload);
     }
 
     @Override
     public void sendToUser(String userId, Chat chat) {
-        messagingTemplate.convertAndSendToUser(userId, "/private", chat, buildHeader());
-        String payload = JsonUtil.toJson(chat);
-        log.info("/private/{} content:{}", userId, payload);
+        String destination = "/private";
+
+        messagingTemplate.convertAndSendToUser(userId, destination, chat, buildHeader());
+        logChat(destination, chat);
     }
 
     @Override
     public void sendToGroup(String group, Chat chat) {
-        messagingTemplate.convertAndSend("/group/" + group, chat, buildHeader());
-        String payload = JsonUtil.toJson(chat);
-        log.info("/group/{} content:{}", group, payload);
+        String destination = "/group/" + group;
+
+        messagingTemplate.convertAndSend(destination, chat, buildHeader());
+        logChat(destination, chat);
     }
 
     @Override
     public void sendToAll(String message) {
-        messagingTemplate.convertAndSend("/topic/broadcast", message);
+        String destination = "/topic/broadcast";
+        messagingTemplate.convertAndSend(destination, message);
     }
 
-    private MessageHeaders buildHeader(){
+    private MessageHeaders buildHeader() {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setHeader("contentType","application/protobuf");
+        headerAccessor.setHeader("contentType", "application/protobuf");
         headerAccessor.setLeaveMutable(true);
         return headerAccessor.getMessageHeaders();
+    }
+
+    private void logChat(String destination, Chat chat) {
+        log.info("destination:{} chatId:{} uuid:{} room:{} user:{} time:{}",
+                destination,
+                chat.getId(),
+                chat.getUuid(),
+                chat.getRoomId(),
+                chat.getUserId(),
+                chat.getCreatedTime()
+        );
+    }
+
+    private void logEvent(String destination, String content) {
+        log.info("destination:{} content:{}", destination, content);
     }
 }
