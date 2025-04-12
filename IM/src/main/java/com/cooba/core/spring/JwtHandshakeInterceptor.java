@@ -28,7 +28,6 @@ public class JwtHandshakeInterceptor implements ChannelInterceptor {
         String user = Objects.requireNonNull(accessor.getUser()).getName();
         String destination = accessor.getDestination();
 
-        if (accessor.getCommand() == null) return message;
         switch (accessor.getCommand()) {
             case CONNECT -> {
                 String authToken = accessor.getFirstNativeHeader("Authorization");

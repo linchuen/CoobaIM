@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.net.URI;
@@ -83,5 +84,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
         messageConverters.add(new ProtoMessageConverter());
         return false;
+    }
+
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        //default value
+        registration.setSendTimeLimit(10 * 1000)
+                .setSendBufferSizeLimit(512 * 1024)
+                .setTimeToFirstMessage(60 * 1000);
     }
 }
