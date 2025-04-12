@@ -155,7 +155,7 @@ services:
     networks:
       - im_net
     environment:
-      VITE_LIVEKIT: ${LIVEKIT_URL}
+      VITE_LIVEKIT: ${VITE_LIVEKIT}  # for client connect
     depends_on:
       - im
 
