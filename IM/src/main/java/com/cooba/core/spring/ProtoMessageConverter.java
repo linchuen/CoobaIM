@@ -51,7 +51,7 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
         throw new ClassCastException();
     }
 
-    public static byte[] buildChatProto(Chat chat){
+    public static byte[] buildChatProto(Chat chat) {
         ChatProto.ChatInfo chatInfo = ChatProto.ChatInfo.newBuilder()
                 .setUuid(chat.getUuid())
                 .setId(String.valueOf(chat.getId()))
@@ -65,6 +65,10 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
                 .setCreatedTime(chat.getCreatedTime().toString())
                 .build();
         return chatInfo.toByteArray();
+    }
+
+    public static ChatProto.ChatInfo readChatProto(byte[] bytes) throws InvalidProtocolBufferException {
+        return ChatProto.ChatInfo.parseFrom(bytes);
     }
 }
 

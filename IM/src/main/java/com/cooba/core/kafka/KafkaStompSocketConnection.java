@@ -4,11 +4,13 @@ import com.cooba.constant.IMEvent;
 import com.cooba.core.SocketConnection;
 import com.cooba.core.spring.ProtoMessageConverter;
 import com.cooba.entity.Chat;
+import com.cooba.proto.ChatProto;
 import com.cooba.util.JsonUtil;
+import com.cooba.util.KryoUtil;
+import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,10 +21,15 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Slf4j
-@RequiredArgsConstructor
 public class KafkaStompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
+
+    public KafkaStompSocketConnection(SimpMessagingTemplate messagingTemplate, KafkaTemplate<String, byte[]> kafkaTemplate) {
+        this.messagingTemplate = messagingTemplate;
+        this.kafkaTemplate = kafkaTemplate;
+        KryoUtil.register(EventData.class);
+    }
 
     @Override
     public void bindGroup(String userId, String group) {
@@ -36,42 +43,38 @@ public class KafkaStompSocketConnection implements SocketConnection {
 
     @Override
     public <T> void sendUserEvent(String userId, IMEvent event, T t) {
-        EventData eventData = new EventData(event.getType(), JsonUtil.toJson(t));
-        String payload = JsonUtil.toJson(eventData);
+        String destination = "/queue/" + event.getType();
+        EventData eventData = new EventData(destination, JsonUtil.toJson(t));
         String topic = decideTopic(userId, "user-event");
-        kafkaTemplate.send(topic, userId, payload.getBytes());
+        kafkaTemplate.send(topic, userId, KryoUtil.write(eventData));
 
-        log.info("kafka topic:{} /queue/{} {} content:{}", topic, event, userId, payload);
+        logKafkaEvent(destination, eventData);
     }
 
     @KafkaListener(topicPattern = "chat-user-event-.*")
     public void listenUserEvent(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-        EventData eventData = JsonUtil.fromJson(new String(record.value()), EventData.class);
-        String event = eventData.event;
-        String payload = eventData.payload;
+        EventData eventData = KryoUtil.read(record.value(), EventData.class);
+        messagingTemplate.convertAndSendToUser(userId, eventData.destination, eventData.payload);
 
-        messagingTemplate.convertAndSendToUser(userId, "/queue/" + event, payload);
-        log.info("/queue/{} {} content:{}", event, userId, payload);
+        logStompEvent(eventData);
     }
 
     @Override
     public <T> void sendAllEvent(IMEvent event, T t) {
-        EventData eventData = new EventData(event.getType(), JsonUtil.toJson(t));
-        String payload = JsonUtil.toJson(eventData);
-        kafkaTemplate.send("all-event", payload.getBytes());
+        String destination = "/topic/" + event.getType();
+        EventData eventData = new EventData(destination, JsonUtil.toJson(t));
+        kafkaTemplate.send("all-event", KryoUtil.write(eventData));
 
-        log.info("kafka topic:{} /topic/{}  content:{}", "all-event", event, payload);
+        logKafkaEvent(destination, eventData);
     }
 
     @KafkaListener(topics = "all-event")
     public void listenAllEvent(ConsumerRecord<String, byte[]> record) {
-        EventData eventData = JsonUtil.fromJson(new String(record.value()), EventData.class);
-        String event = eventData.event;
-        String payload = eventData.payload;
+        EventData eventData = KryoUtil.read(record.value(), EventData.class);
+        messagingTemplate.convertAndSend(eventData.destination, eventData.payload);
 
-        messagingTemplate.convertAndSend("/topic/" + event, payload);
-        log.info("/topic/{}  content:{}", event, payload);
+        logStompEvent(eventData);
     }
 
     @Override
@@ -79,16 +82,15 @@ public class KafkaStompSocketConnection implements SocketConnection {
         String topic = decideTopic(userId, "user");
         kafkaTemplate.send(topic, userId, ProtoMessageConverter.buildChatProto(chat));
 
-        String payload = JsonUtil.toJson(chat);
-        log.info("kafka topic:{} /private/{} content:{}", topic, userId, payload);
+        logKafkaChat(topic, "/private/" + userId, chat);
     }
 
     @KafkaListener(topicPattern = "chat-user-.*")
     public void listenUser(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-
         messagingTemplate.convertAndSendToUser(userId, "/private", record.value(), buildHeader());
-        log.info("/private/{} content:{}", userId, record.value());
+
+        logStompChat("/private/" + userId, record.value());
     }
 
     @Override
@@ -96,16 +98,15 @@ public class KafkaStompSocketConnection implements SocketConnection {
         String topic = decideTopic(group, "room");
         kafkaTemplate.send(topic, group, ProtoMessageConverter.buildChatProto(chat));
 
-        String payload = JsonUtil.toJson(chat);
-        log.info("kafka topic:{} /group/{} content:{}", topic, group, payload);
+        logKafkaChat(topic, "/group/" + group, chat);
     }
 
     @KafkaListener(topicPattern = "chat-room-.*")
     public void listenGroup(ConsumerRecord<String, byte[]> record) {
         String group = record.key();
-
         messagingTemplate.convertAndSend("/group/" + group, record.value(), buildHeader());
-        log.info("/group/{} content:{}", group, record.value());
+
+        logStompChat("/group/" + group, record.value());
     }
 
     @Override
@@ -133,8 +134,44 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @AllArgsConstructor
     @NoArgsConstructor
     private static class EventData {
-        private String event;
+        private String destination;
         private String payload;
     }
 
+    private void logKafkaEvent(String topic, EventData eventData) {
+        log.info("kafka topic:{} destination:{}  content:{}", topic, eventData.destination, eventData.payload);
+    }
+
+    private void logStompEvent(EventData eventData) {
+        log.info("destination:{}  content:{}", eventData.destination, eventData.payload);
+    }
+
+    private void logKafkaChat(String topic, String destination, Chat chat) {
+        log.info("kafka topic:{} destination:{} chatId:{} uuid:{} room:{} user:{} time:{}",
+                topic,
+                destination,
+                chat.getId(),
+                chat.getUuid(),
+                chat.getRoomId(),
+                chat.getUserId(),
+                chat.getCreatedTime()
+        );
+    }
+
+    private void logStompChat(String destination, byte[] bytes) {
+        ChatProto.ChatInfo chatInfo;
+        try {
+            chatInfo = ProtoMessageConverter.readChatProto(bytes);
+            log.info("destination:{} chatId:{} uuid:{} room:{} user:{} time:{}",
+                    destination,
+                    chatInfo.getId(),
+                    chatInfo.getUuid(),
+                    chatInfo.getRoomId(),
+                    chatInfo.getUserId(),
+                    chatInfo.getCreatedTime()
+            );
+        } catch (InvalidProtocolBufferException e) {
+            log.error("parse ProtoBuf error",e);
+        }
+    }
 }
