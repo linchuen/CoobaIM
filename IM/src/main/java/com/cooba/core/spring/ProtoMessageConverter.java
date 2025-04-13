@@ -58,7 +58,7 @@ public class ProtoMessageConverter extends AbstractMessageConverter {
                 .setUserId(chat.getUserId())
                 .setName(chat.getName())
                 .setRoomId(chat.getRoomId())
-                .setMessage(chat.getMessage())
+                .setMessage(chat.getMessage() == null ? "" : chat.getMessage())
                 .setType(chat.getType().name())
                 .setUrl(chat.getUrl() == null ? "" : chat.getUrl())
                 .setSuccess(true)
