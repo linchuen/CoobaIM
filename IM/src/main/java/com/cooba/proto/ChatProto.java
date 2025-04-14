@@ -18,19 +18,11 @@ public final class ChatProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string uuid = 1;</code>
      * @return The uuid.
      */
     java.lang.String getUuid();
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string uuid = 1;</code>
      * @return The bytes for uuid.
      */
@@ -86,19 +78,11 @@ public final class ChatProto {
         getMessageBytes();
 
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string url = 7;</code>
      * @return The url.
      */
     java.lang.String getUrl();
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string url = 7;</code>
      * @return The bytes for url.
      */
@@ -118,10 +102,6 @@ public final class ChatProto {
         getTypeBytes();
 
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>bool success = 9;</code>
      * @return The success.
      */
@@ -189,10 +169,6 @@ public final class ChatProto {
     public static final int UUID_FIELD_NUMBER = 1;
     private volatile java.lang.Object uuid_;
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string uuid = 1;</code>
      * @return The uuid.
      */
@@ -210,10 +186,6 @@ public final class ChatProto {
       }
     }
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string uuid = 1;</code>
      * @return The bytes for uuid.
      */
@@ -371,10 +343,6 @@ public final class ChatProto {
     public static final int URL_FIELD_NUMBER = 7;
     private volatile java.lang.Object url_;
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string url = 7;</code>
      * @return The url.
      */
@@ -392,10 +360,6 @@ public final class ChatProto {
       }
     }
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>string url = 7;</code>
      * @return The bytes for url.
      */
@@ -455,10 +419,6 @@ public final class ChatProto {
     public static final int SUCCESS_FIELD_NUMBER = 9;
     private boolean success_;
     /**
-     * <pre>
-     * optional
-     * </pre>
-     *
      * <code>bool success = 9;</code>
      * @return The success.
      */
@@ -1023,10 +983,6 @@ public final class ChatProto {
 
       private java.lang.Object uuid_ = "";
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string uuid = 1;</code>
        * @return The uuid.
        */
@@ -1043,10 +999,6 @@ public final class ChatProto {
         }
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string uuid = 1;</code>
        * @return The bytes for uuid.
        */
@@ -1064,10 +1016,6 @@ public final class ChatProto {
         }
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string uuid = 1;</code>
        * @param value The uuid to set.
        * @return This builder for chaining.
@@ -1083,10 +1031,6 @@ public final class ChatProto {
         return this;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string uuid = 1;</code>
        * @return This builder for chaining.
        */
@@ -1097,10 +1041,6 @@ public final class ChatProto {
         return this;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string uuid = 1;</code>
        * @param value The bytes for uuid to set.
        * @return This builder for chaining.
@@ -1409,10 +1349,6 @@ public final class ChatProto {
 
       private java.lang.Object url_ = "";
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string url = 7;</code>
        * @return The url.
        */
@@ -1429,10 +1365,6 @@ public final class ChatProto {
         }
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string url = 7;</code>
        * @return The bytes for url.
        */
@@ -1450,10 +1382,6 @@ public final class ChatProto {
         }
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string url = 7;</code>
        * @param value The url to set.
        * @return This builder for chaining.
@@ -1469,10 +1397,6 @@ public final class ChatProto {
         return this;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string url = 7;</code>
        * @return This builder for chaining.
        */
@@ -1483,10 +1407,6 @@ public final class ChatProto {
         return this;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>string url = 7;</code>
        * @param value The bytes for url to set.
        * @return This builder for chaining.
@@ -1581,10 +1501,6 @@ public final class ChatProto {
 
       private boolean success_ ;
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>bool success = 9;</code>
        * @return The success.
        */
@@ -1593,10 +1509,6 @@ public final class ChatProto {
         return success_;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>bool success = 9;</code>
        * @param value The success to set.
        * @return This builder for chaining.
@@ -1608,10 +1520,6 @@ public final class ChatProto {
         return this;
       }
       /**
-       * <pre>
-       * optional
-       * </pre>
-       *
        * <code>bool success = 9;</code>
        * @return This builder for chaining.
        */
