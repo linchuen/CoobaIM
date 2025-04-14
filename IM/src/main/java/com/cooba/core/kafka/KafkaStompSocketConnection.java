@@ -6,11 +6,11 @@ import com.cooba.core.spring.ProtoMessageConverter;
 import com.cooba.entity.Chat;
 import com.cooba.proto.ChatProto;
 import com.cooba.util.JsonUtil;
-import com.cooba.util.KryoUtil;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,15 +21,10 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Slf4j
+@RequiredArgsConstructor
 public class KafkaStompSocketConnection implements SocketConnection {
     private final SimpMessagingTemplate messagingTemplate;
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
-
-    public KafkaStompSocketConnection(SimpMessagingTemplate messagingTemplate, KafkaTemplate<String, byte[]> kafkaTemplate) {
-        this.messagingTemplate = messagingTemplate;
-        this.kafkaTemplate = kafkaTemplate;
-        KryoUtil.register(EventData.class);
-    }
 
     @Override
     public void bindGroup(String userId, String group) {
