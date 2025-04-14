@@ -22,12 +22,14 @@ public class SocketConnectionAutoConfiguration {
     @ConditionalOnMissingBean(SocketConnection.class)
     @ConditionalOnProperty(name = "stomp.kafka.enable", havingValue = "false", matchIfMissing = true)
     public SocketConnection defaultSocketConnection(SimpMessagingTemplate messagingTemplate) {
+        messagingTemplate.setSendTimeout(3000);
         return new StompSocketConnection(messagingTemplate);
     }
 
     @Bean
     @ConditionalOnProperty(name = "stomp.kafka.enable", havingValue = "true")
     public SocketConnection kafkaSocketConnection(SimpMessagingTemplate messagingTemplate, KafkaTemplate<String, byte[]> kafkaTemplate) {
+        messagingTemplate.setSendTimeout(3000);
         if (stompMQ.getEnable()) {
             log.error("stomp.mq.enable should set to false");
             throw new UnsupportedOperationException();
