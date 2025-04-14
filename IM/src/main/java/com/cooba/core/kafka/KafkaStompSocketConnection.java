@@ -46,7 +46,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         String destination = "/queue/" + event.getType();
         EventData eventData = new EventData(destination, JsonUtil.toJson(t));
         String topic = decideTopic(userId, "user-event");
-        kafkaTemplate.send(topic, userId, KryoUtil.write(eventData));
+        kafkaTemplate.send(topic, userId, JsonUtil.toJsonByte(eventData));
 
         logKafkaEvent(destination, eventData);
     }
@@ -54,7 +54,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
     @KafkaListener(topicPattern = "chat-user-event-\\d+")
     public void listenUserEvent(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
-        EventData eventData = KryoUtil.read(record.value(), EventData.class);
+        EventData eventData = JsonUtil.fromJson(record.value(), EventData.class);
         messagingTemplate.convertAndSendToUser(userId, eventData.destination, eventData.payload);
 
         logStompEvent(eventData);
@@ -64,14 +64,14 @@ public class KafkaStompSocketConnection implements SocketConnection {
     public <T> void sendAllEvent(IMEvent event, T t) {
         String destination = "/topic/" + event.getType();
         EventData eventData = new EventData(destination, JsonUtil.toJson(t));
-        kafkaTemplate.send("all-event", KryoUtil.write(eventData));
+        kafkaTemplate.send("all-event", JsonUtil.toJsonByte(eventData));
 
         logKafkaEvent(destination, eventData);
     }
 
     @KafkaListener(topics = "all-event")
     public void listenAllEvent(ConsumerRecord<String, byte[]> record) {
-        EventData eventData = KryoUtil.read(record.value(), EventData.class);
+        EventData eventData = JsonUtil.fromJson(record.value(), EventData.class);
         messagingTemplate.convertAndSend(eventData.destination, eventData.payload);
 
         logStompEvent(eventData);

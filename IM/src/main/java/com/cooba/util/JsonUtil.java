@@ -15,7 +15,17 @@ public class JsonUtil {
     }
 
     @SneakyThrows
+    public static byte[] toJsonByte(Object obj) {
+        return objectMapper.writeValueAsBytes(obj);
+    }
+
+    @SneakyThrows
     public static <T> T fromJson(String json, Class<T> clazz) {
+        return objectMapper.readValue(json, clazz);
+    }
+
+    @SneakyThrows
+    public static <T> T fromJson(byte[] json, Class<T> clazz) {
         return objectMapper.readValue(json, clazz);
     }
 }
