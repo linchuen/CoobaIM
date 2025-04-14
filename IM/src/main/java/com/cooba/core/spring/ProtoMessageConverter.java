@@ -15,7 +15,7 @@ import org.springframework.util.MimeType;
 public class ProtoMessageConverter extends AbstractMessageConverter {
 
     public ProtoMessageConverter() {
-        super(new MimeType("application", "protobuf")); // 自定义 MIME 类型
+        super(new MimeType("application", "octet-stream"));
     }
 
     @Override

@@ -68,7 +68,7 @@ public class StompSocketConnection implements SocketConnection {
 
     private MessageHeaders buildHeader() {
         SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setHeader("contentType", "application/protobuf");
+        headerAccessor.setHeader("contentType", "application/octet-stream");
         headerAccessor.setLeaveMutable(true);
         return headerAccessor.getMessageHeaders();
     }
