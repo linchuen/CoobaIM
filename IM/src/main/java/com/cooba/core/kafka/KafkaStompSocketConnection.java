@@ -51,7 +51,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         logKafkaEvent(destination, eventData);
     }
 
-    @KafkaListener(topicPattern = "chat-user-event-.*")
+    @KafkaListener(topicPattern = "chat-user-event-\\d+")
     public void listenUserEvent(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
         EventData eventData = KryoUtil.read(record.value(), EventData.class);
@@ -85,7 +85,7 @@ public class KafkaStompSocketConnection implements SocketConnection {
         logKafkaChat(topic, "/private/" + userId, chat);
     }
 
-    @KafkaListener(topicPattern = "chat-user-.*")
+    @KafkaListener(topicPattern = "chat-user-\\d+")
     public void listenUser(ConsumerRecord<String, byte[]> record) {
         String userId = record.key();
         messagingTemplate.convertAndSendToUser(userId, "/private", record.value(), buildHeader());
