@@ -32,3 +32,19 @@ and mainly processes data of the same type (such as tables with the same prefix)
 4. **Data layer**: Perform data operations and data can be cached data or SQL data even No-SQL data.
 Avoid making a single SQL statement too complex and logical joins can be used at this layer.
 5. **SQL layer**: SQL syntax is concentrated in this layer.
+
+### Local Develop
+To run the project locally, first clone the frontend repository into the web folder:  
+👉 https://github.com/linchuen/CoobaIM-app.git  
+This project uses STOMP for server communication, with a message queue (MQ) enabled by default.  
+Both Kafka and ActiveMQ Artemis are supported. If you do want to run in a single-server setup,
+you can disable them in application.yml by setting:
+```yaml
+stomp:
+  artemis:
+    enabled: false
+  kafka:
+    enabled: false
+```
+⚠️ When using Kafka, make sure each server instance has a unique group ID to avoid conflicts.
+
