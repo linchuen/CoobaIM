@@ -60,10 +60,11 @@ Responsibility: Centralized SQL management and optimization
 The user connection logic (via STOMP) is separated from the core module.
 The core module is designed to be replaceable—allowing technologies like native WebSocket or MQTT to be used instead.
 
-### Local Develop
+### 💻  Develop
 To run the project locally, first clone the frontend repository into the web folder:  
 👉 https://github.com/linchuen/CoobaIM-app.git  
 Next, execute the SQL scripts located in the sql folder to initialize the database tables.   
+
 This project uses STOMP for server communication, with a message queue (MQ) enabled by default.  
 Both Kafka and ActiveMQ Artemis are supported. If you do want to run in a single-server setup,
 you can disable them in application.yml by setting:

@@ -60,3 +60,21 @@ docker compose up -d
 ### 🧱模組設計補充
 專案有額外將用戶連線功能獨立於core模塊(STOMP)，  
 core模塊的內容預期是可替換的，如使用原生WEBSOCKET、MQTT等。
+
+### 💻️本機開發
+若要在本機運行本專案，請先將前端專案複製到 web 資料夾中：  
+👉 https://github.com/linchuen/CoobaIM-app.git  
+接著，執行 sql 資料夾中的 SQL 腳本來初始化資料表。  
+
+本專案使用 STOMP 進行伺服器通訊，並預設啟用訊息佇列（MQ）功能。
+目前支援 Kafka 與 ActiveMQ Artemis。若您希望以單機模式運行，
+可以在 application.yml 中將以下設定設為 false：
+```yaml
+stomp:
+  artemis:
+    enabled: false
+  kafka:
+    enabled: false
+```
+⚠️ 若使用 Kafka，請確保每個伺服器實例都有唯一的 group ID，以避免衝突。
+
